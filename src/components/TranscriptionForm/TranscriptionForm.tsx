@@ -1,4 +1,4 @@
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren } from "react";
 import { CuesForm } from "./CuesForm/CuesForm";
 import { LanguagesForm } from "./LanguagesForm/LanguagesForm";
 import { MetadataForm } from "./MetadataForm/MetadataForm";
@@ -9,25 +9,19 @@ import { AudioFileForm } from "./AudioFileForm/AudioFileForm";
 type TranscriptionFormProps = {};
 
 export const TranscriptionForm = ({}: TranscriptionFormProps) => {
-  const [audioDuration, setAudioDuration] = useState<number>(0);
-
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-  };
-
-  const handleAudioFileLoaded = (duration: number) => {
-    setAudioDuration(duration);
   };
 
   return (
     <TranscriptionFormProvider>
       <TranscriptionFormWrapper>
-        <AudioFileForm onDurationUpdated={handleAudioFileLoaded} />
+        <AudioFileForm />
         <form onSubmit={handleFormSubmit}>
           <MetadataForm />
           <LanguagesForm />
           <VoicesForm />
-          <CuesForm audioDuration={audioDuration} />
+          <CuesForm />
         </form>
       </TranscriptionFormWrapper>
     </TranscriptionFormProvider>

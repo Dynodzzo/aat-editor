@@ -6,12 +6,10 @@ import {
 } from "../TranscriptionFormContext/TranscriptionFormContext";
 import { Cue, CuesByLanguage, LanguageKey } from "../TranscriptionFormModel";
 
-type CuesFormProps = {
-  audioDuration?: number;
-};
+type CuesFormProps = {};
 
-export const CuesForm = ({ audioDuration }: CuesFormProps) => {
-  const { languages, voices, cues } = useTranscriptionForm();
+export const CuesForm = ({}: CuesFormProps) => {
+  const { duration, languages, voices, cues } = useTranscriptionForm();
   const dispatch = useTranscriptionFormDispatch();
 
   const handleCueStartChange = (event: React.ChangeEvent<HTMLInputElement>, cueKey: string, language: LanguageKey) => {
@@ -141,7 +139,7 @@ export const CuesForm = ({ audioDuration }: CuesFormProps) => {
                       id={`cue-start-${cueKey}`}
                       type="time"
                       min={"00:00:00"}
-                      max={audioDuration ? formatTime(audioDuration) : "00:00:00"}
+                      max={duration ? formatTime(duration) : "00:00:00"}
                       step="1"
                       value={start}
                       onChange={(event) => handleCueStartChange(event, cueKey, langKey)}
@@ -153,7 +151,7 @@ export const CuesForm = ({ audioDuration }: CuesFormProps) => {
                       id={`cue-end-${cueKey}`}
                       type="time"
                       min={"00:00:00"}
-                      max={audioDuration ? formatTime(audioDuration) : "00:00:00"}
+                      max={duration ? formatTime(duration) : "00:00:00"}
                       step="1"
                       value={end}
                       onChange={(event) => handleCueEndChange(event, cueKey, langKey)}
