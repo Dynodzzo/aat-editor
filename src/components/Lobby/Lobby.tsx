@@ -1,44 +1,41 @@
-import { useRef } from "react";
+import { useEffect } from "react";
 import { TranscriptionFormState } from "../TranscriptionForm/TranscriptionFormContext/TranscriptionFormContext";
+import { useTextFileSelector } from "../../hooks/useTextFileSelector";
 
 type LobbyProps = {
   onStartEditing: (state?: TranscriptionFormState) => void;
 };
 
 export const Lobby = ({ onStartEditing }: LobbyProps) => {
-  const importInputRef = useRef<HTMLInputElement>(null);
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const reader = new FileReader();
-
-    reader.onload = (event) => {
-      const result = JSON.parse(event.target?.result?.toString() || "{}");
-      onStartEditing(result);
-    };
-
-    reader.onerror = (event) => {
-      console.log(event);
-    };
-
-    reader.readAsText(event.target.files?.[0] as Blob);
-  };
+  const { fileData, error, isLoading, selectFile } = useTextFileSelector<TranscriptionFormState>();
 
   const handleImportClick = () => {
-    if (importInputRef.current) {
-      importInputRef.current.click();
-    }
+    selectFile();
   };
 
   const handleCreateClick = () => {
     onStartEditing();
   };
 
+  useEffect(() => {
+    if (error) {
+      console.table({ error });
+    }
+
+    if (fileData) {
+      onStartEditing(fileData);
+    }
+  }, [fileData, error]);
+
   return (
     <div>
       <h1>Lobby</h1>
-      <input type="file" accept=".json" hidden ref={importInputRef} onChange={handleFileChange} />
-      <button onClick={handleImportClick}>Import</button>
-      <button onClick={handleCreateClick}>Create</button>
+      <button onClick={handleImportClick} disabled={isLoading}>
+        Import
+      </button>
+      <button onClick={handleCreateClick} disabled={isLoading}>
+        Create
+      </button>
     </div>
   );
 };
