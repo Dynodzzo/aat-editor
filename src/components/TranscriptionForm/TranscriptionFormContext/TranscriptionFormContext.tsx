@@ -72,8 +72,12 @@ const transcriptionReducer = (state: TranscriptionFormState, action: Transcripti
   }
 };
 
-export const TranscriptionFormProvider = ({ children }: PropsWithChildren) => {
-  const [transcription, dispatch] = useReducer(transcriptionReducer, INITIAL_FORM_STATE);
+type TranscriptionFormProviderProps = PropsWithChildren & {
+  initialFormState?: TranscriptionFormState;
+};
+
+export const TranscriptionFormProvider = ({ initialFormState, children }: TranscriptionFormProviderProps) => {
+  const [transcription, dispatch] = useReducer(transcriptionReducer, { ...INITIAL_FORM_STATE, ...initialFormState });
 
   return (
     <TranscriptionContext.Provider value={transcription}>
