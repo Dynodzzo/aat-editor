@@ -1,11 +1,5 @@
 import React, { createContext, PropsWithChildren, useContext, useReducer } from "react";
-import { AVAILABLE_LANGUAGES } from "../TranscriptionFormConstants";
-import { CuesByLanguage, LanguageKey, TranscriptionState, Voice } from "../../../model/TranscriptionModel";
-
-const INITIAL_CUES: CuesByLanguage = AVAILABLE_LANGUAGES.reduce((languages, { key }) => {
-  languages[key] = [];
-  return languages;
-}, {} as CuesByLanguage);
+import { Cue, LanguageKey, TranscriptionState, Voice } from "../../../model/TranscriptionModel";
 
 const INITIAL_FORM_STATE: TranscriptionState = {
   duration: 0,
@@ -13,7 +7,7 @@ const INITIAL_FORM_STATE: TranscriptionState = {
   author: "",
   languages: [],
   voices: [],
-  cues: INITIAL_CUES,
+  cues: [],
 };
 const TranscriptionContext = createContext<TranscriptionState>(INITIAL_FORM_STATE);
 const TranscriptionDispatchContext = createContext<React.Dispatch<TranscriptionFormAction>>(() => {});
@@ -24,7 +18,7 @@ export type TranscriptionFormAction =
   | { type: "UPDATE_AUTHOR"; payload: string }
   | { type: "UPDATE_LANGUAGES"; payload: LanguageKey[] }
   | { type: "UPDATE_VOICES"; payload: Voice[] }
-  | { type: "UPDATE_CUES"; payload: CuesByLanguage };
+  | { type: "UPDATE_CUES"; payload: Cue[] };
 
 const transcriptionReducer = (state: TranscriptionState, action: TranscriptionFormAction) => {
   switch (action.type) {
@@ -56,7 +50,7 @@ const transcriptionReducer = (state: TranscriptionState, action: TranscriptionFo
     case "UPDATE_CUES":
       return {
         ...state,
-        cues: { ...action.payload },
+        cues: [...action.payload],
       };
     default:
       return state;

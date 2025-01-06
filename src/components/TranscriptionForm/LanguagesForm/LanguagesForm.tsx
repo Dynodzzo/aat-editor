@@ -1,9 +1,9 @@
+import { LanguageKey } from "../../../model/TranscriptionModel";
 import { AVAILABLE_LANGUAGES } from "../TranscriptionFormConstants";
 import {
   useTranscriptionForm,
   useTranscriptionFormDispatch,
 } from "../TranscriptionFormContext/TranscriptionFormContext";
-import { LanguageKey } from "../TranscriptionFormModel";
 
 export const LanguagesForm = () => {
   const { languages } = useTranscriptionForm();
@@ -22,14 +22,14 @@ export const LanguagesForm = () => {
   return (
     <fieldset>
       <legend>Languages</legend>
-      <div className="inputWrapper">
-        {AVAILABLE_LANGUAGES.map(({ key, name }) => (
-          <label key={key} htmlFor={key}>
-            {name}
+      {AVAILABLE_LANGUAGES.map(({ key, name }) => (
+        <div key={key} className="inputWrapper">
+          <label htmlFor={key}>
             <input id={key} type="checkbox" checked={languages.includes(key)} onChange={handleChangeLanguages} />
+            {name}
           </label>
-        ))}
-      </div>
+        </div>
+      ))}
     </fieldset>
   );
 };

@@ -3,7 +3,7 @@ import {
   useTranscriptionForm,
   useTranscriptionFormDispatch,
 } from "../TranscriptionFormContext/TranscriptionFormContext";
-import { CuesByLanguage, LanguageKey, Voice, VoiceNameByLanguage } from "../../../model/TranscriptionModel";
+import { LanguageKey, Voice, StringByLanguage } from "../../../model/TranscriptionModel";
 
 export const VoicesForm = () => {
   const { languages, voices, cues } = useTranscriptionForm();
@@ -21,19 +21,16 @@ export const VoicesForm = () => {
       return voice;
     });
 
-    const updatedCues = Object.keys(cues).reduce((updatedCues, langKey) => {
-      updatedCues[langKey as LanguageKey] = cues[langKey as LanguageKey]?.map((cue) => {
-        const voice = voices.find((currentVoice) => currentVoice.key === voiceKey);
-        if (cue.voice === voice?.id) {
-          return {
-            ...cue,
-            voice: event.target.value,
-          };
-        }
-        return cue;
-      });
-      return updatedCues;
-    }, {} as CuesByLanguage);
+    const updatedCues = cues.map((cue) => {
+      if (cue.voice === voiceKey) {
+        return {
+          ...cue,
+          voice: event.target.value,
+        };
+      }
+
+      return cue;
+    });
 
     dispatch({ type: "UPDATE_VOICES", payload: newVoices });
     dispatch({ type: "UPDATE_CUES", payload: updatedCues });
@@ -84,7 +81,7 @@ export const VoicesForm = () => {
       name: AVAILABLE_LANGUAGES.reduce((languages, { key }) => {
         languages[key] = `Voice ${voices.length + 1}`;
         return languages;
-      }, {} as VoiceNameByLanguage),
+      }, {} as StringByLanguage),
     };
     dispatch({ type: "UPDATE_VOICES", payload: [...voices, newVoice] });
   };
@@ -111,42 +108,42 @@ export const VoicesForm = () => {
                     onChange={(event) => handleVoiceIdChange(event, voice.key)}
                   />
                 </label>
-                <div className="inputWrapper">
-                  <label htmlFor={voiceColorId}>
-                    Color
-                    <input
-                      id={voiceColorId}
-                      type="color"
-                      value={voice.color}
-                      onChange={(event) => handleVoiceColorChange(event, voice.key)}
-                    />
-                  </label>
-                </div>
-                {languages.length > 0 && (
-                  <fieldset>
-                    <legend>Voice name</legend>
-                    {AVAILABLE_LANGUAGES.map(({ key: langKey, name }) => {
-                      if (!languages.includes(langKey)) return null;
-
-                      const voiceNameId = `voice-name-${voice.id}-${langKey}`;
-
-                      return (
-                        <div key={langKey} className="inputWrapper">
-                          <label htmlFor={voiceNameId}>
-                            {name}
-                            <input
-                              id={voiceNameId}
-                              type="text"
-                              value={voice.name[langKey]}
-                              onChange={(event) => handleVoiceNameChange(event, voice.key, langKey)}
-                            />
-                          </label>
-                        </div>
-                      );
-                    })}
-                  </fieldset>
-                )}
               </div>
+              <div className="inputWrapper">
+                <label htmlFor={voiceColorId}>
+                  Color
+                  <input
+                    id={voiceColorId}
+                    type="color"
+                    value={voice.color}
+                    onChange={(event) => handleVoiceColorChange(event, voice.key)}
+                  />
+                </label>
+              </div>
+              {languages.length > 0 && (
+                <fieldset>
+                  <legend>Voice name</legend>
+                  {AVAILABLE_LANGUAGES.map(({ key: langKey, name }) => {
+                    if (!languages.includes(langKey)) return null;
+
+                    const voiceNameId = `voice-name-${voice.id}-${langKey}`;
+
+                    return (
+                      <div key={langKey} className="inputWrapper">
+                        <label htmlFor={voiceNameId}>
+                          {name}
+                          <input
+                            id={voiceNameId}
+                            type="text"
+                            value={voice.name[langKey]}
+                            onChange={(event) => handleVoiceNameChange(event, voice.key, langKey)}
+                          />
+                        </label>
+                      </div>
+                    );
+                  })}
+                </fieldset>
+              )}
             </div>
           </fieldset>
         );

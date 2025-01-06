@@ -2,17 +2,14 @@ import { PropsWithChildren } from "react";
 import { CuesForm } from "./CuesForm/CuesForm";
 import { LanguagesForm } from "./LanguagesForm/LanguagesForm";
 import { MetadataForm } from "./MetadataForm/MetadataForm";
-import {
-  TranscriptionFormProvider,
-  TranscriptionFormState,
-  useTranscriptionForm,
-} from "./TranscriptionFormContext/TranscriptionFormContext";
+import { TranscriptionFormProvider, useTranscriptionForm } from "./TranscriptionFormContext/TranscriptionFormContext";
 import { VoicesForm } from "./VoicesForm/VoicesForm";
 import { AudioFileForm } from "./AudioFileForm/AudioFileForm";
 import { ExportActions } from "./ExportActions/ExportActions";
+import { TranscriptionState } from "../../model/TranscriptionModel";
 
 type TranscriptionFormProps = {
-  initialFormState?: TranscriptionFormState;
+  initialFormState?: TranscriptionState;
 };
 
 export const TranscriptionForm = ({ initialFormState }: TranscriptionFormProps) => {

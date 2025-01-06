@@ -1,4 +1,4 @@
-import { CuesByLanguage, LanguageKey, TranscriptionState } from "../../model/TranscriptionModel";
+import { TranscriptionState } from "../../model/TranscriptionModel";
 import { TranscriptionFileSchema, transcriptionFileSchema } from "../../model/TranscriptionSchema";
 
 export function checkFileFormat(fileData: TranscriptionFileSchema): { success: boolean; error?: string } {
@@ -17,12 +17,6 @@ export function hydrateData(fileData: TranscriptionFileSchema): TranscriptionSta
     duration: 0,
     ...fileData,
     voices: fileData.voices.map((voice) => ({ ...voice, key: crypto.randomUUID() })),
-    cues: (Object.keys(fileData.cues) as LanguageKey[]).reduce((cues, languageKey) => {
-      cues[languageKey] = fileData.cues[languageKey]!.map((cue) => ({
-        ...cue,
-        key: crypto.randomUUID(),
-      }));
-      return cues;
-    }, {} as CuesByLanguage),
+    cues: fileData.cues.map((cue) => ({ ...cue, key: crypto.randomUUID() })),
   };
 }
