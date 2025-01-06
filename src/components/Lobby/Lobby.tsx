@@ -1,49 +1,20 @@
-import { useEffect } from "react";
-import { TranscriptionFormState } from "../TranscriptionForm/TranscriptionFormContext/TranscriptionFormContext";
-import { useTextFileSelector } from "../../hooks/useTextFileSelector";
-import { transcriptionFileSchema } from "../../model/TranscriptionSchema";
+import { TranscriptionState } from "../../model/TranscriptionModel";
+import { TranscriptionImporter } from "../TranscriptionImporter/TranscriptionImporter";
 
 type LobbyProps = {
-  onStartEditing: (state?: TranscriptionFormState) => void;
+  onStartEditing: (state?: TranscriptionState) => void;
 };
 
 export const Lobby = ({ onStartEditing }: LobbyProps) => {
-  const { fileData, error, isLoading, selectFile } = useTextFileSelector<TranscriptionFormState>();
-
-  const handleImportClick = () => {
-    selectFile();
-  };
-
   const handleCreateClick = () => {
     onStartEditing();
   };
 
-  useEffect(() => {
-    if (error) {
-      // TODO manage file errors
-      console.table({ error });
-    }
-
-    if (fileData) {
-      const { success, error } = transcriptionFileSchema.safeParse(fileData);
-      if (success) {
-        onStartEditing(fileData);
-      } else {
-        // TODO manage schema errors
-        console.table({ error });
-      }
-    }
-  }, [fileData, error]);
-
   return (
     <div>
       <h1>Lobby</h1>
-      <button onClick={handleImportClick} disabled={isLoading}>
-        Import
-      </button>
-      <button onClick={handleCreateClick} disabled={isLoading}>
-        Create
-      </button>
+      <TranscriptionImporter onFileImported={onStartEditing} />
+      <button onClick={handleCreateClick}>Create</button>
     </div>
   );
 };

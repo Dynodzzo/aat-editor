@@ -1,13 +1,13 @@
 import React, { createContext, PropsWithChildren, useContext, useReducer } from "react";
 import { AVAILABLE_LANGUAGES } from "../TranscriptionFormConstants";
-import { CuesByLanguage, LanguageKey, Voice } from "../../../model/TranscriptionModel";
+import { CuesByLanguage, LanguageKey, TranscriptionState, Voice } from "../../../model/TranscriptionModel";
 
 const INITIAL_CUES: CuesByLanguage = AVAILABLE_LANGUAGES.reduce((languages, { key }) => {
   languages[key] = [];
   return languages;
 }, {} as CuesByLanguage);
 
-const INITIAL_FORM_STATE: TranscriptionFormState = {
+const INITIAL_FORM_STATE: TranscriptionState = {
   duration: 0,
   title: "",
   author: "",
@@ -15,17 +15,8 @@ const INITIAL_FORM_STATE: TranscriptionFormState = {
   voices: [],
   cues: INITIAL_CUES,
 };
-const TranscriptionContext = createContext<TranscriptionFormState>(INITIAL_FORM_STATE);
+const TranscriptionContext = createContext<TranscriptionState>(INITIAL_FORM_STATE);
 const TranscriptionDispatchContext = createContext<React.Dispatch<TranscriptionFormAction>>(() => {});
-
-export type TranscriptionFormState = {
-  duration: number;
-  title: string;
-  author: string;
-  languages: LanguageKey[];
-  voices: Voice[];
-  cues: CuesByLanguage;
-};
 
 export type TranscriptionFormAction =
   | { type: "UPDATE_DURATION"; payload: number }
@@ -35,7 +26,7 @@ export type TranscriptionFormAction =
   | { type: "UPDATE_VOICES"; payload: Voice[] }
   | { type: "UPDATE_CUES"; payload: CuesByLanguage };
 
-const transcriptionReducer = (state: TranscriptionFormState, action: TranscriptionFormAction) => {
+const transcriptionReducer = (state: TranscriptionState, action: TranscriptionFormAction) => {
   switch (action.type) {
     case "UPDATE_DURATION":
       return {
@@ -73,7 +64,7 @@ const transcriptionReducer = (state: TranscriptionFormState, action: Transcripti
 };
 
 type TranscriptionFormProviderProps = PropsWithChildren & {
-  initialFormState?: TranscriptionFormState;
+  initialFormState?: TranscriptionState;
 };
 
 export const TranscriptionFormProvider = ({ initialFormState, children }: TranscriptionFormProviderProps) => {

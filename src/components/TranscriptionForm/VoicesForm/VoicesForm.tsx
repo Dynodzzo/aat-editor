@@ -3,7 +3,7 @@ import {
   useTranscriptionForm,
   useTranscriptionFormDispatch,
 } from "../TranscriptionFormContext/TranscriptionFormContext";
-import { CuesByLanguage, LanguageKey, Voice, VoiceNameByLanguage } from "../TranscriptionFormModel";
+import { CuesByLanguage, LanguageKey, Voice, VoiceNameByLanguage } from "../../../model/TranscriptionModel";
 
 export const VoicesForm = () => {
   const { languages, voices, cues } = useTranscriptionForm();

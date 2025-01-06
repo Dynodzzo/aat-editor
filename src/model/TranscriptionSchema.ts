@@ -29,3 +29,5 @@ export const transcriptionFileSchema = z.object({
   voices: VoicesSchema,
   cues: CuesSchema,
 });
+
+export type TranscriptionFileSchema = z.infer<typeof transcriptionFileSchema>;
