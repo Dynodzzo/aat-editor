@@ -73,7 +73,7 @@ export const ExportActions = () => {
 
   return (
     <>
-      <a href={getDownloadLink()} target="_blank" rel="noreferrer noopener">
+      <a href={getDownloadLink()} target="_blank" rel="noreferrer noopener" download>
         Export
       </a>
     </>
