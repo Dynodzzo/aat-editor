@@ -1,4 +1,4 @@
-import { Language } from "./TranscriptionFormModel";
+import { Language } from "../../model/TranscriptionModel";
 
 export const AVAILABLE_LANGUAGES: Language[] = [
   {

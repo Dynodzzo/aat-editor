@@ -1,10 +1,10 @@
+import { Cue, CuesByLanguage, LanguageKey } from "../../../model/TranscriptionModel";
 import { formatTime } from "../../../utils/time.utils";
 import { AVAILABLE_LANGUAGES } from "../TranscriptionFormConstants";
 import {
   useTranscriptionForm,
   useTranscriptionFormDispatch,
 } from "../TranscriptionFormContext/TranscriptionFormContext";
-import { Cue, CuesByLanguage, LanguageKey } from "../TranscriptionFormModel";
 
 type CuesFormProps = {};
 

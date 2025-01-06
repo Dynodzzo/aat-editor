@@ -1,6 +1,6 @@
 import React, { createContext, PropsWithChildren, useContext, useReducer } from "react";
-import { CuesByLanguage, LanguageKey, Voice } from "../TranscriptionFormModel";
 import { AVAILABLE_LANGUAGES } from "../TranscriptionFormConstants";
+import { CuesByLanguage, LanguageKey, Voice } from "../../../model/TranscriptionModel";
 
 const INITIAL_CUES: CuesByLanguage = AVAILABLE_LANGUAGES.reduce((languages, { key }) => {
   languages[key] = [];
