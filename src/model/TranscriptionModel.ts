@@ -11,7 +11,6 @@ export type Language = {
 };
 
 export type TranscriptionState = {
-  duration: number;
   title: string;
   author: string;
   // fileAuthor: string;

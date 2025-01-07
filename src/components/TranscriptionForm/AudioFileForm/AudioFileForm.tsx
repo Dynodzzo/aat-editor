@@ -1,23 +1,22 @@
+import { useEffect } from "react";
 import { useAudioFileSelector } from "../../../hooks/useAudioFileSelector";
-import { useTranscriptionFormDispatch } from "../TranscriptionFormContext/TranscriptionFormContext";
 
-type AudioFileFormProps = {};
+type AudioFileFormProps = {
+  onAudioFileChanged: (audioObjectURL: string) => void;
+};
 
-export const AudioFileForm = ({}: AudioFileFormProps) => {
-  const dispatch = useTranscriptionFormDispatch();
+export const AudioFileForm = ({ onAudioFileChanged }: AudioFileFormProps) => {
+  const { audioObjectURL, handleAudioFileChanged } = useAudioFileSelector();
 
-  const { audioRef, handleAudioFileChanged } = useAudioFileSelector();
-
-  const handleAudioLoadedMetadata = () => {
-    if (audioRef?.current) {
-      dispatch({ type: "UPDATE_DURATION", payload: audioRef.current.duration });
+  useEffect(() => {
+    if (audioObjectURL) {
+      onAudioFileChanged(audioObjectURL);
     }
-  };
+  }, [audioObjectURL]);
 
   return (
     <>
       <input type="file" accept="audio/*" onChange={handleAudioFileChanged} />
-      <audio controls ref={audioRef} onLoadedMetadata={handleAudioLoadedMetadata}></audio>
     </>
   );
 };

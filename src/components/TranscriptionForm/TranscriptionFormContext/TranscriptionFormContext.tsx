@@ -2,7 +2,6 @@ import React, { createContext, PropsWithChildren, useContext, useReducer } from 
 import { Cue, LanguageKey, TranscriptionState, Voice } from "../../../model/TranscriptionModel";
 
 const INITIAL_FORM_STATE: TranscriptionState = {
-  duration: 0,
   title: "",
   author: "",
   languages: [],
@@ -13,7 +12,6 @@ const TranscriptionContext = createContext<TranscriptionState>(INITIAL_FORM_STAT
 const TranscriptionDispatchContext = createContext<React.Dispatch<TranscriptionFormAction>>(() => {});
 
 export type TranscriptionFormAction =
-  | { type: "UPDATE_DURATION"; payload: number }
   | { type: "UPDATE_TITLE"; payload: string }
   | { type: "UPDATE_AUTHOR"; payload: string }
   | { type: "UPDATE_LANGUAGES"; payload: LanguageKey[] }
@@ -22,11 +20,6 @@ export type TranscriptionFormAction =
 
 const transcriptionReducer = (state: TranscriptionState, action: TranscriptionFormAction) => {
   switch (action.type) {
-    case "UPDATE_DURATION":
-      return {
-        ...state,
-        duration: action.payload,
-      };
     case "UPDATE_TITLE":
       return {
         ...state,

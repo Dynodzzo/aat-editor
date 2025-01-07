@@ -1,16 +1,22 @@
 import { Cue, LanguageKey, StringByLanguage } from "../../../model/TranscriptionModel";
-import { formatTime } from "../../../utils/time.utils";
+import { formatDurationToISOTime, formatISOTimeToDuration } from "../../../utils/time.utils";
 import { AVAILABLE_LANGUAGES } from "../TranscriptionFormConstants";
 import {
   useTranscriptionForm,
   useTranscriptionFormDispatch,
 } from "../TranscriptionFormContext/TranscriptionFormContext";
 
-type CuesFormProps = {};
+type CuesFormProps = {
+  onGetAudioDuration: () => number;
+  onGetCurrentTime: () => string;
+  onPlaySprite: (start: number, end: number) => void;
+};
 
-export const CuesForm = ({}: CuesFormProps) => {
-  const { duration, languages, voices, cues } = useTranscriptionForm();
+export const CuesForm = ({ onGetAudioDuration, onGetCurrentTime, onPlaySprite }: CuesFormProps) => {
+  const { languages, voices, cues } = useTranscriptionForm();
   const dispatch = useTranscriptionFormDispatch();
+
+  const audioDuration = onGetAudioDuration();
 
   const handleCueStartChange = (event: React.ChangeEvent<HTMLInputElement>, cueKey: string) => {
     const newCues = cues.map((cue) => {
@@ -96,8 +102,8 @@ export const CuesForm = ({}: CuesFormProps) => {
   const handleAddCue = () => {
     const newCue: Cue = {
       key: crypto.randomUUID(),
-      start: "00:00:00",
-      end: "00:00:00",
+      start: onGetCurrentTime(),
+      end: onGetCurrentTime(),
       voice: "",
       text: AVAILABLE_LANGUAGES.reduce((acc, { key }) => {
         return {
@@ -132,9 +138,9 @@ export const CuesForm = ({}: CuesFormProps) => {
               <input
                 id={`cue-start-${cueKey}`}
                 type="time"
-                min={"00:00:00"}
-                max={duration ? formatTime(duration) : "00:00:00"}
-                step="1"
+                min={"00:00:00.000"}
+                max={audioDuration ? formatDurationToISOTime(audioDuration) : "00:00:00.000"}
+                step="0.001"
                 value={start}
                 onChange={(event) => handleCueStartChange(event, cueKey)}
               />
@@ -142,13 +148,13 @@ export const CuesForm = ({}: CuesFormProps) => {
           </div>
           <div className="inputWrapper">
             <label htmlFor={`cue-end-${cueKey}`}>
-              Start
+              End
               <input
                 id={`cue-end-${cueKey}`}
                 type="time"
-                min={"00:00:00"}
-                max={duration ? formatTime(duration) : "00:00:00"}
-                step="1"
+                min={"00:00:00.000"}
+                max={audioDuration ? formatDurationToISOTime(audioDuration) : "00:00:00.000"}
+                step="0.001"
                 value={end}
                 onChange={(event) => handleCueEndChange(event, cueKey)}
               />
@@ -199,6 +205,12 @@ export const CuesForm = ({}: CuesFormProps) => {
               </fieldset>
             );
           })}
+          <button
+            type="button"
+            onClick={() => onPlaySprite(formatISOTimeToDuration(start), formatISOTimeToDuration(end))}
+          >
+            Listen
+          </button>
         </fieldset>
       ))}
 
