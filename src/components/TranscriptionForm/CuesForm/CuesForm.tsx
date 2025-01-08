@@ -7,16 +7,14 @@ import {
 } from "../TranscriptionFormContext/TranscriptionFormContext";
 
 type CuesFormProps = {
-  onGetAudioDuration: () => number;
-  onGetCurrentTime: () => string;
+  audioDuration: number;
+  currentTime: number;
   onPlaySprite: (start: number, end: number) => void;
 };
 
-export const CuesForm = ({ onGetAudioDuration, onGetCurrentTime, onPlaySprite }: CuesFormProps) => {
+export const CuesForm = ({ audioDuration, currentTime, onPlaySprite }: CuesFormProps) => {
   const { languages, voices, cues } = useTranscriptionForm();
   const dispatch = useTranscriptionFormDispatch();
-
-  const audioDuration = onGetAudioDuration();
 
   const handleCueStartChange = (event: React.ChangeEvent<HTMLInputElement>, cueKey: string) => {
     const newCues = cues.map((cue) => {
@@ -102,8 +100,8 @@ export const CuesForm = ({ onGetAudioDuration, onGetCurrentTime, onPlaySprite }:
   const handleAddCue = () => {
     const newCue: Cue = {
       key: crypto.randomUUID(),
-      start: onGetCurrentTime(),
-      end: onGetCurrentTime(),
+      start: formatDurationToISOTime(currentTime),
+      end: formatDurationToISOTime(currentTime + 1),
       voice: "",
       text: AVAILABLE_LANGUAGES.reduce((acc, { key }) => {
         return {
@@ -129,90 +127,103 @@ export const CuesForm = ({ onGetAudioDuration, onGetCurrentTime, onPlaySprite }:
     <fieldset>
       <legend>Cues</legend>
 
-      {cues.map(({ key: cueKey, start, end, voice, text, note }, index) => (
-        <fieldset key={cueKey}>
-          <legend>{index}</legend>
-          <div className="inputWrapper">
-            <label htmlFor={`cue-start-${cueKey}`}>
-              Start
-              <input
-                id={`cue-start-${cueKey}`}
-                type="time"
-                min={"00:00:00.000"}
-                max={audioDuration ? formatDurationToISOTime(audioDuration) : "00:00:00.000"}
-                step="0.001"
-                value={start}
-                onChange={(event) => handleCueStartChange(event, cueKey)}
-              />
-            </label>
-          </div>
-          <div className="inputWrapper">
-            <label htmlFor={`cue-end-${cueKey}`}>
-              End
-              <input
-                id={`cue-end-${cueKey}`}
-                type="time"
-                min={"00:00:00.000"}
-                max={audioDuration ? formatDurationToISOTime(audioDuration) : "00:00:00.000"}
-                step="0.001"
-                value={end}
-                onChange={(event) => handleCueEndChange(event, cueKey)}
-              />
-            </label>
-          </div>
-          <div className="inputWrapper">
-            <label htmlFor={`cue-voice-${cueKey}`}>
-              Voice
-              <select
-                id={`cue-voice-${cueKey}`}
-                value={voice}
-                onChange={(event) => handleCueVoiceChange(event, cueKey)}
-              >
-                <option value="">Select a voice...</option>
-                {voices.map((currentVoice) => (
-                  <option key={currentVoice.key} value={currentVoice.id}>
-                    {currentVoice.id}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-          {AVAILABLE_LANGUAGES.map(({ key: langKey, name }) => {
-            if (!languages.includes(langKey)) return null;
-            return (
-              <fieldset key={langKey}>
-                <legend>{name}</legend>
-                <div className="inputWrapper">
-                  <label htmlFor={`cue-text-${cueKey}`}>
-                    Text
-                    <input
-                      id={`cue-text-${cueKey}`}
-                      value={text[langKey]}
-                      onChange={(event) => handleCueTextChange(event, cueKey, langKey)}
-                    />
-                  </label>
-                </div>
-                <div className="inputWrapper">
-                  <label htmlFor={`cue-note-${cueKey}`}>
-                    Note
-                    <input
-                      id={`cue-note-${cueKey}`}
-                      value={note?.[langKey]}
-                      onChange={(event) => handleCueNoteChange(event, cueKey, langKey)}
-                    />
-                  </label>
-                </div>
-              </fieldset>
-            );
-          })}
-          <button
-            type="button"
-            onClick={() => onPlaySprite(formatISOTimeToDuration(start), formatISOTimeToDuration(end))}
-          >
-            Listen
-          </button>
-        </fieldset>
-      ))}
+      {cues.map(({ key: cueKey, start, end, voice, text, note }, index) => {
+        const isCueBeingPlayed =
+          currentTime >= formatISOTimeToDuration(start) && currentTime <= formatISOTimeToDuration(end);
+        return (
+          <fieldset key={cueKey} style={{ border: isCueBeingPlayed ? "4px solid darkblue" : "inherit" }}>
+            <legend>{index}</legend>
+            <div className="inputWrapper">
+              <label htmlFor={`cue-start-${cueKey}`}>
+                Start
+                <input
+                  id={`cue-start-${cueKey}`}
+                  type="time"
+                  min={"00:00:00.000"}
+                  max={audioDuration ? formatDurationToISOTime(audioDuration) : "00:00:00.000"}
+                  step="0.001"
+                  value={start}
+                  onChange={(event) => handleCueStartChange(event, cueKey)}
+                />
+              </label>
+            </div>
+            <div className="inputWrapper">
+              <label htmlFor={`cue-end-${cueKey}`}>
+                End
+                <input
+                  id={`cue-end-${cueKey}`}
+                  type="time"
+                  min={"00:00:00.000"}
+                  max={audioDuration ? formatDurationToISOTime(audioDuration) : "00:00:00.000"}
+                  step="0.001"
+                  value={end}
+                  onChange={(event) => handleCueEndChange(event, cueKey)}
+                />
+              </label>
+            </div>
+            <div className="inputWrapper">
+              <label htmlFor={`cue-voice-${cueKey}`}>
+                Voice
+                <select
+                  id={`cue-voice-${cueKey}`}
+                  value={voice}
+                  onChange={(event) => handleCueVoiceChange(event, cueKey)}
+                >
+                  <option value="">Select a voice...</option>
+                  {voices.map((currentVoice) => (
+                    <option key={currentVoice.key} value={currentVoice.id}>
+                      {currentVoice.id}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <div
+                className="voice-color"
+                style={{
+                  width: "10px",
+                  height: "10px",
+                  borderRadius: "10px",
+                  backgroundColor: voices.find((voiceItem) => voiceItem.id === voice)?.color,
+                }}
+              ></div>
+            </div>
+            {AVAILABLE_LANGUAGES.map(({ key: langKey, name }) => {
+              if (!languages.includes(langKey)) return null;
+              return (
+                <fieldset key={langKey}>
+                  <legend>{name}</legend>
+                  <div className="inputWrapper">
+                    <label htmlFor={`cue-text-${cueKey}`}>
+                      Text
+                      <input
+                        id={`cue-text-${cueKey}`}
+                        value={text[langKey]}
+                        onChange={(event) => handleCueTextChange(event, cueKey, langKey)}
+                      />
+                    </label>
+                  </div>
+                  <div className="inputWrapper">
+                    <label htmlFor={`cue-note-${cueKey}`}>
+                      Note
+                      <input
+                        id={`cue-note-${cueKey}`}
+                        value={note?.[langKey]}
+                        onChange={(event) => handleCueNoteChange(event, cueKey, langKey)}
+                      />
+                    </label>
+                  </div>
+                </fieldset>
+              );
+            })}
+            <button
+              type="button"
+              onClick={() => onPlaySprite(formatISOTimeToDuration(start), formatISOTimeToDuration(end))}
+            >
+              Listen
+            </button>
+          </fieldset>
+        );
+      })}
 
       <button type="button" disabled={languages.length === 0} onClick={handleAddCue}>
         Add cue

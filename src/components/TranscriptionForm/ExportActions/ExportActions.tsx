@@ -1,54 +1,11 @@
+import { LanguageKey } from "../../../model/TranscriptionModel";
+import { AVAILABLE_LANGUAGES } from "../TranscriptionFormConstants";
 import { useTranscriptionForm } from "../TranscriptionFormContext/TranscriptionFormContext";
 
-const UNWANTED_KEYS = ["key", "duration"];
+const UNWANTED_KEYS = ["key"];
 
 export const ExportActions = () => {
   const state = useTranscriptionForm();
-
-  // const formatVoices = () => {
-  //   return voices.map(({ id, color, name }) => {
-  //     return {
-  //       id,
-  //       color,
-  //       name: Object.entries(name).reduce((acc, [key, value]) => {
-  //         if (languages.includes(key as LanguageKey)) {
-  //           return { ...acc, [key]: value };
-  //         }
-
-  //         return acc;
-  //       }, {}),
-  //     };
-  //   });
-  // };
-
-  // const formatCues = () => {
-  //   return Object.entries(cues).reduce((acc, [key, value]) => {
-  //     if (languages.includes(key as LanguageKey)) {
-  //       return {
-  //         ...acc,
-  //         [key]: value.map(({ start, end, voice, text, note }) => ({
-  //           start,
-  //           end,
-  //           voice,
-  //           text,
-  //           note,
-  //         })),
-  //       };
-  //     }
-
-  //     return acc;
-  //   }, {});
-  // };
-
-  // const formatDataForExport = () => {
-  //   return {
-  //     title,
-  //     author,
-  //     languages,
-  //     voices: formatVoices(),
-  //     cues: formatCues(),
-  //   };
-  // };
 
   /**
    * Removes unwanted keys from the JSON object
@@ -59,6 +16,10 @@ export const ExportActions = () => {
   const JSONReplacer = (key: string, value: any) => {
     if (UNWANTED_KEYS.includes(key)) {
       return undefined;
+    }
+
+    if (AVAILABLE_LANGUAGES.map((language) => language.key).includes(key as LanguageKey)) {
+      if (!state.languages.includes(key as LanguageKey)) return undefined;
     }
 
     return value;
