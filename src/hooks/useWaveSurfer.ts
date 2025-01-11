@@ -5,7 +5,7 @@ import RegionsPlugin, { Region, RegionParams } from "wavesurfer.js/dist/plugins/
 import {
   useTranscriptionForm,
   useTranscriptionFormDispatch,
-} from "../components/TranscriptionForm/TranscriptionFormContext/TranscriptionFormContext";
+} from "../components/TranscriptionEditor/Form/FormContext/TranscriptionFormContext";
 import { formatDurationToISOTime, formatISOTimeToDuration } from "../utils/time.utils";
 
 export const useWaveSurfer = (containerRef: RefObject<HTMLDivElement>, audioObjectURL: string) => {

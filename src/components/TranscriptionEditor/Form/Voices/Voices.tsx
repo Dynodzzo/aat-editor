@@ -1,9 +1,6 @@
-import { AVAILABLE_LANGUAGES, DEFAULT_VOICE_COLOR } from "../TranscriptionFormConstants";
-import {
-  useTranscriptionForm,
-  useTranscriptionFormDispatch,
-} from "../TranscriptionFormContext/TranscriptionFormContext";
-import { LanguageKey, Voice, StringByLanguage } from "../../../model/TranscriptionModel";
+import { useTranscriptionForm, useTranscriptionFormDispatch } from "../FormContext/TranscriptionFormContext";
+import { LanguageKey, Voice, StringByLanguage } from "../../../../model/TranscriptionModel";
+import { AVAILABLE_LANGUAGES, DEFAULT_VOICE_COLOR } from "../FormConstants";
 
 export const VoicesForm = () => {
   const { languages, voices, cues } = useTranscriptionForm();

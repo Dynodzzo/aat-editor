@@ -1,10 +1,7 @@
-import { Cue, LanguageKey, StringByLanguage } from "../../../model/TranscriptionModel";
-import { formatDurationToISOTime, formatISOTimeToDuration } from "../../../utils/time.utils";
-import { AVAILABLE_LANGUAGES } from "../TranscriptionFormConstants";
-import {
-  useTranscriptionForm,
-  useTranscriptionFormDispatch,
-} from "../TranscriptionFormContext/TranscriptionFormContext";
+import { Cue, LanguageKey, StringByLanguage } from "../../../../model/TranscriptionModel";
+import { formatDurationToISOTime, formatISOTimeToDuration } from "../../../../utils/time.utils";
+import { AVAILABLE_LANGUAGES } from "../FormConstants";
+import { useTranscriptionForm, useTranscriptionFormDispatch } from "../FormContext/TranscriptionFormContext";
 
 type CuesFormProps = {
   audioDuration: number;

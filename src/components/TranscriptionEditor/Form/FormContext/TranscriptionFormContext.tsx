@@ -1,5 +1,5 @@
 import React, { createContext, PropsWithChildren, useContext, useReducer } from "react";
-import { Cue, LanguageKey, TranscriptionState, Voice } from "../../../model/TranscriptionModel";
+import { Cue, LanguageKey, TranscriptionState, Voice } from "../../../../model/TranscriptionModel";
 
 const INITIAL_FORM_STATE: TranscriptionState = {
   title: "",

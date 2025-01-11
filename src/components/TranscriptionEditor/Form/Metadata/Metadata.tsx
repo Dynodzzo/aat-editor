@@ -1,7 +1,4 @@
-import {
-  useTranscriptionForm,
-  useTranscriptionFormDispatch,
-} from "../TranscriptionFormContext/TranscriptionFormContext";
+import { useTranscriptionForm, useTranscriptionFormDispatch } from "../FormContext/TranscriptionFormContext";
 
 export const MetadataForm = () => {
   const { title, author } = useTranscriptionForm();

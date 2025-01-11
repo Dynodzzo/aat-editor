@@ -1,6 +1,6 @@
-import { LanguageKey } from "../../../model/TranscriptionModel";
-import { AVAILABLE_LANGUAGES } from "../TranscriptionFormConstants";
-import { useTranscriptionForm } from "../TranscriptionFormContext/TranscriptionFormContext";
+import { LanguageKey } from "../../../../model/TranscriptionModel";
+import { AVAILABLE_LANGUAGES } from "../FormConstants";
+import { useTranscriptionForm } from "../FormContext/TranscriptionFormContext";
 
 const UNWANTED_KEYS = ["key"];
 

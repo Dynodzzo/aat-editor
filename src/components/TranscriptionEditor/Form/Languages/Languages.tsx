@@ -1,9 +1,6 @@
-import { LanguageKey } from "../../../model/TranscriptionModel";
-import { AVAILABLE_LANGUAGES } from "../TranscriptionFormConstants";
-import {
-  useTranscriptionForm,
-  useTranscriptionFormDispatch,
-} from "../TranscriptionFormContext/TranscriptionFormContext";
+import { LanguageKey } from "../../../../model/TranscriptionModel";
+import { AVAILABLE_LANGUAGES } from "../FormConstants";
+import { useTranscriptionForm, useTranscriptionFormDispatch } from "../FormContext/TranscriptionFormContext";
 
 export const LanguagesForm = () => {
   const { languages } = useTranscriptionForm();

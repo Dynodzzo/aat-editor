@@ -1,15 +1,15 @@
 import { PropsWithChildren, useRef, useState } from "react";
-import { CuesForm } from "./CuesForm/CuesForm";
-import { LanguagesForm } from "./LanguagesForm/LanguagesForm";
-import { MetadataForm } from "./MetadataForm/MetadataForm";
-import { TranscriptionFormProvider, useTranscriptionForm } from "./TranscriptionFormContext/TranscriptionFormContext";
-import { VoicesForm } from "./VoicesForm/VoicesForm";
-import { AudioFileForm } from "./AudioFileForm/AudioFileForm";
+import { CuesForm } from "./Cues/Cues";
+import { LanguagesForm } from "./Languages/Languages";
+import { MetadataForm } from "./Metadata/Metadata";
+import { TranscriptionFormProvider, useTranscriptionForm } from "./FormContext/TranscriptionFormContext";
+import { VoicesForm } from "./Voices/Voices";
+import { AudioFileForm } from "./AudioFile/AudioFile";
 import { ExportActions } from "./ExportActions/ExportActions";
-import { TranscriptionState } from "../../model/TranscriptionModel";
+import { TranscriptionState } from "../../../model/TranscriptionModel";
 import { AudioPlayer } from "../AudioPlayer/AudioPlayer";
-import { useAudioSprite } from "../../hooks/useAudioSprite";
-import { useWaveSurfer } from "../../hooks/useWaveSurfer";
+import { useAudioSprite } from "../../../hooks/useAudioSprite";
+import { useWaveSurfer } from "../../../hooks/useWaveSurfer";
 
 type TranscriptionFormProps = {
   initialFormState?: TranscriptionState;

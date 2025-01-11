@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useAudioFileSelector } from "../../../hooks/useAudioFileSelector";
+import { useAudioFileSelector } from "../../../../hooks/useAudioFileSelector";
 
 type AudioFileFormProps = {
   onAudioFileChanged: (audioObjectURL: string) => void;
