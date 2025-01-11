@@ -9,7 +9,7 @@ import {
 type CuesFormProps = {
   audioDuration: number;
   currentTime: number;
-  onPlaySprite: (start: number, end: number) => void;
+  onPlaySprite: (id: string) => void;
 };
 
 export const CuesForm = ({ audioDuration, currentTime, onPlaySprite }: CuesFormProps) => {
@@ -215,10 +215,7 @@ export const CuesForm = ({ audioDuration, currentTime, onPlaySprite }: CuesFormP
                 </fieldset>
               );
             })}
-            <button
-              type="button"
-              onClick={() => onPlaySprite(formatISOTimeToDuration(start), formatISOTimeToDuration(end))}
-            >
+            <button type="button" onClick={() => onPlaySprite(cueKey)}>
               Listen
             </button>
           </fieldset>
