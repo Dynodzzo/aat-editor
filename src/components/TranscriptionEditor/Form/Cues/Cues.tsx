@@ -122,6 +122,13 @@ export const CuesForm = ({ onPlaySprite }: CuesFormProps) => {
     });
   };
 
+  const handleDeleteCue = (cueKey: string) => {
+    dispatch({
+      type: "UPDATE_TRANSCRIPTION_CUES",
+      payload: cues.filter((cue) => cue.key !== cueKey),
+    });
+  };
+
   return (
     <fieldset>
       <legend>Cues</legend>
@@ -216,6 +223,9 @@ export const CuesForm = ({ onPlaySprite }: CuesFormProps) => {
             })}
             <button type="button" onClick={() => onPlaySprite && onPlaySprite(cueKey)}>
               Listen
+            </button>
+            <button type="button" onClick={() => handleDeleteCue(cueKey)}>
+              Delete
             </button>
           </fieldset>
         );
