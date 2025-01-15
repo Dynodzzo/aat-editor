@@ -1,4 +1,4 @@
-import React, { createContext, PropsWithChildren, useContext, useReducer } from "react";
+import React, { createContext, PropsWithChildren, Ref, RefObject, useContext, useReducer } from "react";
 import { AudioState } from "../../model/AudioModel";
 import { Cue, LanguageKey, TranscriptionState, Voice } from "../../model/TranscriptionModel";
 
@@ -18,7 +18,7 @@ const INITIAL_STATE: AppContextState = {
   audioPlayer: {
     source: "",
     duration: 0,
-    currentTime: 0,
+    currentTimeRef: null,
   },
 };
 
@@ -33,7 +33,7 @@ export type AppAction =
   | { type: "UPDATE_TRANSCRIPTION_CUES"; payload: Cue[] }
   | { type: "UPDATE_AUDIO_SOURCE"; payload: string }
   | { type: "UPDATE_AUDIO_DURATION"; payload: number }
-  | { type: "UPDATE_AUDIO_CURRENT_TIME"; payload: number };
+  | { type: "UPDATE_AUDIO_CURRENT_TIME"; payload: RefObject<number> };
 
 const appReducer = (state: AppContextState, action: AppAction) => {
   switch (action.type) {
@@ -98,7 +98,7 @@ const appReducer = (state: AppContextState, action: AppAction) => {
         ...state,
         audioPlayer: {
           ...state.audioPlayer,
-          currentTime: action.payload,
+          currentTimeRef: action.payload,
         },
       };
     default:

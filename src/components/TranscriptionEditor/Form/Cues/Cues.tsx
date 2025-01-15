@@ -1,3 +1,4 @@
+import { useRef, useState } from "react";
 import { Cue, LanguageKey, StringByLanguage } from "../../../../model/TranscriptionModel";
 import { formatDurationToISOTime, formatISOTimeToDuration } from "../../../../utils/time.utils";
 import { useAppContext, useAppDispatch } from "../../../Context/Context";
@@ -10,7 +11,7 @@ type CuesFormProps = {
 export const CuesForm = ({ onPlaySprite }: CuesFormProps) => {
   const {
     transcriptionForm: { languages, voices, cues },
-    audioPlayer: { duration, currentTime },
+    audioPlayer: { duration, currentTimeRef },
   } = useAppContext();
   const dispatch = useAppDispatch();
 
@@ -98,8 +99,8 @@ export const CuesForm = ({ onPlaySprite }: CuesFormProps) => {
   const handleAddCue = () => {
     const newCue: Cue = {
       key: crypto.randomUUID(),
-      start: formatDurationToISOTime(currentTime),
-      end: formatDurationToISOTime(currentTime + 1),
+      start: formatDurationToISOTime(currentTimeRef?.current || 0),
+      end: formatDurationToISOTime((currentTimeRef?.current || 0) + 1),
       voice: "",
       text: AVAILABLE_LANGUAGES.reduce((acc, { key }) => {
         return {

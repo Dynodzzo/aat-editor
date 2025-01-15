@@ -23,7 +23,7 @@ export const AudioPlayer = memo(({ onReady }: AudioPlayerProps) => {
   const [activeRegionId, setActiveRegionId] = useState<string>("");
   const [zoom, setZoom] = useState<number>(WAVE_SURFER_ZOOM_DEFAULT_ZOOM);
 
-  const { waveSurfer, containerRef, currentTime, duration, isReady, isPlaying, play, pause } = useWaveSurfer(source);
+  const { waveSurfer, containerRef, currentTimeRef, duration, isReady, isPlaying, play, pause } = useWaveSurfer(source);
 
   const regions = useMemo(() => {
     return cues.map((cue) => {
@@ -146,8 +146,8 @@ export const AudioPlayer = memo(({ onReady }: AudioPlayerProps) => {
   }, [duration]);
 
   useEffect(() => {
-    dispatch({ type: "UPDATE_AUDIO_CURRENT_TIME", payload: currentTime });
-  }, [currentTime]);
+    dispatch({ type: "UPDATE_AUDIO_CURRENT_TIME", payload: currentTimeRef });
+  }, [isReady]);
 
   return (
     <div className="audio-player" style={{ position: "sticky", top: 0, backgroundColor: "white" }}>

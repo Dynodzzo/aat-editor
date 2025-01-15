@@ -7,8 +7,8 @@ export const useWaveSurfer = (source: string) => {
 
   const [isReady, setIsReady] = useState<boolean>(false);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
+  const currentTimeRef = useRef<number>(0);
 
   useEffect(() => {
     if (!containerRef.current || !source) return;
@@ -26,14 +26,14 @@ export const useWaveSurfer = (source: string) => {
     ws.on("load", () => {
       setIsReady(false);
       setIsPlaying(false);
-      setCurrentTime(0);
+      currentTimeRef.current = 0;
     });
 
     ws.on("ready", (duration: number) => {
       ws.zoom(70);
       setIsReady(true);
       setDuration(duration);
-      setCurrentTime(0);
+      currentTimeRef.current = 0;
     });
 
     ws.on("play", () => {
@@ -45,13 +45,13 @@ export const useWaveSurfer = (source: string) => {
     });
 
     ws.on("timeupdate", (time: number) => {
-      setCurrentTime(time);
+      currentTimeRef.current = time;
     });
 
     ws.on("destroy", () => {
       setIsReady(false);
       setIsPlaying(false);
-      setCurrentTime(0);
+      currentTimeRef.current = 0;
     });
 
     setWaveSurfer(ws);
@@ -91,7 +91,7 @@ export const useWaveSurfer = (source: string) => {
   return {
     waveSurfer,
     containerRef,
-    currentTime,
+    currentTimeRef,
     duration,
     isReady,
     isPlaying,

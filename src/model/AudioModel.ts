@@ -1,5 +1,7 @@
+import { RefObject } from "react";
+
 export type AudioState = {
   source: string;
   duration: number;
-  currentTime: number;
+  currentTimeRef: RefObject<number> | null;
 };
