@@ -13,6 +13,7 @@ const WAVE_SURFER_ZOOM_MIN_ZOOM: number = 0;
 const WAVE_SURFER_ZOOM_MAX_ZOOM: number = 150;
 const WAVE_SURFER_ZOOM_DEFAULT_ZOOM: number = 70;
 const WAVE_SURFER_ZOOM_STEP: number = 0.1;
+const DEFAULT_REGION_COLOR: string = "rgba(0, 0, 0, 0.2)";
 
 export const AudioPlayer = memo(({ onReady }: AudioPlayerProps) => {
   const {
@@ -32,7 +33,7 @@ export const AudioPlayer = memo(({ onReady }: AudioPlayerProps) => {
         id: cue.key,
         start: formatISOTimeToDuration(cue.start),
         end: formatISOTimeToDuration(cue.end),
-        color: voice?.color + "44",
+        color: voice ? voice.color + "44" : DEFAULT_REGION_COLOR,
         content: voice?.id,
         drag: true,
         resize: true,
