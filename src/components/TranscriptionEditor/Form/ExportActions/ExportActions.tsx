@@ -1,11 +1,11 @@
 import { LanguageKey } from "../../../../model/TranscriptionModel";
+import { useAppContext } from "../../../Context/Context";
 import { AVAILABLE_LANGUAGES } from "../FormConstants";
-import { useTranscriptionForm } from "../FormContext/TranscriptionFormContext";
 
 const UNWANTED_KEYS = ["key"];
 
 export const ExportActions = () => {
-  const state = useTranscriptionForm();
+  const state = useAppContext();
 
   /**
    * Removes unwanted keys from the JSON object
@@ -19,14 +19,14 @@ export const ExportActions = () => {
     }
 
     if (AVAILABLE_LANGUAGES.map((language) => language.key).includes(key as LanguageKey)) {
-      if (!state.languages.includes(key as LanguageKey)) return undefined;
+      if (!state.transcriptionForm.languages.includes(key as LanguageKey)) return undefined;
     }
 
     return value;
   };
 
   const getDownloadLink = () => {
-    const data = JSON.stringify(state, JSONReplacer, 2);
+    const data = JSON.stringify(state.transcriptionForm, JSONReplacer, 2);
     const blob = new Blob([data], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     return url;

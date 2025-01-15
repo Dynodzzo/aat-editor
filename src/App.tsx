@@ -1,21 +1,23 @@
 import { useState } from "react";
 import { Lobby } from "./components/Lobby/Lobby";
-import { TranscriptionForm } from "./components/TranscriptionEditor/Form/Form";
-import { TranscriptionFormState } from "./components/TranscriptionEditor/Form/FormContext/TranscriptionFormContext";
+import { TranscriptionState } from "./model/TranscriptionModel";
+import { TranscriptionEditor } from "./components/TranscriptionEditor/TranscriptionEditor";
 
 function App() {
   const [isEditing, setIsEditing] = useState(false);
-  const [initialFormState, setInitialFormState] = useState<TranscriptionFormState | undefined>();
+  const [initialFormState, setInitialFormState] = useState<TranscriptionState | undefined>();
 
-  const handleStartEditing = (state?: TranscriptionFormState) => {
+  const handleStartEditing = (state?: TranscriptionState) => {
     setIsEditing(true);
     if (state) setInitialFormState(state);
   };
 
-  if (!isEditing) {
-    return <Lobby onStartEditing={handleStartEditing} />;
-  }
-  return <TranscriptionForm initialFormState={initialFormState} />;
+  return (
+    <>
+      {isEditing && <TranscriptionEditor initialFormState={initialFormState} />}
+      {!isEditing && <Lobby onStartEditing={handleStartEditing} />}
+    </>
+  );
 }
 
 export default App;

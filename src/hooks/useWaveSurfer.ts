@@ -1,157 +1,101 @@
-import { RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import WaveSurfer from "wavesurfer.js";
-import ZoomPlugin from "wavesurfer.js/dist/plugins/zoom.esm.js";
-import RegionsPlugin, { Region, RegionParams } from "wavesurfer.js/dist/plugins/regions.esm.js";
-import {
-  useTranscriptionForm,
-  useTranscriptionFormDispatch,
-} from "../components/TranscriptionEditor/Form/FormContext/TranscriptionFormContext";
-import { formatDurationToISOTime, formatISOTimeToDuration } from "../utils/time.utils";
 
-export const useWaveSurfer = (containerRef: RefObject<HTMLDivElement>, audioObjectURL: string) => {
-  const { cues, voices } = useTranscriptionForm();
-  const dispatch = useTranscriptionFormDispatch();
-  const waveSurfer = useRef<WaveSurfer | null>(null);
-  const regionsPlugin = useRef<RegionsPlugin | null>(null);
+export const useWaveSurfer = (source: string) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [waveSurfer, setWaveSurfer] = useState<WaveSurfer | null>(null);
+
   const [isReady, setIsReady] = useState<boolean>(false);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
-  const activeRegion = useRef<Region | null>(null);
-
-  const regions: RegionParams[] = useMemo(() => {
-    return cues.map((cue) => ({
-      id: cue.key,
-      start: formatISOTimeToDuration(cue.start),
-      end: formatISOTimeToDuration(cue.end),
-      drag: false,
-      resize: true,
-      color: voices.find((voice) => voice.id === cue.voice)?.color + "66",
-    }));
-  }, [cues, voices]);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || !source) return;
 
-    regionsPlugin.current = RegionsPlugin.create();
-
-    waveSurfer.current = WaveSurfer.create({
+    const ws = WaveSurfer.create({
       container: containerRef.current,
       waveColor: "gainsboro",
       progressColor: "darkgrey",
-      cursorColor: "navy",
-      cursorWidth: 3,
-      // barWidth: 1,
-      // barRadius: 3,
-      // height: 100,
+      cursorColor: "red",
+      cursorWidth: 1,
       mediaControls: true,
-      url: audioObjectURL,
-      plugins: [regionsPlugin.current],
+      url: source,
     });
 
-    waveSurfer.current.on("decode", (duration: number) => {
-      setDuration(duration);
-      waveSurfer.current?.zoom(20);
-      waveSurfer.current?.seekTo(currentTime);
+    ws.on("load", () => {
+      setIsReady(false);
+      setIsPlaying(false);
+      setCurrentTime(0);
     });
 
-    waveSurfer.current.on("ready", () => {
+    ws.on("ready", (duration: number) => {
+      ws.zoom(70);
       setIsReady(true);
+      setDuration(duration);
+      setCurrentTime(0);
     });
 
-    waveSurfer.current.on("audioprocess", (currentAudioTime: number) => {
-      setCurrentTime(currentAudioTime);
+    ws.on("play", () => {
+      setIsPlaying(true);
     });
 
-    waveSurfer.current.registerPlugin(
-      ZoomPlugin.create({
-        // the amount of zoom per wheel step, e.g. 0.5 means a 50% magnification per scroll
-        scale: 0.5,
-        // Optionally, specify the maximum pixels-per-second factor while zooming
-        maxZoom: 100,
-      })
-    );
+    ws.on("pause", () => {
+      setIsPlaying(false);
+    });
+
+    ws.on("timeupdate", (time: number) => {
+      setCurrentTime(time);
+    });
+
+    ws.on("destroy", () => {
+      setIsReady(false);
+      setIsPlaying(false);
+      setCurrentTime(0);
+    });
+
+    setWaveSurfer(ws);
 
     return () => {
-      waveSurfer.current?.destroy();
+      ws.unAll();
+      ws.destroy();
+      setWaveSurfer(null);
     };
-  }, [containerRef, audioObjectURL]);
+  }, [source]);
 
-  useEffect(() => {
-    if (waveSurfer.current && regionsPlugin.current && isReady) {
-      regionsPlugin.current.unAll();
-      regionsPlugin.current?.clearRegions();
-      regions.forEach((region) => regionsPlugin.current?.addRegion({ ...region }));
+  const play = useCallback(
+    async (from?: number) => {
+      if (!waveSurfer) return;
 
-      regionsPlugin.current.on("region-out", (region: Region) => {
-        if (activeRegion.current && activeRegion.current.id === region.id) {
-          waveSurfer.current?.pause();
-          activeRegion.current = null;
-        }
-      });
+      if (typeof from === "number" && from >= 0) waveSurfer.setTime(from);
+      try {
+        await waveSurfer.play();
+      } catch (e) {
+        console.log("fail", e);
+      }
+    },
+    [waveSurfer]
+  );
 
-      regionsPlugin.current.on("region-updated", (region: Region) => {
-        const { id } = region;
-        const cue = cues.find((cue) => cue.key === id);
-        if (cue) {
-          dispatch({
-            type: "UPDATE_CUES",
-            payload: cues.map((cue) => {
-              if (cue.key === id) {
-                return {
-                  ...cue,
-                  start: formatDurationToISOTime(region.start),
-                  end: formatDurationToISOTime(region.end),
-                };
-              }
-
-              return cue;
-            }),
-          });
-        }
-      });
-
-      return () => {
-        regionsPlugin.current?.unAll();
-        regionsPlugin.current?.clearRegions();
-      };
-    }
-  }, [regions, isReady]);
-
-  const play = useCallback(() => {
-    waveSurfer.current?.play();
-  }, []);
-
-  const pause = useCallback(() => {
-    waveSurfer.current?.pause();
-  }, []);
-
-  const stop = useCallback(() => {
-    waveSurfer.current?.stop();
-  }, []);
-
-  const seek = useCallback((time: number) => {
-    waveSurfer.current?.seekTo(time);
-  }, []);
-
-  const playRegion = useCallback((id: string) => {
-    if (activeRegion) {
-      pause();
-    }
-    const region = regionsPlugin.current?.getRegions().find((region) => region.id === id);
-    if (region) {
-      activeRegion.current = region;
-      seek(region.start);
-      region.play();
-    }
-  }, []);
+  const pause = useCallback(
+    (to?: number) => {
+      if (waveSurfer) {
+        waveSurfer.pause();
+        // Makes sure the cursor stops at the right position
+        if (typeof to === "number" && to >= 0) waveSurfer.setTime(to);
+      }
+    },
+    [waveSurfer]
+  );
 
   return {
+    waveSurfer,
+    containerRef,
     currentTime,
     duration,
+    isReady,
+    isPlaying,
     play,
     pause,
-    stop,
-    seek,
-    playRegion,
   };
 };

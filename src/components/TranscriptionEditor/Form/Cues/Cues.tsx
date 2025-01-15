@@ -1,17 +1,18 @@
 import { Cue, LanguageKey, StringByLanguage } from "../../../../model/TranscriptionModel";
 import { formatDurationToISOTime, formatISOTimeToDuration } from "../../../../utils/time.utils";
+import { useAppContext, useAppDispatch } from "../../../Context/Context";
 import { AVAILABLE_LANGUAGES } from "../FormConstants";
-import { useTranscriptionForm, useTranscriptionFormDispatch } from "../FormContext/TranscriptionFormContext";
 
 type CuesFormProps = {
-  audioDuration: number;
-  currentTime: number;
-  onPlaySprite: (id: string) => void;
+  onPlaySprite?: (id?: string) => void;
 };
 
-export const CuesForm = ({ audioDuration, currentTime, onPlaySprite }: CuesFormProps) => {
-  const { languages, voices, cues } = useTranscriptionForm();
-  const dispatch = useTranscriptionFormDispatch();
+export const CuesForm = ({ onPlaySprite }: CuesFormProps) => {
+  const {
+    transcriptionForm: { languages, voices, cues },
+    audioPlayer: { duration, currentTime },
+  } = useAppContext();
+  const dispatch = useAppDispatch();
 
   const handleCueStartChange = (event: React.ChangeEvent<HTMLInputElement>, cueKey: string) => {
     const newCues = cues.map((cue) => {
@@ -25,7 +26,7 @@ export const CuesForm = ({ audioDuration, currentTime, onPlaySprite }: CuesFormP
       return cue;
     });
 
-    dispatch({ type: "UPDATE_CUES", payload: newCues });
+    dispatch({ type: "UPDATE_TRANSCRIPTION_CUES", payload: newCues });
   };
 
   const handleCueEndChange = (event: React.ChangeEvent<HTMLInputElement>, cueKey: string) => {
@@ -40,7 +41,7 @@ export const CuesForm = ({ audioDuration, currentTime, onPlaySprite }: CuesFormP
       return cue;
     });
 
-    dispatch({ type: "UPDATE_CUES", payload: newCues });
+    dispatch({ type: "UPDATE_TRANSCRIPTION_CUES", payload: newCues });
   };
 
   const handleCueVoiceChange = (event: React.ChangeEvent<HTMLSelectElement>, cueKey: string) => {
@@ -55,7 +56,7 @@ export const CuesForm = ({ audioDuration, currentTime, onPlaySprite }: CuesFormP
       return cue;
     });
 
-    dispatch({ type: "UPDATE_CUES", payload: newCues });
+    dispatch({ type: "UPDATE_TRANSCRIPTION_CUES", payload: newCues });
   };
 
   const handleCueTextChange = (event: React.ChangeEvent<HTMLInputElement>, cueKey: string, language: LanguageKey) => {
@@ -73,7 +74,7 @@ export const CuesForm = ({ audioDuration, currentTime, onPlaySprite }: CuesFormP
       return cue;
     });
 
-    dispatch({ type: "UPDATE_CUES", payload: newCues });
+    dispatch({ type: "UPDATE_TRANSCRIPTION_CUES", payload: newCues });
   };
 
   const handleCueNoteChange = (event: React.ChangeEvent<HTMLInputElement>, cueKey: string, language: LanguageKey) => {
@@ -91,7 +92,7 @@ export const CuesForm = ({ audioDuration, currentTime, onPlaySprite }: CuesFormP
       return cue;
     });
 
-    dispatch({ type: "UPDATE_CUES", payload: newCues });
+    dispatch({ type: "UPDATE_TRANSCRIPTION_CUES", payload: newCues });
   };
 
   const handleAddCue = () => {
@@ -115,7 +116,7 @@ export const CuesForm = ({ audioDuration, currentTime, onPlaySprite }: CuesFormP
     };
 
     dispatch({
-      type: "UPDATE_CUES",
+      type: "UPDATE_TRANSCRIPTION_CUES",
       payload: [...cues, newCue],
     });
   };
@@ -137,7 +138,7 @@ export const CuesForm = ({ audioDuration, currentTime, onPlaySprite }: CuesFormP
                   id={`cue-start-${cueKey}`}
                   type="time"
                   min={"00:00:00.000"}
-                  max={audioDuration ? formatDurationToISOTime(audioDuration) : "00:00:00.000"}
+                  max={duration ? formatDurationToISOTime(duration) : "00:00:00.000"}
                   step="0.001"
                   value={start}
                   onChange={(event) => handleCueStartChange(event, cueKey)}
@@ -151,7 +152,7 @@ export const CuesForm = ({ audioDuration, currentTime, onPlaySprite }: CuesFormP
                   id={`cue-end-${cueKey}`}
                   type="time"
                   min={"00:00:00.000"}
-                  max={audioDuration ? formatDurationToISOTime(audioDuration) : "00:00:00.000"}
+                  max={duration ? formatDurationToISOTime(duration) : "00:00:00.000"}
                   step="0.001"
                   value={end}
                   onChange={(event) => handleCueEndChange(event, cueKey)}
@@ -212,7 +213,7 @@ export const CuesForm = ({ audioDuration, currentTime, onPlaySprite }: CuesFormP
                 </fieldset>
               );
             })}
-            <button type="button" onClick={() => onPlaySprite(cueKey)}>
+            <button type="button" onClick={() => onPlaySprite && onPlaySprite(cueKey)}>
               Listen
             </button>
           </fieldset>

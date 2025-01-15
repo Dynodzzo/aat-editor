@@ -1,15 +1,17 @@
-import { useTranscriptionForm, useTranscriptionFormDispatch } from "../FormContext/TranscriptionFormContext";
+import { useAppContext, useAppDispatch } from "../../../Context/Context";
 
 export const MetadataForm = () => {
-  const { title, author } = useTranscriptionForm();
-  const dispatch = useTranscriptionFormDispatch();
+  const {
+    transcriptionForm: { title, author },
+  } = useAppContext();
+  const dispatch = useAppDispatch();
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: "UPDATE_TITLE", payload: event.target.value });
+    dispatch({ type: "UPDATE_TRANSCRIPTION_TITLE", payload: event.target.value });
   };
 
   const handleAuthorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: "UPDATE_AUTHOR", payload: event.target.value });
+    dispatch({ type: "UPDATE_TRANSCRIPTION_AUTHOR", payload: event.target.value });
   };
 
   return (

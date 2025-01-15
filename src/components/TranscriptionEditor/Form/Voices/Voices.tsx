@@ -1,12 +1,14 @@
-import { useTranscriptionForm, useTranscriptionFormDispatch } from "../FormContext/TranscriptionFormContext";
 import { LanguageKey, Voice, StringByLanguage } from "../../../../model/TranscriptionModel";
+import { useAppContext, useAppDispatch } from "../../../Context/Context";
 import { AVAILABLE_LANGUAGES, DEFAULT_VOICE_COLOR } from "../FormConstants";
 
 export const VoicesForm = () => {
-  const { languages, voices, cues } = useTranscriptionForm();
-  const dispatch = useTranscriptionFormDispatch();
+  const {
+    transcriptionForm: { languages, voices, cues },
+  } = useAppContext();
+  const dispatch = useAppDispatch();
 
-  const handleVoiceIdChange = (event: React.ChangeEvent<HTMLInputElement>, voiceKey: string) => {
+  const handleVoiceIdChange = (event: React.ChangeEvent<HTMLInputElement>, voiceKey: string, voiceId: string) => {
     const newVoices = voices.map((voice) => {
       if (voice.key === voiceKey) {
         return {
@@ -19,7 +21,7 @@ export const VoicesForm = () => {
     });
 
     const updatedCues = cues.map((cue) => {
-      if (cue.voice === voiceKey) {
+      if (cue.voice === voiceId) {
         return {
           ...cue,
           voice: event.target.value,
@@ -29,8 +31,8 @@ export const VoicesForm = () => {
       return cue;
     });
 
-    dispatch({ type: "UPDATE_VOICES", payload: newVoices });
-    dispatch({ type: "UPDATE_CUES", payload: updatedCues });
+    dispatch({ type: "UPDATE_TRANSCRIPTION_VOICES", payload: newVoices });
+    dispatch({ type: "UPDATE_TRANSCRIPTION_CUES", payload: updatedCues });
   };
 
   const handleVoiceColorChange = (event: React.ChangeEvent<HTMLInputElement>, voiceKey: string) => {
@@ -45,7 +47,7 @@ export const VoicesForm = () => {
       return voice;
     });
 
-    dispatch({ type: "UPDATE_VOICES", payload: newVoices });
+    dispatch({ type: "UPDATE_TRANSCRIPTION_VOICES", payload: newVoices });
   };
 
   const handleVoiceNameChange = (
@@ -67,7 +69,7 @@ export const VoicesForm = () => {
       return voice;
     });
 
-    dispatch({ type: "UPDATE_VOICES", payload: newVoices });
+    dispatch({ type: "UPDATE_TRANSCRIPTION_VOICES", payload: newVoices });
   };
 
   const handleAddVoice = () => {
@@ -80,7 +82,7 @@ export const VoicesForm = () => {
         return languages;
       }, {} as StringByLanguage),
     };
-    dispatch({ type: "UPDATE_VOICES", payload: [...voices, newVoice] });
+    dispatch({ type: "UPDATE_TRANSCRIPTION_VOICES", payload: [...voices, newVoice] });
   };
 
   return (
@@ -102,7 +104,7 @@ export const VoicesForm = () => {
                     id={voiceId}
                     type="text"
                     value={voice.id}
-                    onChange={(event) => handleVoiceIdChange(event, voice.key)}
+                    onChange={(event) => handleVoiceIdChange(event, voice.key, voice.id)}
                   />
                 </label>
               </div>

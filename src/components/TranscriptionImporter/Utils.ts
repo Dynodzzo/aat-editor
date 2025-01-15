@@ -14,7 +14,6 @@ export function checkFileFormat(fileData: TranscriptionFileSchema): { success: b
 
 export function hydrateData(fileData: TranscriptionFileSchema): TranscriptionState {
   return {
-    duration: 0,
     ...fileData,
     voices: fileData.voices.map((voice) => ({ ...voice, key: crypto.randomUUID() })),
     cues: fileData.cues.map((cue) => ({ ...cue, key: crypto.randomUUID() })),

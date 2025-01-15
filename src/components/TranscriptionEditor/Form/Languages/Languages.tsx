@@ -1,18 +1,20 @@
 import { LanguageKey } from "../../../../model/TranscriptionModel";
+import { useAppContext, useAppDispatch } from "../../../Context/Context";
 import { AVAILABLE_LANGUAGES } from "../FormConstants";
-import { useTranscriptionForm, useTranscriptionFormDispatch } from "../FormContext/TranscriptionFormContext";
 
 export const LanguagesForm = () => {
-  const { languages } = useTranscriptionForm();
-  const dispatch = useTranscriptionFormDispatch();
+  const {
+    transcriptionForm: { languages },
+  } = useAppContext();
+  const dispatch = useAppDispatch();
 
   const handleChangeLanguages = (event: React.ChangeEvent<HTMLInputElement>) => {
     const language = event.target.id as LanguageKey;
 
     if (languages.includes(language)) {
-      dispatch({ type: "UPDATE_LANGUAGES", payload: languages.filter((lang) => lang !== language) });
+      dispatch({ type: "UPDATE_TRANSCRIPTION_LANGUAGES", payload: languages.filter((lang) => lang !== language) });
     } else {
-      dispatch({ type: "UPDATE_LANGUAGES", payload: [...languages, language] });
+      dispatch({ type: "UPDATE_TRANSCRIPTION_LANGUAGES", payload: [...languages, language] });
     }
   };
 

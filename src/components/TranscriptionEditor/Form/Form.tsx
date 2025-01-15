@@ -1,64 +1,46 @@
-import { PropsWithChildren, useRef, useState } from "react";
+import { PropsWithChildren } from "react";
 import { CuesForm } from "./Cues/Cues";
 import { LanguagesForm } from "./Languages/Languages";
 import { MetadataForm } from "./Metadata/Metadata";
-import { TranscriptionFormProvider, useTranscriptionForm } from "./FormContext/TranscriptionFormContext";
 import { VoicesForm } from "./Voices/Voices";
 import { AudioFileForm } from "./AudioFile/AudioFile";
 import { ExportActions } from "./ExportActions/ExportActions";
-import { TranscriptionState } from "../../../model/TranscriptionModel";
-import { AudioPlayer } from "../AudioPlayer/AudioPlayer";
-import { useAudioSprite } from "../../../hooks/useAudioSprite";
-import { useWaveSurfer } from "../../../hooks/useWaveSurfer";
+import { useAppContext, useAppDispatch } from "../../Context/Context";
 
 type TranscriptionFormProps = {
-  initialFormState?: TranscriptionState;
+  onPlay?: (id?: string) => void;
 };
 
-export const TranscriptionForm = ({ initialFormState }: TranscriptionFormProps) => {
-  return (
-    <TranscriptionFormProvider initialFormState={initialFormState}>
-      <TranscriptionFormContent />
-    </TranscriptionFormProvider>
-  );
-};
-
-const TranscriptionFormVisualizer = ({ children }: PropsWithChildren) => {
-  const state = useTranscriptionForm();
-  return (
-    <>
-      {children}
-      <pre>{JSON.stringify(state, null, 2)}</pre>
-    </>
-  );
-};
-
-const TranscriptionFormContent = () => {
-  const [audioObjectURL, setAudioObjectURL] = useState<string>("");
-  const waveSurferContainerRef = useRef<HTMLDivElement>(null);
-  //const { audioRef, duration, currentTime, playSprite } = useAudioSprite(audioObjectURL);
-  const { currentTime, duration, play, playRegion } = useWaveSurfer(waveSurferContainerRef, audioObjectURL);
-
+export const TranscriptionForm = ({ onPlay }: TranscriptionFormProps) => {
+  const dispatch = useAppDispatch();
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
 
-  const handleAudioSourceChanged = (audioObjectURL: string) => {
-    setAudioObjectURL(audioObjectURL);
+  const handleAudioSourceChanged = (currentAudioSource: string) => {
+    dispatch({ type: "UPDATE_AUDIO_SOURCE", payload: currentAudioSource });
   };
 
   return (
     <TranscriptionFormVisualizer>
       <AudioFileForm onAudioFileChanged={handleAudioSourceChanged} />
-      {/* <AudioPlayer audioRef={audioRef} /> */}
-      <div className="wavesurfer" ref={waveSurferContainerRef}></div>
       <form onSubmit={handleFormSubmit}>
         <MetadataForm />
         <LanguagesForm />
         <VoicesForm />
-        <CuesForm audioDuration={duration} currentTime={currentTime} onPlaySprite={playRegion} />
+        <CuesForm onPlaySprite={onPlay} />
       </form>
       <ExportActions />
     </TranscriptionFormVisualizer>
+  );
+};
+
+const TranscriptionFormVisualizer = ({ children }: PropsWithChildren) => {
+  const state = useAppContext();
+  return (
+    <>
+      {children}
+      <pre>{JSON.stringify(state, null, 2)}</pre>
+    </>
   );
 };
