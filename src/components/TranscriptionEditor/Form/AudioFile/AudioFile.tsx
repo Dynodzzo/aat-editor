@@ -12,7 +12,7 @@ export const AudioFileForm = ({ onAudioFileChanged }: AudioFileFormProps) => {
     if (audioObjectURL) {
       onAudioFileChanged(audioObjectURL);
     }
-  }, [audioObjectURL]);
+  }, [audioObjectURL, onAudioFileChanged]);
 
   return (
     <>

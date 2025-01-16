@@ -1,5 +1,5 @@
 import { LanguageKey } from "../../../../model/TranscriptionModel";
-import { useAppContext, useAppDispatch } from "../../../Context/Context";
+import { useAppContext, useAppDispatch } from "../../../Context/useContext";
 import { AVAILABLE_LANGUAGES } from "../FormConstants";
 
 export const LanguagesForm = () => {

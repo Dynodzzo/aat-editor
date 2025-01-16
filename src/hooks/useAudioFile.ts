@@ -5,41 +5,41 @@ export const useAudioFile = (audioObjectURL: string) => {
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
 
+  const handleTimeUpdate = useCallback(() => {
+    if (!audioRef.current) return;
+    setCurrentTime(audioRef.current.currentTime);
+  }, []);
+
+  const handleLoadedMetadata = useCallback(() => {
+    if (!audioRef.current) return;
+    setDuration(audioRef.current.duration);
+  }, []);
+
+  const initializeEventListeners = useCallback(() => {
+    if (!audioRef.current) return;
+
+    audioRef.current.addEventListener("timeupdate", handleTimeUpdate);
+    audioRef.current.addEventListener("loadedmetadata", handleLoadedMetadata);
+  }, [handleTimeUpdate, handleLoadedMetadata]);
+
+  const removeEventListeners = useCallback(() => {
+    if (!audioRef.current) return;
+
+    audioRef.current.removeEventListener("timeupdate", handleTimeUpdate);
+    audioRef.current.removeEventListener("loadedmetadata", handleLoadedMetadata);
+  }, [handleTimeUpdate, handleLoadedMetadata]);
+
   useEffect(() => {
     changeAudioSource(audioObjectURL);
     initializeEventListeners();
 
     return () => removeEventListeners();
-  }, [audioObjectURL]);
+  }, [audioObjectURL, initializeEventListeners, removeEventListeners]);
 
   const changeAudioSource = (audioObjectURL: string) => {
     if (audioObjectURL && audioRef.current) {
       audioRef.current.src = audioObjectURL;
     }
-  };
-
-  const initializeEventListeners = () => {
-    if (!audioRef.current) return;
-
-    audioRef.current.addEventListener("timeupdate", handleTimeUpdate);
-    audioRef.current.addEventListener("loadedmetadata", handleLoadedMetadata);
-  };
-
-  const removeEventListeners = () => {
-    if (!audioRef.current) return;
-
-    audioRef.current.removeEventListener("timeupdate", handleTimeUpdate);
-    audioRef.current.removeEventListener("loadedmetadata", handleLoadedMetadata);
-  };
-
-  const handleTimeUpdate = () => {
-    if (!audioRef.current) return;
-    setCurrentTime(audioRef.current.currentTime);
-  };
-
-  const handleLoadedMetadata = () => {
-    if (!audioRef.current) return;
-    setDuration(audioRef.current.duration);
   };
 
   const play = useCallback(() => {
@@ -52,16 +52,16 @@ export const useAudioFile = (audioObjectURL: string) => {
     if (!audioRef.current.paused) audioRef.current.pause();
   }, []);
 
-  const stop = useCallback(() => {
-    if (!audioRef.current) return;
-    pause();
-    seek(0);
-  }, []);
-
   const seek = useCallback((time: number) => {
     if (!audioRef.current) return;
     audioRef.current.currentTime = time;
   }, []);
+
+  const stop = useCallback(() => {
+    if (!audioRef.current) return;
+    pause();
+    seek(0);
+  }, [pause, seek]);
 
   return { audioRef, duration, currentTime, play, pause, stop, seek };
 };

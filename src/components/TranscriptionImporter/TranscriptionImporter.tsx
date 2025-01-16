@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useTextFileSelector } from "../../hooks/useTextFileSelector";
-import { checkFileFormat, hydrateData } from "./Utils";
-import { TranscriptionFileSchema } from "../../model/TranscriptionSchema";
 import { TranscriptionState } from "../../model/TranscriptionModel";
+import { TranscriptionFileSchema } from "../../model/TranscriptionSchema";
+import { checkFileFormat, hydrateData } from "./Utils";
 
 type TranscriptionImporterProps = {
   onFileImported: (state?: TranscriptionState) => void;
@@ -31,7 +31,7 @@ export const TranscriptionImporter = ({ onFileImported }: TranscriptionImporterP
         console.table(error);
       }
     }
-  }, [fileData, error]);
+  }, [fileData, error, onFileImported]);
 
   return (
     <button onClick={handleImportClick} disabled={isLoading}>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Lobby } from "./components/Lobby/Lobby";
-import { TranscriptionState } from "./model/TranscriptionModel";
 import { TranscriptionEditor } from "./components/TranscriptionEditor/TranscriptionEditor";
+import { TranscriptionState } from "./model/TranscriptionModel";
 
 function App() {
   const [isEditing, setIsEditing] = useState(false);

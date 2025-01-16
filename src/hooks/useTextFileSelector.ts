@@ -11,9 +11,9 @@ export const useTextFileSelector = <T>(accept: string = ".json") => {
       const [file] = (event as unknown as React.ChangeEvent<HTMLInputElement>).target.files || [];
       const result = await file.text();
       setFileData(JSON.parse(result));
-    } catch (error) {
+    } catch (error: unknown) {
       setFileData(null);
-      setError("Error reading file");
+      setError(`Error reading file: ${error}`);
     } finally {
       setIsLoading(false);
     }
@@ -24,12 +24,12 @@ export const useTextFileSelector = <T>(accept: string = ".json") => {
     element.setAttribute("type", "file");
     element.setAttribute("accept", accept);
     return element;
-  }, []);
+  }, [accept]);
 
   useEffect(() => {
     inputElement.addEventListener("change", handleFileChange);
     return () => inputElement.removeEventListener("change", handleFileChange);
-  }, []);
+  }, [handleFileChange, inputElement]);
 
   const selectFile = () => {
     inputElement.click();

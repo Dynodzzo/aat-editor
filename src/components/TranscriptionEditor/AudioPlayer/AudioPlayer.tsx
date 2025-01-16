@@ -1,9 +1,9 @@
-import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef } from "react";
 import { Region } from "wavesurfer.js/dist/plugins/regions.js";
-import { useAppContext, useAppDispatch } from "../../Context/Context";
-import { formatDurationToISOTime, formatISOTimeToDuration } from "../../../utils/time.utils";
 import { useWaveSurfer } from "../../../hooks/useWaveSurfer";
 import { useWaveSurferRegions } from "../../../hooks/useWaveSurferRegions";
+import { formatDurationToISOTime, formatISOTimeToDuration } from "../../../utils/time.utils";
+import { useAppContext, useAppDispatch } from "../../Context/useContext";
 
 type AudioPlayerProps = {
   onReady?: (play: () => void) => void;
@@ -21,8 +21,8 @@ export const AudioPlayer = memo(({ onReady }: AudioPlayerProps) => {
     audioPlayer: { source },
   } = useAppContext();
   const dispatch = useAppDispatch();
-  const [activeRegionId, setActiveRegionId] = useState<string>("");
-  const [zoom, setZoom] = useState<number>(WAVE_SURFER_ZOOM_DEFAULT_ZOOM);
+  const activeRegionId = useRef<string>("");
+  const zoom = useRef<number>(WAVE_SURFER_ZOOM_DEFAULT_ZOOM);
 
   const { waveSurfer, containerRef, currentTimeRef, duration, isReady, isPlaying, play, pause } = useWaveSurfer(source);
 
@@ -39,13 +39,13 @@ export const AudioPlayer = memo(({ onReady }: AudioPlayerProps) => {
         resize: true,
       };
     });
-  }, [isReady, cues, voices]);
+  }, [cues, voices]);
 
   const handleRegionUpdate = useCallback(
     ({ start }: Region) => {
       if (isPlaying) pause(start);
     },
-    [waveSurfer, isPlaying, pause]
+    [isPlaying, pause]
   );
 
   const handleRegionUpdated = useCallback(
@@ -71,21 +71,17 @@ export const AudioPlayer = memo(({ onReady }: AudioPlayerProps) => {
         });
       }
     },
-    [waveSurfer, isPlaying, cues, pause, dispatch]
+    [isPlaying, cues, pause, dispatch]
   );
 
   const handleRegionOut = useCallback(
     ({ id, end }: Region) => {
-      setActiveRegionId((currentActiveRegionId) => {
-        if (currentActiveRegionId === id) {
-          pause(end);
-          return "";
-        }
-
-        return currentActiveRegionId;
-      });
+      if (activeRegionId.current === id) {
+        pause(end);
+        activeRegionId.current = "";
+      }
     },
-    [waveSurfer, pause]
+    [pause]
   );
 
   const waveSurferRegionsHandlers = useMemo(() => {
@@ -107,7 +103,7 @@ export const AudioPlayer = memo(({ onReady }: AudioPlayerProps) => {
       const region = regions.find((region) => region.id === regionId);
       if (!region) return;
 
-      setActiveRegionId(regionId);
+      activeRegionId.current = regionId;
       play(region.start);
     };
 
@@ -119,36 +115,35 @@ export const AudioPlayer = memo(({ onReady }: AudioPlayerProps) => {
   useEffect(() => {
     if (!waveSurfer || !isReady) return;
 
+    const waveSurferContainer = containerRef.current;
+
     const handleWheel = (event: WheelEvent) => {
       if (event.ctrlKey) {
         event.preventDefault();
 
-        setZoom((currentZoom) => {
-          const newZoom = Math.min(
-            Math.max(currentZoom + event.deltaY * -WAVE_SURFER_ZOOM_STEP, WAVE_SURFER_ZOOM_MIN_ZOOM),
-            WAVE_SURFER_ZOOM_MAX_ZOOM
-          );
-
-          waveSurfer.zoom(newZoom);
-          return newZoom;
-        });
+        const newZoom = Math.min(
+          Math.max(zoom.current + event.deltaY * -WAVE_SURFER_ZOOM_STEP, WAVE_SURFER_ZOOM_MIN_ZOOM),
+          WAVE_SURFER_ZOOM_MAX_ZOOM
+        );
+        zoom.current = newZoom;
+        waveSurfer.zoom(newZoom);
       }
     };
 
-    containerRef.current?.addEventListener("wheel", handleWheel);
+    waveSurferContainer?.addEventListener("wheel", handleWheel);
 
     return () => {
-      containerRef.current?.removeEventListener("wheel", handleWheel);
+      waveSurferContainer?.removeEventListener("wheel", handleWheel);
     };
-  }, [waveSurfer, isReady]);
+  }, [waveSurfer, isReady, containerRef]);
 
   useEffect(() => {
     dispatch({ type: "UPDATE_AUDIO_DURATION", payload: duration });
-  }, [duration]);
+  }, [dispatch, duration]);
 
   useEffect(() => {
     dispatch({ type: "UPDATE_AUDIO_CURRENT_TIME", payload: currentTimeRef });
-  }, [isReady]);
+  }, [dispatch, currentTimeRef]);
 
   return (
     <div className="audio-player" style={{ position: "sticky", top: 0, backgroundColor: "white" }}>

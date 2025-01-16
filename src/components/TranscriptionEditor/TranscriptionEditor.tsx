@@ -1,8 +1,8 @@
+import { useCallback, useState } from "react";
 import { TranscriptionState } from "../../model/TranscriptionModel";
-import { AppProvider } from "../Context/Context";
+import { AppProvider } from "../Context/ContextProvider";
 import { AudioPlayer } from "./AudioPlayer/AudioPlayer";
 import { TranscriptionForm } from "./Form/Form";
-import { useCallback, useState } from "react";
 
 type TranscriptionEditorProps = {
   initialFormState?: TranscriptionState;

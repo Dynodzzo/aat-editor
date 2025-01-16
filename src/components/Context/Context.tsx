@@ -1,4 +1,4 @@
-import React, { createContext, PropsWithChildren, RefObject, useContext, useReducer } from "react";
+import React, { createContext, RefObject } from "react";
 import { AudioState } from "../../model/AudioModel";
 import { Cue, LanguageKey, TranscriptionState, Voice } from "../../model/TranscriptionModel";
 
@@ -7,7 +7,7 @@ type AppContextState = {
   audioPlayer: AudioState;
 };
 
-const INITIAL_STATE: AppContextState = {
+export const INITIAL_STATE: AppContextState = {
   transcriptionForm: {
     title: "",
     author: "",
@@ -22,8 +22,8 @@ const INITIAL_STATE: AppContextState = {
   },
 };
 
-const AppContext = createContext<AppContextState>(INITIAL_STATE);
-const AppDispatchContext = createContext<React.Dispatch<AppAction>>(() => {});
+export const AppContext = createContext<AppContextState>(INITIAL_STATE);
+export const AppDispatchContext = createContext<React.Dispatch<AppAction>>(() => {});
 
 export type AppAction =
   | { type: "UPDATE_TRANSCRIPTION_TITLE"; payload: string }
@@ -35,7 +35,7 @@ export type AppAction =
   | { type: "UPDATE_AUDIO_DURATION"; payload: number }
   | { type: "UPDATE_AUDIO_CURRENT_TIME"; payload: RefObject<number> };
 
-const appReducer = (state: AppContextState, action: AppAction) => {
+export const appReducer = (state: AppContextState, action: AppAction) => {
   switch (action.type) {
     case "UPDATE_TRANSCRIPTION_TITLE":
       return {
@@ -104,32 +104,4 @@ const appReducer = (state: AppContextState, action: AppAction) => {
     default:
       return state;
   }
-};
-
-type AppProviderProps = PropsWithChildren & {
-  initialTranscriptionFormState?: TranscriptionState;
-};
-
-export const AppProvider = ({ initialTranscriptionFormState, children }: AppProviderProps) => {
-  const [appState, dispatch] = useReducer(appReducer, {
-    ...INITIAL_STATE,
-    transcriptionForm: {
-      ...INITIAL_STATE.transcriptionForm,
-      ...initialTranscriptionFormState,
-    },
-  });
-
-  return (
-    <AppContext.Provider value={appState}>
-      <AppDispatchContext.Provider value={dispatch}>{children}</AppDispatchContext.Provider>
-    </AppContext.Provider>
-  );
-};
-
-export const useAppContext = () => {
-  return useContext(AppContext);
-};
-
-export const useAppDispatch = () => {
-  return useContext(AppDispatchContext);
 };

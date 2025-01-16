@@ -1,5 +1,5 @@
 import { LanguageKey } from "../../../../model/TranscriptionModel";
-import { useAppContext } from "../../../Context/Context";
+import { useAppContext } from "../../../Context/useContext";
 import { AVAILABLE_LANGUAGES } from "../FormConstants";
 
 const UNWANTED_KEYS = ["key"];
@@ -13,7 +13,7 @@ export const ExportActions = () => {
    * @param value
    * @returns
    */
-  const JSONReplacer = (key: string, value: any) => {
+  const JSONReplacer = (key: string, value: unknown) => {
     if (UNWANTED_KEYS.includes(key)) {
       return undefined;
     }

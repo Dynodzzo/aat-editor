@@ -1,9 +1,9 @@
 import { useRef, useState } from "react";
+import { useRequestAnimationFrame } from "../../../../hooks/useRequestAnimationFrame";
 import { Cue, LanguageKey, StringByLanguage } from "../../../../model/TranscriptionModel";
 import { formatDurationToISOTime, formatISOTimeToDuration } from "../../../../utils/time.utils";
-import { useAppContext, useAppDispatch } from "../../../Context/Context";
+import { useAppContext, useAppDispatch } from "../../../Context/useContext";
 import { AVAILABLE_LANGUAGES } from "../FormConstants";
-import { useRequestAnimationFrame } from "../../../../hooks/useRequestAnimationFrame";
 
 type CuesFormProps = {
   onPlaySprite?: (id?: string) => void;
