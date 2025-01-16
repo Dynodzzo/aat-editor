@@ -3,6 +3,7 @@ import { Cue, LanguageKey, StringByLanguage } from "../../../../model/Transcript
 import { formatDurationToISOTime, formatISOTimeToDuration } from "../../../../utils/time.utils";
 import { useAppContext, useAppDispatch } from "../../../Context/Context";
 import { AVAILABLE_LANGUAGES } from "../FormConstants";
+import { useRequestAnimationFrame } from "../../../../hooks/useRequestAnimationFrame";
 
 type CuesFormProps = {
   onPlaySprite?: (id?: string) => void;
@@ -14,6 +15,33 @@ export const CuesForm = ({ onPlaySprite }: CuesFormProps) => {
     audioPlayer: { duration, currentTimeRef },
   } = useAppContext();
   const dispatch = useAppDispatch();
+  const cuesContainersRefs = useRef<Record<string, HTMLFieldSetElement>>({});
+  const [playingCuesKeys, setPlayingCuesKeys] = useState<string[]>([]);
+
+  useRequestAnimationFrame(() => {
+    const currentTime = currentTimeRef?.current;
+
+    if (currentTime && cues.length > 0) {
+      const cuesBeingPlayed = cues.filter(({ start, end }) => {
+        const isCueStartGreaterThanCurrentTime = formatISOTimeToDuration(start) <= currentTime;
+        const isCueEndLessThanCurrentTime = formatISOTimeToDuration(end) >= currentTime;
+        return isCueStartGreaterThanCurrentTime && isCueEndLessThanCurrentTime;
+      });
+
+      if (!cuesBeingPlayed.length) return setPlayingCuesKeys([]);
+
+      const cuesKeysBeingPlayed = cuesBeingPlayed.map(({ key }) => key);
+
+      if (playingCuesKeys.join() !== cuesKeysBeingPlayed.join()) {
+        setPlayingCuesKeys(cuesKeysBeingPlayed);
+        const lastCueBeingPlayed = cuesBeingPlayed.at(-1);
+
+        if (lastCueBeingPlayed) {
+          cuesContainersRefs.current[lastCueBeingPlayed.key].scrollIntoView({ behavior: "smooth" });
+        }
+      }
+    }
+  });
 
   const handleCueStartChange = (event: React.ChangeEvent<HTMLInputElement>, cueKey: string) => {
     const newCues = cues.map((cue) => {
@@ -134,10 +162,18 @@ export const CuesForm = ({ onPlaySprite }: CuesFormProps) => {
       <legend>Cues</legend>
 
       {cues.map(({ key: cueKey, start, end, voice, text, note }, index) => {
-        const isCueBeingPlayed =
-          currentTime >= formatISOTimeToDuration(start) && currentTime <= formatISOTimeToDuration(end);
+        const isCueBeingPlayed = playingCuesKeys.includes(cueKey);
+
         return (
-          <fieldset key={cueKey} style={{ border: isCueBeingPlayed ? "4px solid darkblue" : "inherit" }}>
+          <fieldset
+            ref={(element) => {
+              if (element) {
+                cuesContainersRefs.current[cueKey] = element;
+              }
+            }}
+            key={cueKey}
+            style={{ border: isCueBeingPlayed ? "4px solid darkblue" : "inherit" }}
+          >
             <legend>{index}</legend>
             <div className="inputWrapper">
               <label htmlFor={`cue-start-${cueKey}`}>
