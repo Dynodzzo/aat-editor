@@ -1,4 +1,4 @@
-import React, { createContext, PropsWithChildren, Ref, RefObject, useContext, useReducer } from "react";
+import React, { createContext, PropsWithChildren, RefObject, useContext, useReducer } from "react";
 import { AudioState } from "../../model/AudioModel";
 import { Cue, LanguageKey, TranscriptionState, Voice } from "../../model/TranscriptionModel";
 
