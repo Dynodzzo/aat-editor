@@ -15,7 +15,7 @@ const WAVE_SURFER_ZOOM_DEFAULT_ZOOM = 70;
 const WAVE_SURFER_ZOOM_STEP = 0.1;
 const DEFAULT_REGION_COLOR = "rgba(0, 0, 0, 0.2)";
 
-export const AudioPlayer = memo(({ onReady }: AudioPlayerProps) => {
+export const AudioPlayer = memo(function AudioPlayer({ onReady }: AudioPlayerProps) {
   const {
     transcriptionForm: { cues, voices },
     audioPlayer: { source },
