@@ -235,20 +235,20 @@ export const CuesForm = ({ onPlaySprite }: CuesFormProps) => {
                 <fieldset key={langKey}>
                   <legend>{name}</legend>
                   <div className="inputWrapper">
-                    <label htmlFor={`cue-text-${cueKey}`}>
+                    <label htmlFor={`cue-text-${cueKey}-${langKey}`}>
                       Text
                       <input
-                        id={`cue-text-${cueKey}`}
+                        id={`cue-text-${cueKey}-${langKey}`}
                         value={text[langKey]}
                         onChange={(event) => handleCueTextChange(event, cueKey, langKey)}
                       />
                     </label>
                   </div>
                   <div className="inputWrapper">
-                    <label htmlFor={`cue-note-${cueKey}`}>
+                    <label htmlFor={`cue-note-${cueKey}-${langKey}`}>
                       Note
                       <input
-                        id={`cue-note-${cueKey}`}
+                        id={`cue-note-${cueKey}-${langKey}`}
                         value={note?.[langKey]}
                         onChange={(event) => handleCueNoteChange(event, cueKey, langKey)}
                       />
