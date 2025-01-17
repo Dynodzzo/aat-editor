@@ -1,10 +1,10 @@
-import { useAppContext, useAppDispatch } from "../../../Context/useContext";
+import { useTranscriptionEditorContext, useTranscriptionEditorDispatch } from "../../Context/useContext";
 
 export const MetadataForm = () => {
   const {
     transcriptionForm: { title, author },
-  } = useAppContext();
-  const dispatch = useAppDispatch();
+  } = useTranscriptionEditorContext();
+  const dispatch = useTranscriptionEditorDispatch();
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({ type: "UPDATE_TRANSCRIPTION_TITLE", payload: event.target.value });

@@ -42,9 +42,9 @@ export const useAudioFile = (audioObjectURL: string) => {
     }
   };
 
-  const play = useCallback(() => {
+  const play = useCallback(async () => {
     if (!audioRef.current) return;
-    audioRef.current.play();
+    await audioRef.current.play();
   }, []);
 
   const pause = useCallback(() => {

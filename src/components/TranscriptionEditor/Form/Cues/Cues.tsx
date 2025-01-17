@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { useRequestAnimationFrame } from "../../../../hooks/useRequestAnimationFrame";
 import { Cue, LanguageKey, StringByLanguage } from "../../../../model/TranscriptionModel";
 import { formatDurationToISOTime, formatISOTimeToDuration } from "../../../../utils/time.utils";
-import { useAppContext, useAppDispatch } from "../../../Context/useContext";
+import { useTranscriptionEditorContext, useTranscriptionEditorDispatch } from "../../Context/useContext";
 import { AVAILABLE_LANGUAGES } from "../FormConstants";
 
 type CuesFormProps = {
@@ -13,8 +13,8 @@ export const CuesForm = ({ onPlaySprite }: CuesFormProps) => {
   const {
     transcriptionForm: { languages, voices, cues },
     audioPlayer: { duration, currentTimeRef },
-  } = useAppContext();
-  const dispatch = useAppDispatch();
+  } = useTranscriptionEditorContext();
+  const dispatch = useTranscriptionEditorDispatch();
   const cuesContainersRefs = useRef<Record<string, HTMLFieldSetElement>>({});
   const [playingCuesKeys, setPlayingCuesKeys] = useState<string[]>([]);
 
@@ -127,8 +127,8 @@ export const CuesForm = ({ onPlaySprite }: CuesFormProps) => {
   const handleAddCue = () => {
     const newCue: Cue = {
       key: crypto.randomUUID(),
-      start: formatDurationToISOTime(currentTimeRef?.current || 0),
-      end: formatDurationToISOTime((currentTimeRef?.current || 0) + 1),
+      start: formatDurationToISOTime(currentTimeRef?.current ?? 0),
+      end: formatDurationToISOTime((currentTimeRef?.current ?? 0) + 1),
       voice: "",
       text: AVAILABLE_LANGUAGES.reduce((acc, { key }) => {
         return {

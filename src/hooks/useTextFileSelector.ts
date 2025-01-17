@@ -1,22 +1,22 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-export const useTextFileSelector = <T>(accept: string = ".json") => {
+export const useTextFileSelector = <T>(accept = ".json") => {
   const [fileData, setFileData] = useState<T | null>(null);
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleFileChange = useCallback(async (event: Event) => {
-    try {
-      setIsLoading(true);
-      const [file] = (event as unknown as React.ChangeEvent<HTMLInputElement>).target.files || [];
-      const result = await file.text();
-      setFileData(JSON.parse(result));
-    } catch (error: unknown) {
-      setFileData(null);
-      setError(`Error reading file: ${error}`);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleFileChange = useCallback((event: Event) => {
+    setIsLoading(true);
+    const [file] = (event as unknown as React.ChangeEvent<HTMLInputElement>).target.files ?? [];
+
+    file
+      .text()
+      .then((fileValue: string) => {
+        setFileData(JSON.parse(fileValue) as T);
+        setError("");
+      })
+      .catch((error) => setError(`Error reading file: ${error}`))
+      .finally(() => setIsLoading(false));
   }, []);
 
   const inputElement = useMemo(() => {

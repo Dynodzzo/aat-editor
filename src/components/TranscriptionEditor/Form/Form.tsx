@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import { useAppContext, useAppDispatch } from "../../Context/useContext";
+import { useTranscriptionEditorContext, useTranscriptionEditorDispatch } from "../Context/useContext";
 import { AudioFileForm } from "./AudioFile/AudioFile";
 import { CuesForm } from "./Cues/Cues";
 import { ExportActions } from "./ExportActions/ExportActions";
@@ -12,7 +12,7 @@ type TranscriptionFormProps = {
 };
 
 export const TranscriptionForm = ({ onPlay }: TranscriptionFormProps) => {
-  const dispatch = useAppDispatch();
+  const dispatch = useTranscriptionEditorDispatch();
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
@@ -36,7 +36,7 @@ export const TranscriptionForm = ({ onPlay }: TranscriptionFormProps) => {
 };
 
 const TranscriptionFormVisualizer = ({ children }: PropsWithChildren) => {
-  const state = useAppContext();
+  const state = useTranscriptionEditorContext();
   return (
     <>
       {children}

@@ -1,11 +1,11 @@
 import { LanguageKey } from "../../../../model/TranscriptionModel";
-import { useAppContext } from "../../../Context/useContext";
+import { useTranscriptionEditorContext } from "../../Context/useContext";
 import { AVAILABLE_LANGUAGES } from "../FormConstants";
 
 const UNWANTED_KEYS = ["key"];
 
 export const ExportActions = () => {
-  const state = useAppContext();
+  const state = useTranscriptionEditorContext();
 
   /**
    * Removes unwanted keys from the JSON object

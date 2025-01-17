@@ -1,12 +1,12 @@
 import { LanguageKey } from "../../../../model/TranscriptionModel";
-import { useAppContext, useAppDispatch } from "../../../Context/useContext";
+import { useTranscriptionEditorContext, useTranscriptionEditorDispatch } from "../../Context/useContext";
 import { AVAILABLE_LANGUAGES } from "../FormConstants";
 
 export const LanguagesForm = () => {
   const {
     transcriptionForm: { languages },
-  } = useAppContext();
-  const dispatch = useAppDispatch();
+  } = useTranscriptionEditorContext();
+  const dispatch = useTranscriptionEditorDispatch();
 
   const handleChangeLanguages = (event: React.ChangeEvent<HTMLInputElement>) => {
     const language = event.target.id as LanguageKey;

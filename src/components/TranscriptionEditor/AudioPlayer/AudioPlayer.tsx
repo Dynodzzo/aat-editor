@@ -3,24 +3,24 @@ import { Region } from "wavesurfer.js/dist/plugins/regions.js";
 import { useWaveSurfer } from "../../../hooks/useWaveSurfer";
 import { useWaveSurferRegions } from "../../../hooks/useWaveSurferRegions";
 import { formatDurationToISOTime, formatISOTimeToDuration } from "../../../utils/time.utils";
-import { useAppContext, useAppDispatch } from "../../Context/useContext";
+import { useTranscriptionEditorContext, useTranscriptionEditorDispatch } from "../Context/useContext";
 
 type AudioPlayerProps = {
-  onReady?: (play: () => void) => void;
+  onReady?: (play: () => Promise<void>) => void;
 };
 
-const WAVE_SURFER_ZOOM_MIN_ZOOM: number = 0;
-const WAVE_SURFER_ZOOM_MAX_ZOOM: number = 150;
-const WAVE_SURFER_ZOOM_DEFAULT_ZOOM: number = 70;
-const WAVE_SURFER_ZOOM_STEP: number = 0.1;
-const DEFAULT_REGION_COLOR: string = "rgba(0, 0, 0, 0.2)";
+const WAVE_SURFER_ZOOM_MIN_ZOOM = 0;
+const WAVE_SURFER_ZOOM_MAX_ZOOM = 150;
+const WAVE_SURFER_ZOOM_DEFAULT_ZOOM = 70;
+const WAVE_SURFER_ZOOM_STEP = 0.1;
+const DEFAULT_REGION_COLOR = "rgba(0, 0, 0, 0.2)";
 
 export const AudioPlayer = memo(({ onReady }: AudioPlayerProps) => {
   const {
     transcriptionForm: { cues, voices },
     audioPlayer: { source },
-  } = useAppContext();
-  const dispatch = useAppDispatch();
+  } = useTranscriptionEditorContext();
+  const dispatch = useTranscriptionEditorDispatch();
   const activeRegionId = useRef<string>("");
   const zoom = useRef<number>(WAVE_SURFER_ZOOM_DEFAULT_ZOOM);
 
@@ -97,18 +97,18 @@ export const AudioPlayer = memo(({ onReady }: AudioPlayerProps) => {
   useEffect(() => {
     if (!isReady || !onReady) return;
 
-    const playRegion = (regionId?: string) => {
+    const playRegion = async (regionId?: string) => {
       if (!regionId) return play();
 
       const region = regions.find((region) => region.id === regionId);
       if (!region) return;
 
       activeRegionId.current = regionId;
-      play(region.start);
+      await play(region.start);
     };
 
-    onReady((regionId?: string) => {
-      playRegion(regionId);
+    onReady(async (regionId?: string) => {
+      await playRegion(regionId);
     });
   }, [isReady, regions, onReady, play]);
 

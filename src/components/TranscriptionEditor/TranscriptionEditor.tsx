@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { TranscriptionState } from "../../model/TranscriptionModel";
-import { AppProvider } from "../Context/ContextProvider";
 import { AudioPlayer } from "./AudioPlayer/AudioPlayer";
+import { TranscriptionEditorProvider } from "./Context/ContextProvider";
 import { TranscriptionForm } from "./Form/Form";
 
 type TranscriptionEditorProps = {
@@ -16,9 +16,9 @@ export const TranscriptionEditor = ({ initialFormState }: TranscriptionEditorPro
   }, []);
 
   return (
-    <AppProvider initialTranscriptionFormState={initialFormState}>
+    <TranscriptionEditorProvider initialFormState={initialFormState}>
       <AudioPlayer onReady={handleAudioPlayerReady} />
       <TranscriptionForm onPlay={play} />;
-    </AppProvider>
+    </TranscriptionEditorProvider>
   );
 };

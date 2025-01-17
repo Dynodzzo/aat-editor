@@ -1,13 +1,13 @@
 import React, { createContext, RefObject } from "react";
-import { AudioState } from "../../model/AudioModel";
-import { Cue, LanguageKey, TranscriptionState, Voice } from "../../model/TranscriptionModel";
+import { AudioState } from "../../../model/AudioModel";
+import { Cue, LanguageKey, TranscriptionState, Voice } from "../../../model/TranscriptionModel";
 
-type AppContextState = {
+type TranscriptionEditorContextState = {
   transcriptionForm: TranscriptionState;
   audioPlayer: AudioState;
 };
 
-export const INITIAL_STATE: AppContextState = {
+export const INITIAL_STATE: TranscriptionEditorContextState = {
   transcriptionForm: {
     title: "",
     author: "",
@@ -22,10 +22,11 @@ export const INITIAL_STATE: AppContextState = {
   },
 };
 
-export const AppContext = createContext<AppContextState>(INITIAL_STATE);
-export const AppDispatchContext = createContext<React.Dispatch<AppAction>>(() => {});
+export const TranscriptionEditorContext = createContext<TranscriptionEditorContextState>(INITIAL_STATE);
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+export const TranscriptionEditorDispatchContext = createContext<React.Dispatch<TranscriptionEditorAction>>(() => {});
 
-export type AppAction =
+export type TranscriptionEditorAction =
   | { type: "UPDATE_TRANSCRIPTION_TITLE"; payload: string }
   | { type: "UPDATE_TRANSCRIPTION_AUTHOR"; payload: string }
   | { type: "UPDATE_TRANSCRIPTION_LANGUAGES"; payload: LanguageKey[] }
@@ -35,7 +36,7 @@ export type AppAction =
   | { type: "UPDATE_AUDIO_DURATION"; payload: number }
   | { type: "UPDATE_AUDIO_CURRENT_TIME"; payload: RefObject<number> };
 
-export const appReducer = (state: AppContextState, action: AppAction) => {
+export const appReducer = (state: TranscriptionEditorContextState, action: TranscriptionEditorAction) => {
   switch (action.type) {
     case "UPDATE_TRANSCRIPTION_TITLE":
       return {

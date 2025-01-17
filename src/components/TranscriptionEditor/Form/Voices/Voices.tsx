@@ -1,12 +1,12 @@
 import { LanguageKey, Voice, StringByLanguage } from "../../../../model/TranscriptionModel";
-import { useAppContext, useAppDispatch } from "../../../Context/useContext";
+import { useTranscriptionEditorContext, useTranscriptionEditorDispatch } from "../../Context/useContext";
 import { AVAILABLE_LANGUAGES, DEFAULT_VOICE_COLOR } from "../FormConstants";
 
 export const VoicesForm = () => {
   const {
     transcriptionForm: { languages, voices, cues },
-  } = useAppContext();
-  const dispatch = useAppDispatch();
+  } = useTranscriptionEditorContext();
+  const dispatch = useTranscriptionEditorDispatch();
 
   const handleVoiceIdChange = (event: React.ChangeEvent<HTMLInputElement>, voiceKey: string, voiceId: string) => {
     const newVoices = voices.map((voice) => {
