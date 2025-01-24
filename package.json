@@ -7,16 +7,31 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.6.0",
+    "tailwindcss-animate": "^1.0.7",
     "wavesurfer.js": "^7.8.15",
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^3.2.4",
     "@eslint/js": "^9.17.0",
+    "@storybook/addon-essentials": "^8.6.0-alpha.1",
+    "@storybook/addon-interactions": "^8.6.0-alpha.1",
+    "@storybook/addon-onboarding": "^8.6.0-alpha.1",
+    "@storybook/blocks": "^8.6.0-alpha.1",
+    "@storybook/react": "^8.6.0-alpha.1",
+    "@storybook/react-vite": "^8.6.0-alpha.1",
+    "@storybook/test": "^8.6.0-alpha.1",
     "@types/react": "^18.3.17",
     "@types/react-dom": "^18.3.5",
     "@typescript-eslint/parser": "^8.20.0",
@@ -27,10 +42,18 @@
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.16",
+    "eslint-plugin-storybook": "^0.11.2",
     "globals": "^15.13.0",
+    "storybook": "^8.6.0-alpha.1",
+    "tailwindcss": "^4.0.0",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.18.1",
     "vite": "^6.0.3",
     "vite-plugin-checker": "^0.8.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "plugin:storybook/recommended"
+    ]
   }
 }

@@ -47,7 +47,7 @@ export default tseslint.config(
       "import/order": [
         "warn",
         {
-          groups: ["builtin", "external", "internal", "parent", "sibling", "index", "object", "type", "unknown"],
+          groups: ["builtin", "external", "internal", "parent", "sibling", "index", "object", "unknown"],
           alphabetize: {
             order: "asc",
             caseInsensitive: true,
