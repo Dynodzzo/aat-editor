@@ -18,7 +18,7 @@ export const Select = ({ value, placeholder = "", options, decorator, onChange }
 
   return (
     <RadixSelect.Root value={value} onValueChange={handleChange}>
-      <RadixSelect.Trigger className="w-full h-min px-2 py-1 flex flex-row items-center gap-1 rounded-md bg-transparent inset-ring inset-ring-zinc-300 text-zinc-500 data-placeholder:italic data-placeholder:text-zinc-400">
+      <RadixSelect.Trigger className="w-full h-min px-2 py-1 flex flex-row items-center gap-1 rounded-md bg-transparent inset-ring inset-ring-zinc-300 text-zinc-500 data-placeholder:italic data-placeholder:text-zinc-400 cursor-pointer">
         <span className="flex-auto text-sm font-normal text-left">
           <RadixSelect.Value placeholder={placeholder}></RadixSelect.Value>
         </span>
