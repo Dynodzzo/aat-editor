@@ -26,7 +26,7 @@ export const Input = memo(function InputField({
   }, [variant]);
 
   const sizeClass = useMemo(() => {
-    return size === "md" ? "p-3" : "text-sm px-2 py-1";
+    return size === "md" ? "p-3" : "px-2 py-1";
   }, [size]);
 
   const handleChange = useCallback(
@@ -37,16 +37,18 @@ export const Input = memo(function InputField({
   );
 
   return (
-    <input
-      className={clsx(
-        "w-full h-full text-sm text-zinc-500 font-normal placeholder:italic placeholder:text-zinc-400 rounded-md",
-        variantClass,
-        sizeClass,
-        additionalClasses
-      )}
-      value={value}
-      placeholder={placeholder}
-      onChange={handleChange}
-    />
+    <div className="text-sm text-zinc-500 font-normal">
+      <input
+        className={clsx(
+          "w-full h-full placeholder:italic placeholder:text-zinc-400 rounded-md",
+          variantClass,
+          sizeClass,
+          additionalClasses
+        )}
+        value={value}
+        placeholder={placeholder}
+        onChange={handleChange}
+      />
+    </div>
   );
 });
