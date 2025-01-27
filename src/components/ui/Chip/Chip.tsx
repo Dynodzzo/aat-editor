@@ -3,11 +3,12 @@ import { memo, useMemo } from "react";
 
 type ChipProps = {
   value: string;
+  id?: string;
   highlighted?: boolean;
-  onClick?: () => void;
+  onClick?: (event: React.SyntheticEvent<HTMLDivElement>) => void;
 };
 
-export const Chip = memo(function ColorIndicator({ value, highlighted, onClick }: ChipProps) {
+export const Chip = memo(function ColorIndicator({ value, id, highlighted, onClick }: ChipProps) {
   const containerClass = useMemo(() => {
     return highlighted
       ? "inset-ring-2 inset-ring-slate-600 text-slate-600"
@@ -20,6 +21,7 @@ export const Chip = memo(function ColorIndicator({ value, highlighted, onClick }
 
   return (
     <div
+      id={id}
       className={clsx("grid place-content-center px-3 py-2 rounded-full w-min cursor-pointer", containerClass)}
       onClick={onClick}
     >
