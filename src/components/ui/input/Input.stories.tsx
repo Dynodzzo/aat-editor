@@ -1,32 +1,26 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { Input, InputSize, InputVariant } from "./Input";
+import { Input } from "./Input";
+
+export type InputArgs = React.ComponentProps<typeof Input>;
 
 const meta = {
   component: Input,
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof Input>;
+} satisfies Meta<InputArgs>;
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
-type StoryArgs = {
-  value: string;
-  placeholder?: string;
-  label?: string;
-  info?: string;
-  variant?: InputVariant;
-  size?: InputSize;
-};
 
-const defaultArgs: StoryArgs = {
+const defaultArgs: InputArgs = {
   value: "",
   placeholder: "Try typing here",
 };
 
-const renderFunction = function Render(args: StoryArgs) {
+const renderFunction = function Render(args: InputArgs) {
   const [value, setValue] = useState(args.value);
 
   function onChange(event: React.ChangeEvent<HTMLInputElement>) {

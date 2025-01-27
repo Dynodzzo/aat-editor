@@ -1,38 +1,38 @@
-import { useArgs } from "@storybook/preview-api";
 import type { Meta, StoryObj } from "@storybook/react";
+
 import { useState } from "react";
+import { useArgs } from "storybook/internal/preview-api";
 import { Input } from "../Input/Input";
 import { InputArgs } from "../Input/Input.stories";
-import { InputField } from "./InputField";
+import { InputFieldInline } from "./InputFieldInline";
 import { Label } from "./Label";
 import { LabelArgs } from "./Label.stories";
 import { LabelInfo } from "./LabelInfo";
 import { LabelText } from "./LabelText";
 
-type InputFieldArgs = React.ComponentProps<typeof InputField> & LabelArgs & InputArgs;
-type Story = StoryObj<InputFieldArgs>;
+type InputFieldInlineArgs = React.ComponentProps<typeof InputFieldInline> & LabelArgs & InputArgs;
+type Story = StoryObj<InputFieldInlineArgs>;
 
-const defaultArgs: InputFieldArgs = {
+const defaultArgs: InputFieldInlineArgs = {
   value: "",
   placeholder: "Try typing here",
   label: "Label",
-  info: "Help",
 };
 
 const meta = {
-  component: InputField,
+  component: InputFieldInline,
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<InputFieldArgs>;
+} satisfies Meta<typeof InputFieldInline>;
 
 export default meta;
 
-const InputFieldTemplate: Story = {
+const InputFieldInlineTemplate: Story = {
   render: function Render({ label, info, value, placeholder, variant, size }) {
     const [currentValue, setCurrentValue] = useState<string>(value);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [_, updateArgs] = useArgs<InputFieldArgs>();
+    const [_, updateArgs] = useArgs<InputFieldInlineArgs>();
 
     function onChange(event: React.ChangeEvent<HTMLInputElement>) {
       setCurrentValue(event?.target.value);
@@ -40,24 +40,15 @@ const InputFieldTemplate: Story = {
     }
 
     return (
-      <InputField>
+      <InputFieldInline>
         <Label>
           <LabelText>{label}</LabelText>
           {info && <LabelInfo>{info}</LabelInfo>}
         </Label>
         <Input value={currentValue} placeholder={placeholder} onChange={onChange} variant={variant} size={size} />
-      </InputField>
+      </InputFieldInline>
     );
   },
-};
-
-export const FillMedium: Story = {
-  args: {
-    ...defaultArgs,
-    variant: "fill",
-    size: "md",
-  },
-  ...InputFieldTemplate,
 };
 
 export const FillSmall: Story = {
@@ -66,16 +57,16 @@ export const FillSmall: Story = {
     variant: "fill",
     size: "sm",
   },
-  ...InputFieldTemplate,
+  ...InputFieldInlineTemplate,
 };
 
-export const OutlineMedium: Story = {
+export const FillMedium: Story = {
   args: {
     ...defaultArgs,
-    variant: "outline",
+    variant: "fill",
     size: "md",
   },
-  ...InputFieldTemplate,
+  ...InputFieldInlineTemplate,
 };
 
 export const OutlineSmall: Story = {
@@ -84,5 +75,14 @@ export const OutlineSmall: Story = {
     variant: "outline",
     size: "sm",
   },
-  ...InputFieldTemplate,
+  ...InputFieldInlineTemplate,
+};
+
+export const OutlineMedium: Story = {
+  args: {
+    ...defaultArgs,
+    variant: "outline",
+    size: "md",
+  },
+  ...InputFieldInlineTemplate,
 };

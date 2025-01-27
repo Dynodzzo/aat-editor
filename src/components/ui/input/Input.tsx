@@ -10,17 +10,17 @@ export type InputProps = {
   placeholder?: string;
   variant?: InputVariant;
   size?: InputSize;
-  additionalClasses?: string;
+  className?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export const Input = memo(function InputField({
+export const Input = memo(function Input({
   value,
   id,
   placeholder = "",
   variant = "outline",
   size = "md",
-  additionalClasses = "",
+  className = "",
   onChange,
 }: InputProps) {
   const variantClass = useMemo(() => {
@@ -28,7 +28,7 @@ export const Input = memo(function InputField({
   }, [variant]);
 
   const sizeClass = useMemo(() => {
-    return size === "md" ? "p-3" : "px-2 py-1";
+    return size === "md" ? "p-3" : "p-2";
   }, [size]);
 
   const handleChange = useCallback(
@@ -39,14 +39,13 @@ export const Input = memo(function InputField({
   );
 
   return (
-    <div className="text-sm text-zinc-500 font-normal">
+    <div className={clsx("text-sm text-zinc-500 font-normal", className)}>
       <input
         id={id}
         className={clsx(
-          "w-full h-full placeholder:italic placeholder:text-zinc-400 rounded-md",
+          "w-full h-full placeholder:italic placeholder:text-zinc-400 rounded-md [text-align:inherit]",
           variantClass,
-          sizeClass,
-          additionalClasses
+          sizeClass
         )}
         type="text"
         value={value}
