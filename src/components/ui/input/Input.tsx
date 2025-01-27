@@ -6,6 +6,7 @@ export type InputSize = "sm" | "md";
 
 export type InputProps = {
   value: string;
+  id?: string;
   placeholder?: string;
   variant?: InputVariant;
   size?: InputSize;
@@ -15,6 +16,7 @@ export type InputProps = {
 
 export const Input = memo(function InputField({
   value,
+  id,
   placeholder = "",
   variant = "outline",
   size = "md",
@@ -39,12 +41,14 @@ export const Input = memo(function InputField({
   return (
     <div className="text-sm text-zinc-500 font-normal">
       <input
+        id={id}
         className={clsx(
           "w-full h-full placeholder:italic placeholder:text-zinc-400 rounded-md",
           variantClass,
           sizeClass,
           additionalClasses
         )}
+        type="text"
         value={value}
         placeholder={placeholder}
         onChange={handleChange}
