@@ -1,22 +1,22 @@
+import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
 import { Input } from "../../../ui/Input/Input";
 import { InputField } from "../../../ui/InputField/InputField";
 import { Label } from "../../../ui/InputField/Label";
 import { LabelText } from "../../../ui/InputField/LabelText";
 import { Typography } from "../../../ui/Typography/Typography";
-import { useTranscriptionEditorContext, useTranscriptionEditorDispatch } from "../../Context/useContext";
+import { selectAuthor, selectTitle, updateAuthor, updateTitle } from "../../TranscriptionEditorSlice";
 
 export const MetadataForm = () => {
-  const {
-    transcriptionForm: { title, author },
-  } = useTranscriptionEditorContext();
-  const dispatch = useTranscriptionEditorDispatch();
+  const dispatch = useAppDispatch();
+  const title = useAppSelector(selectTitle);
+  const author = useAppSelector(selectAuthor);
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: "UPDATE_TRANSCRIPTION_TITLE", payload: event.target.value });
+    dispatch(updateTitle(event.target.value));
   };
 
   const handleAuthorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: "UPDATE_TRANSCRIPTION_AUTHOR", payload: event.target.value });
+    dispatch(updateAuthor(event.target.value));
   };
 
   return (
