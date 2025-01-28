@@ -146,7 +146,7 @@ export const AudioPlayer = memo(function AudioPlayer({ onReady }: AudioPlayerPro
   }, [dispatch, currentTimeRef]);
 
   return (
-    <div className="audio-player" style={{ position: "sticky", top: 0, backgroundColor: "white" }}>
+    <div className="audio-player" style={{ backgroundColor: "white" }}>
       <div ref={containerRef} className="wavesurfer-container"></div>
     </div>
   );
