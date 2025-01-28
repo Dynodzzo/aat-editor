@@ -1,3 +1,8 @@
+import { Input } from "../../../ui/Input/Input";
+import { InputField } from "../../../ui/InputField/InputField";
+import { Label } from "../../../ui/InputField/Label";
+import { LabelText } from "../../../ui/InputField/LabelText";
+import { Typography } from "../../../ui/Typography/Typography";
 import { useTranscriptionEditorContext, useTranscriptionEditorDispatch } from "../../Context/useContext";
 
 export const MetadataForm = () => {
@@ -15,20 +20,22 @@ export const MetadataForm = () => {
   };
 
   return (
-    <fieldset>
-      <legend>Metadata</legend>
-      <div className="inputWrapper">
-        <label htmlFor="title">
-          Title
-          <input id="title" type="text" value={title} onChange={handleTitleChange} />
-        </label>
+    <div className="flex flex-col gap-4">
+      <Typography variant="h2">Metadata</Typography>
+      <div className="flex flex-col gap-4">
+        <InputField>
+          <Label>
+            <LabelText htmlFor="title">Title</LabelText>
+          </Label>
+          <Input id="title" value={title} variant="fill" onChange={handleTitleChange} />
+        </InputField>
+        <InputField>
+          <Label>
+            <LabelText htmlFor="author">Author</LabelText>
+          </Label>
+          <Input id="author" value={author} variant="fill" onChange={handleAuthorChange} />
+        </InputField>
       </div>
-      <div className="inputWrapper">
-        <label htmlFor="author">
-          Author
-          <input id="author" type="text" value={author} onChange={handleAuthorChange} />
-        </label>
-      </div>
-    </fieldset>
+    </div>
   );
 };
