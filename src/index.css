@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+html,
+body {
+  height: 100%;
+}
+
 /* 1. Use a more-intuitive box-sizing model */
 *,
 *::before,
@@ -68,6 +73,7 @@ h6 {
 #__next {
   isolation: isolate;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  height: 100%;
 }
 
 :root {
