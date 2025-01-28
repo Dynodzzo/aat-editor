@@ -1,79 +1,89 @@
-import { LanguageKey, Voice, StringByLanguage } from "../../../../model/TranscriptionModel";
+import { PlusCircleSolid } from "iconoir-react";
+import { memo, useCallback } from "react";
+import { LanguageKey, Voice as VoiceModel, StringByLanguage } from "../../../../model/TranscriptionModel";
+import { Button } from "../../../ui/Button/Button";
+import { Typography } from "../../../ui/Typography/Typography";
 import { useTranscriptionEditorContext, useTranscriptionEditorDispatch } from "../../Context/useContext";
 import { AVAILABLE_LANGUAGES, DEFAULT_VOICE_COLOR } from "../FormConstants";
+import { Voice } from "./Voice";
 
-export const VoicesForm = () => {
+export const VoicesForm = memo(function VoicesForm() {
   const {
     transcriptionForm: { languages, voices, cues },
   } = useTranscriptionEditorContext();
   const dispatch = useTranscriptionEditorDispatch();
 
-  const handleVoiceIdChange = (event: React.ChangeEvent<HTMLInputElement>, voiceKey: string, voiceId: string) => {
-    const newVoices = voices.map((voice) => {
-      if (voice.key === voiceKey) {
-        return {
-          ...voice,
-          id: event.target.value,
-        };
-      }
+  const handleVoiceIdChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>, voiceKey: string, voiceId: string) => {
+      const newVoices = voices.map((voice) => {
+        if (voice.key === voiceKey) {
+          return {
+            ...voice,
+            id: event.target.value,
+          };
+        }
 
-      return voice;
-    });
+        return voice;
+      });
 
-    const updatedCues = cues.map((cue) => {
-      if (cue.voice === voiceId) {
-        return {
-          ...cue,
-          voice: event.target.value,
-        };
-      }
+      const updatedCues = cues.map((cue) => {
+        if (cue.voice === voiceId) {
+          return {
+            ...cue,
+            voice: event.target.value,
+          };
+        }
 
-      return cue;
-    });
+        return cue;
+      });
 
-    dispatch({ type: "UPDATE_TRANSCRIPTION_VOICES", payload: newVoices });
-    dispatch({ type: "UPDATE_TRANSCRIPTION_CUES", payload: updatedCues });
-  };
+      dispatch({ type: "UPDATE_TRANSCRIPTION_VOICES", payload: newVoices });
+      dispatch({ type: "UPDATE_TRANSCRIPTION_CUES", payload: updatedCues });
+    },
+    [voices, cues, dispatch]
+  );
 
-  const handleVoiceColorChange = (event: React.ChangeEvent<HTMLInputElement>, voiceKey: string) => {
-    const newVoices = voices.map((voice) => {
-      if (voice.key === voiceKey) {
-        return {
-          ...voice,
-          color: event.target.value,
-        };
-      }
+  const handleVoiceColorChange = useCallback(
+    (color: string, voiceKey: string) => {
+      const newVoices = voices.map((voice) => {
+        if (voice.key === voiceKey) {
+          return {
+            ...voice,
+            color,
+          };
+        }
 
-      return voice;
-    });
+        return voice;
+      });
 
-    dispatch({ type: "UPDATE_TRANSCRIPTION_VOICES", payload: newVoices });
-  };
+      dispatch({ type: "UPDATE_TRANSCRIPTION_VOICES", payload: newVoices });
+    },
+    [voices, dispatch]
+  );
 
-  const handleVoiceNameChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    voiceKey: string,
-    language: LanguageKey
-  ) => {
-    const newVoices = voices.map((voice) => {
-      if (voice.key === voiceKey) {
-        return {
-          ...voice,
-          name: {
-            ...voice.name,
-            [language]: event.target.value,
-          },
-        };
-      }
+  const handleVoiceNameChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>, voiceKey: string, language: LanguageKey) => {
+      const newVoices = voices.map((voice) => {
+        if (voice.key === voiceKey) {
+          return {
+            ...voice,
+            name: {
+              ...voice.name,
+              [language]: event.target.value,
+            },
+          };
+        }
 
-      return voice;
-    });
+        return voice;
+      });
 
-    dispatch({ type: "UPDATE_TRANSCRIPTION_VOICES", payload: newVoices });
-  };
+      dispatch({ type: "UPDATE_TRANSCRIPTION_VOICES", payload: newVoices });
+    },
+    [voices, dispatch]
+  );
 
-  const handleAddVoice = () => {
-    const newVoice: Voice = {
+  const handleAddVoice = useCallback(() => {
+    const newVoice: VoiceModel = {
       id: `voice-${voices.length + 1}`,
       key: crypto.randomUUID(),
       color: DEFAULT_VOICE_COLOR,
@@ -83,73 +93,32 @@ export const VoicesForm = () => {
       }, {} as StringByLanguage),
     };
     dispatch({ type: "UPDATE_TRANSCRIPTION_VOICES", payload: [...voices, newVoice] });
-  };
+  }, [voices, dispatch]);
 
   return (
-    <fieldset>
-      <legend>Voices</legend>
-      {voices.map((voice, index) => {
-        const voiceId = `voice-id-${voice.id}`;
-        const voiceColorId = `voice-color-id-${voice.id}`;
-
-        return (
-          <fieldset key={voice.key}>
-            <legend>Voice {index + 1}</legend>
-
-            <div key={index} className="voiceWrapper">
-              <div className="inputWrapper">
-                <label htmlFor={voiceId}>
-                  ID
-                  <input
-                    id={voiceId}
-                    type="text"
-                    value={voice.id}
-                    onChange={(event) => handleVoiceIdChange(event, voice.key, voice.id)}
-                  />
-                </label>
-              </div>
-              <div className="inputWrapper">
-                <label htmlFor={voiceColorId}>
-                  Color
-                  <input
-                    id={voiceColorId}
-                    type="color"
-                    value={voice.color}
-                    onChange={(event) => handleVoiceColorChange(event, voice.key)}
-                  />
-                </label>
-              </div>
-              {languages.length > 0 && (
-                <fieldset>
-                  <legend>Voice name</legend>
-                  {AVAILABLE_LANGUAGES.map(({ key: langKey, name }) => {
-                    if (!languages.includes(langKey)) return null;
-
-                    const voiceNameId = `voice-name-${voice.id}-${langKey}`;
-
-                    return (
-                      <div key={langKey} className="inputWrapper">
-                        <label htmlFor={voiceNameId}>
-                          {name}
-                          <input
-                            id={voiceNameId}
-                            type="text"
-                            value={voice.name[langKey]}
-                            onChange={(event) => handleVoiceNameChange(event, voice.key, langKey)}
-                          />
-                        </label>
-                      </div>
-                    );
-                  })}
-                </fieldset>
-              )}
-            </div>
-          </fieldset>
-        );
-      })}
-      <button type="button" onClick={handleAddVoice}>
-        Add voice
-      </button>
-    </fieldset>
+    <div className="flex flex-col gap-4 w-full">
+      <div className="flex items-center relative">
+        <Typography variant="h2">Voices</Typography>
+        <div className="absolute right-0">
+          <Button onClick={handleAddVoice} prefix={<PlusCircleSolid width={20} height={20} />}>
+            Add voice
+          </Button>
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-6">
+        {voices.map((voice) => {
+          return (
+            <Voice
+              key={voice.key}
+              voice={voice}
+              languages={languages}
+              onChangeId={handleVoiceIdChange}
+              onChangeColor={handleVoiceColorChange}
+              onChangeName={handleVoiceNameChange}
+            />
+          );
+        })}
+      </div>
+    </div>
   );
-};
+});
