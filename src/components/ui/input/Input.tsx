@@ -5,9 +5,13 @@ export type InputVariant = "fill" | "outline";
 export type InputSize = "sm" | "md";
 
 export type InputProps = {
+  type?: "text" | "password" | "time";
   value: string;
   id?: string;
   placeholder?: string;
+  min?: string;
+  max?: string;
+  step?: string;
   variant?: InputVariant;
   size?: InputSize;
   className?: string;
@@ -15,9 +19,13 @@ export type InputProps = {
 };
 
 export const Input = memo(function Input({
+  type = "text",
   value,
   id,
   placeholder = "",
+  min,
+  max,
+  step,
   variant = "outline",
   size = "md",
   className = "",
@@ -47,9 +55,12 @@ export const Input = memo(function Input({
           variantClass,
           sizeClass
         )}
-        type="text"
+        type={type}
         value={value}
         placeholder={placeholder}
+        min={min}
+        max={max}
+        step={step}
         onChange={handleChange}
       />
     </div>
