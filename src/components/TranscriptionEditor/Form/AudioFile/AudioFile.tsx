@@ -1,18 +1,16 @@
 import { useEffect } from "react";
 import { useAudioFileSelector } from "../../../../hooks/useAudioFileSelector";
+import { useTranscriptionEditorDispatch } from "../../Context/useContext";
 
-type AudioFileFormProps = {
-  onAudioFileChanged: (audioObjectURL: string) => void;
-};
-
-export const AudioFileForm = ({ onAudioFileChanged }: AudioFileFormProps) => {
+export const AudioFileForm = () => {
   const { audioObjectURL, handleAudioFileChanged } = useAudioFileSelector();
+  const dispatch = useTranscriptionEditorDispatch();
 
   useEffect(() => {
     if (audioObjectURL) {
-      onAudioFileChanged(audioObjectURL);
+      dispatch({ type: "UPDATE_AUDIO_SOURCE", payload: audioObjectURL });
     }
-  }, [audioObjectURL, onAudioFileChanged]);
+  }, [audioObjectURL, dispatch]);
 
   return (
     <>
