@@ -1,49 +1,42 @@
 import { memo, useCallback, useId } from "react";
-import { LanguageKey, Voice as VoiceModel } from "../../../../model/TranscriptionModel";
+import { Language } from "../../../../model/transcription/language.model";
+import { selectVoiceById, updateVoiceColor, updateVoiceName } from "../../../../store/features/voice.slice";
+import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
 import { ColorInput } from "../../../ui/ColorInput/ColorInput";
 import { Input } from "../../../ui/Input/Input";
 import { InputFieldInline } from "../../../ui/InputField/InputFieldInline";
 import { Label } from "../../../ui/InputField/Label";
 import { LabelText } from "../../../ui/InputField/LabelText";
-import { AVAILABLE_LANGUAGES } from "../FormConstants";
+import { VoiceTranslation } from "./VoiceTranslation";
 
 type VoiceProps = {
-  voice: VoiceModel;
-  languages: LanguageKey[];
-  onChangeId: (event: React.ChangeEvent<HTMLInputElement>, voiceKey: string, voiceId: string) => void;
-  onChangeColor: (color: string, voiceKey: string) => void;
-  onChangeName: (event: React.ChangeEvent<HTMLInputElement>, voiceKey: string, language: LanguageKey) => void;
+  voiceId: string;
+  languages: Language[];
 };
 
-export const Voice = memo(function Voice({ voice, languages, onChangeId, onChangeColor, onChangeName }: VoiceProps) {
+export const Voice = memo(function Voice({ voiceId, languages }: VoiceProps) {
   const colorId = useId();
-  const voiceId = useId();
+  const dispatch = useAppDispatch();
+  const { id, color, name } = useAppSelector((state) => selectVoiceById(state, voiceId));
 
   const handleChangeColor = useCallback(
-    (color: string) => {
-      onChangeColor(color, voice.key);
+    (newColor: string) => {
+      dispatch(updateVoiceColor({ id, color: newColor }));
     },
-    [onChangeColor, voice]
-  );
-
-  const handleChangeId = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      onChangeId(event, voice.key, voice.id);
-    },
-    [onChangeId, voice]
+    [dispatch, id]
   );
 
   const handleChangeName = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>, language: LanguageKey) => {
-      onChangeName(event, voice.key, language);
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      dispatch(updateVoiceName({ id, name: event.target.value }));
     },
-    [onChangeName, voice]
+    [dispatch, id]
   );
 
   return (
     <div className="flex flex-col gap-1">
       <div className="flex flex-row gap-4 items-center">
-        <ColorInput id={colorId} value={voice.color} onChange={handleChangeColor} />
+        <ColorInput id={colorId} value={color} onChange={handleChangeColor} />
         <InputFieldInline className="justify-between">
           <Label>
             <LabelText htmlFor={voiceId}>ID</LabelText>
@@ -51,38 +44,16 @@ export const Voice = memo(function Voice({ voice, languages, onChangeId, onChang
           <Input
             id={voiceId}
             className="text-right max-w-30"
-            value={voice.id}
+            value={name}
             size="sm"
             variant="fill"
-            onChange={handleChangeId}
+            onChange={handleChangeName}
           />
         </InputFieldInline>
       </div>
-      {languages.length > 0 && (
-        <>
-          {AVAILABLE_LANGUAGES.map(({ key: langKey, name }) => {
-            if (!languages.includes(langKey)) return null;
-
-            const voiceNameId = `voice-name-${voice.id}-${langKey}`;
-
-            return (
-              <InputFieldInline key={langKey} className="justify-between">
-                <Label>
-                  <LabelText htmlFor={voiceNameId}>{name}</LabelText>
-                </Label>
-                <Input
-                  id={voiceNameId}
-                  className="text-right max-w-30"
-                  value={voice.name[langKey]!}
-                  size="sm"
-                  variant="fill"
-                  onChange={(event) => handleChangeName(event, langKey)}
-                />
-              </InputFieldInline>
-            );
-          })}
-        </>
-      )}
+      {languages.map(({ id: languageId, name }) => {
+        return <VoiceTranslation key={languageId} voiceId={voiceId} languageId={languageId} languageName={name} />;
+      })}
     </div>
   );
 });

@@ -1,31 +1,23 @@
-import { LanguageKey } from "../../../../model/TranscriptionModel";
-import { Chip } from "../../../ui/Chip/Chip";
+import { AVAILABLE_LANGUAGES_IDS } from "../../../../constants/language.constants";
+import { LanguageId } from "../../../../model/transcription/language.model";
+import { toggleLanguage } from "../../../../store/features/language.slice";
+import { useAppDispatch } from "../../../../store/hooks";
 import { Typography } from "../../../ui/Typography/Typography";
-import { useTranscriptionEditorContext, useTranscriptionEditorDispatch } from "../../Context/useContext";
-import { AVAILABLE_LANGUAGES } from "../FormConstants";
+import { Language } from "./Language";
 
 export const LanguagesForm = () => {
-  const {
-    transcriptionForm: { languages },
-  } = useTranscriptionEditorContext();
-  const dispatch = useTranscriptionEditorDispatch();
+  const dispatch = useAppDispatch();
 
-  const handleChangeLanguages = (event: React.SyntheticEvent<HTMLDivElement>) => {
-    const language = event.currentTarget.id as LanguageKey;
-
-    if (languages.includes(language)) {
-      dispatch({ type: "UPDATE_TRANSCRIPTION_LANGUAGES", payload: languages.filter((lang) => lang !== language) });
-    } else {
-      dispatch({ type: "UPDATE_TRANSCRIPTION_LANGUAGES", payload: [...languages, language] });
-    }
+  const handleChangeLanguages = (id: LanguageId) => {
+    dispatch(toggleLanguage(id));
   };
 
   return (
     <div className="flex flex-col gap-4">
       <Typography variant="h2">Languages</Typography>
       <div className="flex flex-row gap-2">
-        {AVAILABLE_LANGUAGES.map(({ key, name }) => (
-          <Chip key={key} id={key} value={name} highlighted={languages.includes(key)} onClick={handleChangeLanguages} />
+        {AVAILABLE_LANGUAGES_IDS.map((id) => (
+          <Language key={id} id={id} onToggle={handleChangeLanguages} />
         ))}
       </div>
     </div>

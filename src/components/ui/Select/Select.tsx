@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { NavArrowDown } from "iconoir-react";
 import { Select as RadixSelect } from "radix-ui";
 import { PropsWithChildren } from "react";
@@ -7,6 +8,7 @@ type SelectProps = {
   value: string;
   placeholder?: string;
   decorator?: JSX.Element;
+  className?: string;
   onChange?: (value: string) => void;
 };
 
@@ -15,6 +17,7 @@ export const Select = ({
   value,
   placeholder = "",
   decorator,
+  className,
   onChange,
   children,
 }: PropsWithChildren<SelectProps>) => {
@@ -28,7 +31,10 @@ export const Select = ({
     <RadixSelect.Root value={value} onValueChange={handleChange}>
       <RadixSelect.Trigger
         id={id}
-        className="w-full h-min px-2 py-1 flex flex-row items-center gap-1 rounded-md bg-transparent inset-ring inset-ring-zinc-300 text-zinc-500 data-placeholder:italic data-placeholder:text-zinc-400 cursor-pointer"
+        className={clsx(
+          "h-min px-2 py-1 flex flex-row items-center gap-1 rounded-md bg-transparent inset-ring inset-ring-zinc-300 text-zinc-500 data-placeholder:italic data-placeholder:text-zinc-400 cursor-pointer",
+          className
+        )}
       >
         <span className="flex-auto text-sm font-normal text-left">
           <RadixSelect.Value placeholder={placeholder}></RadixSelect.Value>

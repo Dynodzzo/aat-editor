@@ -1,170 +1,83 @@
-import { memo, useRef, useState } from "react";
+import { ForwardedRef, forwardRef, memo, PropsWithChildren, useContext, useRef, useState } from "react";
+import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
 import { useRequestAnimationFrame } from "../../../../hooks/useRequestAnimationFrame";
-import { LanguageKey } from "../../../../model/TranscriptionModel";
+import { selectAudioDuration } from "../../../../store/features/audio.slice";
+import { selectCuesdsAndTimes } from "../../../../store/features/cue.slice";
+import { selectActiveLanguages } from "../../../../store/features/language.slice";
+import { useAppSelector } from "../../../../store/hooks";
 import { formatISOTimeToDuration } from "../../../../utils/time.utils";
-import { useTranscriptionEditorContext, useTranscriptionEditorDispatch } from "../../Context/useContext";
+import { AudioCurrentTimeContext } from "../../Context/AudioCurrentTimeContext";
 import { Cue } from "./Cue";
 
 type CuesFormProps = {
   onPlaySprite?: (id?: string) => void;
 };
 
+const ItemWrapper = forwardRef<HTMLDivElement, PropsWithChildren>(function ItemWrapper(
+  props,
+  ref: ForwardedRef<HTMLDivElement>
+) {
+  return <div className="px-4 pt-4 last:pb-4" ref={ref} {...props} />;
+});
+
 export const CuesForm = memo(function CuesForm({ onPlaySprite }: CuesFormProps) {
-  const {
-    transcriptionForm: { languages, voices, cues },
-    audioPlayer: { duration, currentTimeRef },
-  } = useTranscriptionEditorContext();
-  const dispatch = useTranscriptionEditorDispatch();
-  const cuesContainersRefs = useRef<Record<string, HTMLDivElement>>({});
-  const [playingCuesKeys, setPlayingCuesKeys] = useState<string[]>([]);
+  const languages = useAppSelector(selectActiveLanguages);
+  const cues = useAppSelector(selectCuesdsAndTimes);
+  const duration = useAppSelector(selectAudioDuration);
+  const currentTimeRef = useContext(AudioCurrentTimeContext);
+
+  const virtuosoRef = useRef<VirtuosoHandle>(null);
+  const [playingCues, setPlayingCues] = useState<number[]>([]);
 
   useRequestAnimationFrame(() => {
     const currentTime = currentTimeRef?.current;
 
     if (currentTime && cues.length > 0) {
-      const cuesBeingPlayed = cues.filter(({ start, end }) => {
-        const isCueStartGreaterThanCurrentTime = formatISOTimeToDuration(start) <= currentTime;
-        const isCueEndLessThanCurrentTime = formatISOTimeToDuration(end) >= currentTime;
-        return isCueStartGreaterThanCurrentTime && isCueEndLessThanCurrentTime;
-      });
+      const cuesBeingPlayed = cues
+        .filter(({ start, end }) => {
+          const isCueStartGreaterThanCurrentTime = formatISOTimeToDuration(start) <= currentTime;
+          const isCueEndLessThanCurrentTime = formatISOTimeToDuration(end) >= currentTime;
+          return isCueStartGreaterThanCurrentTime && isCueEndLessThanCurrentTime;
+        })
+        .map((cue) => cues.findIndex((c) => c.id === cue.id));
 
-      if (!cuesBeingPlayed.length) return setPlayingCuesKeys([]);
+      if (!cuesBeingPlayed.length && playingCues.length) return setPlayingCues([]);
 
-      const cuesKeysBeingPlayed = cuesBeingPlayed.map(({ key }) => key);
+      const cuesKeysBeingPlayed = cuesBeingPlayed.map((index) => index);
 
-      if (playingCuesKeys.join() !== cuesKeysBeingPlayed.join()) {
-        setPlayingCuesKeys(cuesKeysBeingPlayed);
-        const lastCueBeingPlayed = cuesBeingPlayed.at(-1);
+      if (playingCues.join() !== cuesKeysBeingPlayed.join()) {
+        setPlayingCues(cuesKeysBeingPlayed);
+        const lastCueBeingPlayed = cuesKeysBeingPlayed.at(-1);
 
-        if (lastCueBeingPlayed) {
-          cuesContainersRefs.current[lastCueBeingPlayed.key].scrollIntoView({ behavior: "smooth" });
+        if (lastCueBeingPlayed !== undefined) {
+          virtuosoRef.current?.scrollToIndex({ index: lastCueBeingPlayed, align: "start", behavior: "smooth" });
         }
       }
     }
   });
 
-  const handleCueStartChange = (start: string, cueKey: string) => {
-    const newCues = cues.map((cue) => {
-      if (cue.key === cueKey) {
-        return {
-          ...cue,
-          start,
-        };
-      }
-
-      return cue;
-    });
-
-    dispatch({ type: "UPDATE_TRANSCRIPTION_CUES", payload: newCues });
-  };
-
-  const handleCueEndChange = (end: string, cueKey: string) => {
-    const newCues = cues.map((cue) => {
-      if (cue.key === cueKey) {
-        return {
-          ...cue,
-          end,
-        };
-      }
-
-      return cue;
-    });
-
-    dispatch({ type: "UPDATE_TRANSCRIPTION_CUES", payload: newCues });
-  };
-
-  const handleCueVoiceChange = (voice: string, cueKey: string) => {
-    const newCues = cues.map((cue) => {
-      if (cue.key === cueKey) {
-        return {
-          ...cue,
-          voice,
-        };
-      }
-
-      return cue;
-    });
-
-    dispatch({ type: "UPDATE_TRANSCRIPTION_CUES", payload: newCues });
-  };
-
-  const handleCueTextChange = (text: string, cueKey: string, language: LanguageKey) => {
-    const newCues = cues.map((cue) => {
-      if (cue.key === cueKey) {
-        return {
-          ...cue,
-          text: {
-            ...cue.text,
-            [language]: text,
-          },
-        };
-      }
-
-      return cue;
-    });
-
-    dispatch({ type: "UPDATE_TRANSCRIPTION_CUES", payload: newCues });
-  };
-
-  const handleCueNoteChange = (note: string, cueKey: string, language: LanguageKey) => {
-    const newCues = cues.map((cue) => {
-      if (cue.key === cueKey) {
-        return {
-          ...cue,
-          note: {
-            ...cue.note,
-            [language]: note,
-          },
-        };
-      }
-
-      return cue;
-    });
-
-    dispatch({ type: "UPDATE_TRANSCRIPTION_CUES", payload: newCues });
-  };
-
-  const handleDeleteCue = (cueKey: string) => {
-    dispatch({
-      type: "UPDATE_TRANSCRIPTION_CUES",
-      payload: cues.filter((cue) => cue.key !== cueKey),
-    });
-  };
-
   return (
-    <div className="p-4 flex flex-col gap-4 overflow-auto">
-      {cues.map((cue, index) => {
-        const isCueBeingPlayed = playingCuesKeys.includes(cue.key);
-
-        return (
-          <div
-            ref={(element) => {
-              if (element) {
-                cuesContainersRefs.current[cue.key] = element;
-              }
-            }}
-            key={cue.key}
-          >
+    <div className="flex flex-col overflow-auto h-full">
+      <Virtuoso
+        ref={virtuosoRef}
+        totalCount={cues.length}
+        data={cues}
+        components={{ Item: ItemWrapper }}
+        itemContent={(index, cue) => (
+          <div key={cue.id}>
             <Cue
               index={index.toString()}
-              cue={cue}
+              cueId={cue.id}
               languages={languages}
-              voices={voices}
               duration={duration}
-              isPlaying={isCueBeingPlayed}
-              onChangeVoice={handleCueVoiceChange}
-              onChangeStart={handleCueStartChange}
-              onChangeEnd={handleCueEndChange}
-              onChangeText={handleCueTextChange}
-              onChangeNote={handleCueNoteChange}
+              isPlaying={playingCues.includes(index)}
               onPlaySprite={(cueKey?: string) => {
                 if (onPlaySprite) onPlaySprite(cueKey);
               }}
-              onDelete={handleDeleteCue}
             />
           </div>
-        );
-      })}
+        )}
+      />
     </div>
   );
 });

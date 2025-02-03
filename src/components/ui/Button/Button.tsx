@@ -9,6 +9,7 @@ type ButtonProps = {
   variant?: ButtonVariant;
   style?: ButtonStyle;
   prefix?: JSX.Element;
+  disabled?: boolean;
   onClick?: () => void;
 };
 
@@ -16,6 +17,7 @@ export const Button = memo(function ColorIndicator({
   variant = "outline",
   style = "primary",
   prefix,
+  disabled,
   onClick,
   children,
 }: React.PropsWithChildren<ButtonProps>) {
@@ -37,6 +39,7 @@ export const Button = memo(function ColorIndicator({
         styleClass
       )}
       onClick={onClick}
+      disabled={disabled}
     >
       {prefix}
       {children}

@@ -1,8 +1,7 @@
-import { TranscriptionState } from "../../model/TranscriptionModel";
-import { TranscriptionFileSchema, transcriptionFileSchema } from "../../model/TranscriptionSchema";
+import { TranscriptionExport, transcriptionSchema } from "../../model/export/transcription.export.schema";
 
-export function checkFileFormat(fileData: TranscriptionFileSchema): { success: boolean; error?: string } {
-  const { success, error } = transcriptionFileSchema.safeParse(fileData);
+export function checkFileFormat(fileData: TranscriptionExport): { success: boolean; error?: string } {
+  const { success, error } = transcriptionSchema.safeParse(fileData);
 
   if (success) {
     return { success };
@@ -10,12 +9,4 @@ export function checkFileFormat(fileData: TranscriptionFileSchema): { success: b
     // TODO parse error and return a user-friendly message
     return { success: false, error: JSON.stringify(error, null, 2) };
   }
-}
-
-export function hydrateData(fileData: TranscriptionFileSchema): TranscriptionState {
-  return {
-    ...fileData,
-    voices: fileData.voices.map((voice) => ({ ...voice, key: crypto.randomUUID() })),
-    cues: fileData.cues.map((cue) => ({ ...cue, key: crypto.randomUUID() })),
-  };
 }

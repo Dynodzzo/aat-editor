@@ -1,14 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
 import WaveSurfer from "wavesurfer.js";
 
-export const useWaveSurfer = (source: string) => {
+export const useWaveSurfer = (source: string, currentTimeRef: MutableRefObject<number>) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [waveSurfer, setWaveSurfer] = useState<WaveSurfer | null>(null);
 
   const [isReady, setIsReady] = useState<boolean>(false);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [duration, setDuration] = useState<number>(0);
-  const currentTimeRef = useRef<number>(0);
 
   useEffect(() => {
     if (!containerRef.current || !source) return;
@@ -21,6 +20,7 @@ export const useWaveSurfer = (source: string) => {
       cursorWidth: 1,
       mediaControls: true,
       url: source,
+      backend: "MediaElement",
     });
 
     ws.on("load", () => {
@@ -61,7 +61,7 @@ export const useWaveSurfer = (source: string) => {
       ws.destroy();
       setWaveSurfer(null);
     };
-  }, [source]);
+  }, [currentTimeRef, source]);
 
   const play = useCallback(
     async (from?: number) => {

@@ -1,8 +1,8 @@
-import { TranscriptionState } from "../../model/TranscriptionModel";
 import { TranscriptionImporter } from "../TranscriptionImporter/TranscriptionImporter";
+import { Button } from "../ui/Button/Button";
 
 type LobbyProps = {
-  onStartEditing: (state?: TranscriptionState) => void;
+  onStartEditing: () => void;
 };
 
 export const Lobby = ({ onStartEditing }: LobbyProps) => {
@@ -13,8 +13,10 @@ export const Lobby = ({ onStartEditing }: LobbyProps) => {
   return (
     <div>
       <h1>Lobby</h1>
-      <TranscriptionImporter onFileImported={onStartEditing} />
-      <button onClick={handleCreateClick}>Create</button>
+      <div className="flex flex-row gap-2">
+        <TranscriptionImporter onFileImported={onStartEditing} />
+        <Button onClick={handleCreateClick}>Create</Button>
+      </div>
     </div>
   );
 };

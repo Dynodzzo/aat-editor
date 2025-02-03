@@ -1,99 +1,29 @@
 import { PlusCircleSolid } from "iconoir-react";
 import { memo, useCallback } from "react";
-import { LanguageKey, Voice as VoiceModel, StringByLanguage } from "../../../../model/TranscriptionModel";
+import { Voice as VoiceModel } from "../../../../model/transcription/voice.model";
+import { selectActiveLanguages } from "../../../../store/features/language.slice";
+import { addVoice, selectVoicesIds } from "../../../../store/features/voice.slice";
+import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
 import { Button } from "../../../ui/Button/Button";
 import { Typography } from "../../../ui/Typography/Typography";
-import { useTranscriptionEditorContext, useTranscriptionEditorDispatch } from "../../Context/useContext";
-import { AVAILABLE_LANGUAGES, DEFAULT_VOICE_COLOR } from "../FormConstants";
+
 import { Voice } from "./Voice";
 
+const DEFAULT_VOICE_COLOR = "FFFFFF";
+
 export const VoicesForm = memo(function VoicesForm() {
-  const {
-    transcriptionForm: { languages, voices, cues },
-  } = useTranscriptionEditorContext();
-  const dispatch = useTranscriptionEditorDispatch();
-
-  const handleVoiceIdChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>, voiceKey: string, voiceId: string) => {
-      const newVoices = voices.map((voice) => {
-        if (voice.key === voiceKey) {
-          return {
-            ...voice,
-            id: event.target.value,
-          };
-        }
-
-        return voice;
-      });
-
-      const updatedCues = cues.map((cue) => {
-        if (cue.voice === voiceId) {
-          return {
-            ...cue,
-            voice: event.target.value,
-          };
-        }
-
-        return cue;
-      });
-
-      dispatch({ type: "UPDATE_TRANSCRIPTION_VOICES", payload: newVoices });
-      dispatch({ type: "UPDATE_TRANSCRIPTION_CUES", payload: updatedCues });
-    },
-    [voices, cues, dispatch]
-  );
-
-  const handleVoiceColorChange = useCallback(
-    (color: string, voiceKey: string) => {
-      const newVoices = voices.map((voice) => {
-        if (voice.key === voiceKey) {
-          return {
-            ...voice,
-            color,
-          };
-        }
-
-        return voice;
-      });
-
-      dispatch({ type: "UPDATE_TRANSCRIPTION_VOICES", payload: newVoices });
-    },
-    [voices, dispatch]
-  );
-
-  const handleVoiceNameChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>, voiceKey: string, language: LanguageKey) => {
-      const newVoices = voices.map((voice) => {
-        if (voice.key === voiceKey) {
-          return {
-            ...voice,
-            name: {
-              ...voice.name,
-              [language]: event.target.value,
-            },
-          };
-        }
-
-        return voice;
-      });
-
-      dispatch({ type: "UPDATE_TRANSCRIPTION_VOICES", payload: newVoices });
-    },
-    [voices, dispatch]
-  );
+  const dispatch = useAppDispatch();
+  const languages = useAppSelector(selectActiveLanguages);
+  const voicesIds = useAppSelector(selectVoicesIds);
 
   const handleAddVoice = useCallback(() => {
     const newVoice: VoiceModel = {
-      id: `voice-${voices.length + 1}`,
-      key: crypto.randomUUID(),
+      name: `voice-${voicesIds.length + 1}`,
+      id: crypto.randomUUID(),
       color: DEFAULT_VOICE_COLOR,
-      name: AVAILABLE_LANGUAGES.reduce((languages, { key }) => {
-        languages[key] = `Voice ${voices.length + 1}`;
-        return languages;
-      }, {} as StringByLanguage),
     };
-    dispatch({ type: "UPDATE_TRANSCRIPTION_VOICES", payload: [...voices, newVoice] });
-  }, [voices, dispatch]);
+    dispatch(addVoice(newVoice));
+  }, [voicesIds, dispatch]);
 
   return (
     <div className="flex flex-col gap-4 w-full">
@@ -106,17 +36,8 @@ export const VoicesForm = memo(function VoicesForm() {
         </div>
       </div>
       <div className="grid grid-cols-2 gap-6">
-        {voices.map((voice) => {
-          return (
-            <Voice
-              key={voice.key}
-              voice={voice}
-              languages={languages}
-              onChangeId={handleVoiceIdChange}
-              onChangeColor={handleVoiceColorChange}
-              onChangeName={handleVoiceNameChange}
-            />
-          );
+        {voicesIds.map((voiceId) => {
+          return <Voice key={voiceId} voiceId={voiceId} languages={languages} />;
         })}
       </div>
     </div>

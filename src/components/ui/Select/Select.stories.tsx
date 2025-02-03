@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { useArgs } from "storybook/internal/preview-api";
-import { Select } from "./Select";
+import { Select, SelectItem } from "./Select";
 
 const meta = {
   component: Select,
@@ -16,14 +16,12 @@ type Story = StoryObj<typeof meta>;
 type StoryArgs = {
   value: string;
   placeholder?: string;
-  options: string[];
   decorator?: JSX.Element;
 };
 
 const defaultArgs: StoryArgs = {
   value: "",
   placeholder: "Select...",
-  options: ["Apple", "Banana", "Kiwi", "Peach"],
 };
 
 const renderFunction = function Render(args: StoryArgs) {
@@ -33,7 +31,14 @@ const renderFunction = function Render(args: StoryArgs) {
     updateArgs({ value: currentValue });
   }
 
-  return <Select {...args} value={storyArgs.value} onChange={onChange} />;
+  return (
+    <Select {...args} value={storyArgs.value} onChange={onChange}>
+      <SelectItem value="Apple">Apple</SelectItem>
+      <SelectItem value="Banana">Banana</SelectItem>
+      <SelectItem value="Kiwi">Kiwi</SelectItem>
+      <SelectItem value="Peach">Peach</SelectItem>
+    </Select>
+  );
 };
 
 export const Default: Story = {

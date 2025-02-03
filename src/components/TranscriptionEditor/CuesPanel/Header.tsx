@@ -1,43 +1,26 @@
 import { PlusCircleSolid } from "iconoir-react";
-import { memo } from "react";
-import { Cue, StringByLanguage } from "../../../model/TranscriptionModel";
+import { memo, useContext } from "react";
+import { Cue } from "../../../model/transcription/cue.model";
+import { addCue } from "../../../store/features/cue.slice";
+import { useAppDispatch } from "../../../store/hooks";
 import { formatDurationToISOTime } from "../../../utils/time.utils";
 import { Button } from "../../ui/Button/Button";
 import { Typography } from "../../ui/Typography/Typography";
-import { useTranscriptionEditorContext, useTranscriptionEditorDispatch } from "../Context/useContext";
-import { AVAILABLE_LANGUAGES } from "../Form/FormConstants";
+import { AudioCurrentTimeContext } from "../Context/AudioCurrentTimeContext";
 
 export const Header = memo(function Header() {
-  const {
-    transcriptionForm: { cues },
-    audioPlayer: { currentTimeRef },
-  } = useTranscriptionEditorContext();
-  const dispatch = useTranscriptionEditorDispatch();
+  const dispatch = useAppDispatch();
+  const currentTimeRef = useContext(AudioCurrentTimeContext);
 
   const handleAddCue = () => {
     const newCue: Cue = {
-      key: crypto.randomUUID(),
-      start: formatDurationToISOTime(currentTimeRef?.current ?? 0),
-      end: formatDurationToISOTime((currentTimeRef?.current ?? 0) + 1),
-      voice: "",
-      text: AVAILABLE_LANGUAGES.reduce((acc, { key }) => {
-        return {
-          ...acc,
-          [key]: "",
-        };
-      }, {} as StringByLanguage),
-      note: AVAILABLE_LANGUAGES.reduce((acc, { key }) => {
-        return {
-          ...acc,
-          [key]: "",
-        };
-      }, {} as StringByLanguage),
+      id: crypto.randomUUID(),
+      voiceId: "",
+      start: formatDurationToISOTime(currentTimeRef.current),
+      end: formatDurationToISOTime(currentTimeRef.current + 1),
     };
 
-    dispatch({
-      type: "UPDATE_TRANSCRIPTION_CUES",
-      payload: [...cues, newCue],
-    });
+    dispatch(addCue(newCue));
   };
 
   return (

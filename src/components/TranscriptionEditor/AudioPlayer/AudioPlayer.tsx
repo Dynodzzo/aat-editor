@@ -1,9 +1,13 @@
-import { memo, useCallback, useEffect, useMemo, useRef } from "react";
+import { memo, useCallback, useContext, useEffect, useMemo, useRef } from "react";
 import { Region } from "wavesurfer.js/dist/plugins/regions.js";
 import { useWaveSurfer } from "../../../hooks/useWaveSurfer";
 import { useWaveSurferRegions } from "../../../hooks/useWaveSurferRegions";
+import { selectAudioSource, updateAudioDuration } from "../../../store/features/audio.slice";
+import { selectAllCues, updateCueEnd, updateCueStart } from "../../../store/features/cue.slice";
+import { selectAllVoices } from "../../../store/features/voice.slice";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { formatDurationToISOTime, formatISOTimeToDuration } from "../../../utils/time.utils";
-import { useTranscriptionEditorContext, useTranscriptionEditorDispatch } from "../Context/useContext";
+import { AudioCurrentTimeContext } from "../Context/AudioCurrentTimeContext";
 
 type AudioPlayerProps = {
   onReady?: (play: () => Promise<void>) => void;
@@ -16,62 +20,42 @@ const WAVE_SURFER_ZOOM_STEP = 0.1;
 const DEFAULT_REGION_COLOR = "rgba(0, 0, 0, 0.2)";
 
 export const AudioPlayer = memo(function AudioPlayer({ onReady }: AudioPlayerProps) {
-  const {
-    transcriptionForm: { cues, voices },
-    audioPlayer: { source },
-  } = useTranscriptionEditorContext();
-  const dispatch = useTranscriptionEditorDispatch();
+  const dispatch = useAppDispatch();
+  const source = useAppSelector(selectAudioSource);
+  const cues = useAppSelector(selectAllCues);
+  const voices = useAppSelector(selectAllVoices);
   const activeRegionId = useRef<string>("");
   const zoom = useRef<number>(WAVE_SURFER_ZOOM_DEFAULT_ZOOM);
 
-  const { waveSurfer, containerRef, currentTimeRef, duration, isReady, isPlaying, play, pause } = useWaveSurfer(source);
+  const currentTimeRef = useContext(AudioCurrentTimeContext);
+  const { waveSurfer, containerRef, duration, isReady, play, pause } = useWaveSurfer(source, currentTimeRef);
 
   const regions = useMemo(() => {
     return cues.map((cue) => {
-      const voice = voices.find((voice) => voice.id === cue.voice);
+      const voice = voices.find((voice) => voice.id === cue.voiceId);
       return {
-        id: cue.key,
+        id: cue.id,
         start: formatISOTimeToDuration(cue.start),
         end: formatISOTimeToDuration(cue.end),
+        // TODO Extract the magic constant
         color: voice ? voice.color + "44" : DEFAULT_REGION_COLOR,
-        content: voice?.id,
+        content: voice?.name,
         drag: true,
         resize: true,
       };
     });
   }, [cues, voices]);
 
-  const handleRegionUpdate = useCallback(
-    ({ start }: Region) => {
-      if (isPlaying) pause(start);
-    },
-    [isPlaying, pause]
-  );
-
   const handleRegionUpdated = useCallback(
     ({ id, start, end }: Region) => {
-      if (isPlaying) pause(start);
-
-      const doesCueExists = cues.some((cue) => cue.key === id);
+      const doesCueExists = cues.some((cue) => cue.id === id);
 
       if (doesCueExists) {
-        dispatch({
-          type: "UPDATE_TRANSCRIPTION_CUES",
-          payload: cues.map((cue) => {
-            if (cue.key === id) {
-              return {
-                ...cue,
-                start: formatDurationToISOTime(start),
-                end: formatDurationToISOTime(end),
-              };
-            }
-
-            return cue;
-          }),
-        });
+        dispatch(updateCueStart({ id, start: formatDurationToISOTime(start) }));
+        dispatch(updateCueEnd({ id, end: formatDurationToISOTime(end) }));
       }
     },
-    [isPlaying, cues, pause, dispatch]
+    [cues, dispatch]
   );
 
   const handleRegionOut = useCallback(
@@ -86,11 +70,10 @@ export const AudioPlayer = memo(function AudioPlayer({ onReady }: AudioPlayerPro
 
   const waveSurferRegionsHandlers = useMemo(() => {
     return {
-      onRegionUpdate: handleRegionUpdate,
       onRegionUpdated: handleRegionUpdated,
       onRegionOut: handleRegionOut,
     };
-  }, [handleRegionUpdate, handleRegionUpdated, handleRegionOut]);
+  }, [handleRegionUpdated, handleRegionOut]);
 
   useWaveSurferRegions(waveSurfer, regions, isReady, waveSurferRegionsHandlers);
 
@@ -138,12 +121,8 @@ export const AudioPlayer = memo(function AudioPlayer({ onReady }: AudioPlayerPro
   }, [waveSurfer, isReady, containerRef]);
 
   useEffect(() => {
-    dispatch({ type: "UPDATE_AUDIO_DURATION", payload: duration });
+    dispatch(updateAudioDuration(duration));
   }, [dispatch, duration]);
-
-  useEffect(() => {
-    dispatch({ type: "UPDATE_AUDIO_CURRENT_TIME", payload: currentTimeRef });
-  }, [dispatch, currentTimeRef]);
 
   return (
     <div className="audio-player" style={{ backgroundColor: "white" }}>
