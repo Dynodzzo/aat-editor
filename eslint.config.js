@@ -18,7 +18,7 @@ export default tseslint.config(
     ],
     files: ["src/**/*.{ts,tsx}"],
     languageOptions: {
-      ecmaVersion: 2022,
+      ecmaVersion: 2024,
       globals: globals.browser,
       parserOptions: {
         project: ["./tsconfig.node.json", "./tsconfig.app.json"],
