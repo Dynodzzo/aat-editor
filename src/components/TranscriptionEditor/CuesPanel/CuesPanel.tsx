@@ -3,15 +3,11 @@ import { Cues } from "../Form/Cues/Cues";
 import { CuesPanelLayout } from "./CuesPanelLayout";
 import { Header } from "./Header";
 
-type CuesPanelProps = {
-  playSprite?: (id?: string) => void;
-};
-
-export const CuesPanel = memo(function CuesPanel({ playSprite }: CuesPanelProps) {
+export const CuesPanel = memo(function CuesPanel() {
   return (
     <CuesPanelLayout>
       <Header />
-      <Cues onPlaySprite={playSprite} />
+      <Cues />
     </CuesPanelLayout>
   );
 });

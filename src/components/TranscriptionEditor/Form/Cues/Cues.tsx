@@ -6,12 +6,8 @@ import { selectCuesdsAndTimes } from "../../../../store/features/cue.slice";
 import { selectActiveLanguages } from "../../../../store/features/language.slice";
 import { useAppSelector } from "../../../../store/hooks";
 import { formatISOTimeToDuration } from "../../../../utils/time.utils";
-import { AudioCurrentTimeContext } from "../../Context/AudioCurrentTimeContext";
+import { AudioContext } from "../../Context/AudioContext";
 import { Cue } from "./Cue";
-
-type CuesFormProps = {
-  onPlaySprite?: (id?: string) => void;
-};
 
 const ItemWrapper = forwardRef<HTMLDivElement, PropsWithChildren>(function ItemWrapper(
   props,
@@ -20,11 +16,12 @@ const ItemWrapper = forwardRef<HTMLDivElement, PropsWithChildren>(function ItemW
   return <div className="px-4 pt-4 last:pb-4" ref={ref} {...props} />;
 });
 
-export const Cues = memo(function CuesForm({ onPlaySprite }: CuesFormProps) {
+export const Cues = memo(function CuesForm() {
   const languages = useAppSelector(selectActiveLanguages);
   const cues = useAppSelector(selectCuesdsAndTimes);
   const duration = useAppSelector(selectAudioDuration);
-  const currentTimeRef = useContext(AudioCurrentTimeContext);
+
+  const { currentTimeRef } = useContext(AudioContext);
 
   const virtuosoRef = useRef<VirtuosoHandle>(null);
   const [playingCues, setPlayingCues] = useState<number[]>([]);
@@ -70,10 +67,7 @@ export const Cues = memo(function CuesForm({ onPlaySprite }: CuesFormProps) {
               cueId={cue.id}
               languages={languages}
               duration={duration}
-              isPlaying={playingCues.includes(index)}
-              onPlaySprite={(cueKey?: string) => {
-                if (onPlaySprite) onPlaySprite(cueKey);
-              }}
+              isBeingPlayed={playingCues.includes(index)}
             />
           </div>
         )}

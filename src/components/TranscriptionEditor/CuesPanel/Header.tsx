@@ -6,11 +6,11 @@ import { useAppDispatch } from "../../../store/hooks";
 import { formatDurationToISOTime } from "../../../utils/time.utils";
 import { Button } from "../../ui/Button/Button";
 import { Typography } from "../../ui/Typography/Typography";
-import { AudioCurrentTimeContext } from "../Context/AudioCurrentTimeContext";
+import { AudioContext } from "../Context/AudioContext";
 
 export const Header = memo(function Header() {
   const dispatch = useAppDispatch();
-  const currentTimeRef = useContext(AudioCurrentTimeContext);
+  const { currentTimeRef } = useContext(AudioContext);
 
   const handleAddCue = () => {
     const newCue: Cue = {

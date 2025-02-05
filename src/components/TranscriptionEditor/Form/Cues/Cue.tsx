@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { PlaySolid, Trash } from "iconoir-react";
-import { memo, useCallback, useId } from "react";
+import { memo, useCallback, useContext, useId } from "react";
 import { Language } from "../../../../model/transcription/language.model";
 import {
   deleteCue,
@@ -17,6 +17,7 @@ import { InputFieldInline } from "../../../ui/InputField/InputFieldInline";
 import { Label } from "../../../ui/InputField/Label";
 import { LabelText } from "../../../ui/InputField/LabelText";
 import { Typography } from "../../../ui/Typography/Typography";
+import { AudioContext } from "../../Context/AudioContext";
 import { CueTranslation } from "./CueTranslation";
 import { CueVoice } from "./CueVoice";
 
@@ -28,15 +29,17 @@ type CueProps = {
   cueId: string;
   languages: Language[];
   duration?: number;
-  isPlaying?: boolean;
-  onPlaySprite: (cueKey?: string) => void;
+  isBeingPlayed?: boolean;
 };
 
-export const Cue = memo(function Cue({ index, cueId, languages, duration, isPlaying, onPlaySprite }: CueProps) {
+export const Cue = memo(function Cue({ index, cueId, languages, duration, isBeingPlayed }: CueProps) {
   const startId = useId();
   const endId = useId();
   const dispatch = useAppDispatch();
   const cue = useAppSelector((state) => selectCueById(state, cueId));
+  const {
+    playerControls: { playRegion },
+  } = useContext(AudioContext);
 
   const handleChangeStart = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,12 +66,16 @@ export const Cue = memo(function Cue({ index, cueId, languages, duration, isPlay
     dispatch(deleteCue(cue.id));
   }, [dispatch, cue]);
 
+  const handleListen = useCallback(async () => {
+    await playRegion?.(cue.id);
+  }, [playRegion, cue]);
+
   if (!cue) return null;
 
   return (
     <div
       className={clsx("px-6 py-4 flex flex-col gap-3 bg-zinc-50 rounded-sm", {
-        "inset-ring-1 inset-ring-slate-500": isPlaying,
+        "inset-ring-2 inset-ring-slate-500": isBeingPlayed,
       })}
     >
       <div className="flex flex-row items-center justify-between">
@@ -115,7 +122,7 @@ export const Cue = memo(function Cue({ index, cueId, languages, duration, isPlay
           <Button
             variant="inline"
             style="primary"
-            onClick={() => onPlaySprite(cue.id)}
+            onClick={() => void handleListen()}
             prefix={<PlaySolid width={20} height={20} />}
           >
             Listen

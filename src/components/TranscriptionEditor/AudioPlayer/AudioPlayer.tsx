@@ -1,40 +1,30 @@
 import { ForwardSolid, PauseSolid, PlaySolid, SoundHigh, Timer } from "iconoir-react";
-import { useContext, useState } from "react";
-import { useRequestAnimationFrame } from "../../../hooks/useRequestAnimationFrame";
-import { selectAudioDuration } from "../../../store/features/audio.slice";
-import { useAppSelector } from "../../../store/hooks";
-import { formatDurationToISOTime } from "../../../utils/time.utils";
+import { useContext } from "react";
 import { Typography } from "../../ui/Typography/Typography";
-import { AudioCurrentTimeContext } from "../Context/AudioCurrentTimeContext";
+import { AudioContext } from "../Context/AudioContext";
+import { Progress } from "./Progress";
 
-type AudioPlayerProps = {
-  play?: () => void;
-  pause?: () => void;
-  playNextRegion?: () => void;
-  playPreviousRegion?: () => void;
-  isPlaying?: boolean;
-};
-
-export const AudioPlayer = ({ play, pause, playNextRegion, playPreviousRegion, isPlaying }: AudioPlayerProps) => {
+export const AudioPlayer = () => {
   // const dispatch = useAppDispatch();
-  const duration = useAppSelector(selectAudioDuration);
-  const [progress, setProgress] = useState<number>(0);
 
-  const currentTimeRef = useContext(AudioCurrentTimeContext);
+  const {
+    isPlaying,
+    playerControls: { play, pause, playNextRegion, playPreviousRegion },
+  } = useContext(AudioContext);
 
-  const handleTogglePlay = () => {
+  const handleTogglePlay = async () => {
     if (!play || !pause) return;
 
     if (isPlaying) return pause();
-    play();
+    await play();
   };
 
-  const handlePreviousRegionClick = () => {
-    playPreviousRegion?.();
+  const handlePreviousRegionClick = async () => {
+    await playPreviousRegion?.();
   };
 
-  const handleNextRegionClick = () => {
-    playNextRegion?.();
+  const handleNextRegionClick = async () => {
+    await playNextRegion?.();
   };
 
   const handleVolumeClick = () => {
@@ -45,31 +35,10 @@ export const AudioPlayer = ({ play, pause, playNextRegion, playPreviousRegion, i
     // dispatch(toggleVolume());
   };
 
-  useRequestAnimationFrame(() => {
-    const currentTime = currentTimeRef?.current;
-    setProgress((currentTime / duration) * 100);
-  });
-
   // TODO: increase tap target size for buttons
   return (
     <div className="flex flex-col">
-      <div className="progress flex flex-col gap-1 items-stretch px-6 pt-4 pb-2 bg-zinc-100">
-        <div className="progress-bar bg-gray-600 h-2 rounded-full outline-2 outline-gray-600 ">
-          <div className="progress-indicator bg-gray-300 h-2 rounded-full" style={{ width: `${progress}%` }} />
-        </div>
-        <div className="flex flex-row justify-between">
-          <Typography>
-            <span className="text-zinc-500 font-normal text-sm">
-              {formatDurationToISOTime(currentTimeRef.current, { includeMilliseconds: false })}
-            </span>
-          </Typography>
-          <Typography>
-            <span className="text-zinc-500 font-normal text-sm">
-              {formatDurationToISOTime(duration, { includeMilliseconds: false })}
-            </span>
-          </Typography>
-        </div>
-      </div>
+      <Progress />
       <div className="controls bg-gray-300 flex flex-row justify-between items-center px-6 py-4">
         <div className="volume flex flex-row gap-2 items-center cursor-pointer w-15">
           <button className="grid place-items-center text-gray-600 cursor-pointer" onClick={handleVolumeClick}>
@@ -80,16 +49,22 @@ export const AudioPlayer = ({ play, pause, playNextRegion, playPreviousRegion, i
           </Typography>
         </div>
         <div className="playback-controls flex flex-row gap-4">
-          <button className="grid place-items-center text-gray-600 cursor-pointer" onClick={handlePreviousRegionClick}>
+          <button
+            className="grid place-items-center text-gray-600 cursor-pointer"
+            onClick={() => void handlePreviousRegionClick()}
+          >
             <ForwardSolid className="rotate-180" width={20} height={20} />
           </button>
           <button
             className="bg-gray-600 rounded-full w-10 h-10 grid place-items-center text-zinc-50 cursor-pointer"
-            onClick={handleTogglePlay}
+            onClick={() => void handleTogglePlay()}
           >
             {!isPlaying ? <PlaySolid className="translate-x-[1px]" /> : <PauseSolid />}
           </button>
-          <button className="grid place-items-center text-gray-600 cursor-pointer" onClick={handleNextRegionClick}>
+          <button
+            className="grid place-items-center text-gray-600 cursor-pointer"
+            onClick={() => void handleNextRegionClick()}
+          >
             <ForwardSolid width={20} height={20} />
           </button>
         </div>
