@@ -12,7 +12,7 @@ export const Lobby = ({ onStartEditing }: LobbyProps) => {
 
   return (
     <div>
-      <div className="flex flex-row gap-2">
+      <div className="flex flex-row gap-2 p-6">
         <TranscriptionImporter onFileImported={onStartEditing} />
         <Button onClick={handleCreateClick}>Create</Button>
       </div>
