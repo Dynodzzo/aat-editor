@@ -54,7 +54,7 @@ export const AudioPlayer = ({ play, pause, playNextRegion, playPreviousRegion, i
   return (
     <div className="flex flex-col">
       <div className="progress flex flex-col gap-1 items-stretch px-6 pt-4 pb-2 bg-zinc-100">
-        <div className="progress-bar bg-gray-600 h-2 rounded-full">
+        <div className="progress-bar bg-gray-600 h-2 rounded-full outline-2 outline-gray-600 ">
           <div className="progress-indicator bg-gray-300 h-2 rounded-full" style={{ width: `${progress}%` }} />
         </div>
         <div className="flex flex-row justify-between">
