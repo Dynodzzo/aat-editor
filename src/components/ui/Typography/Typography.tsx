@@ -50,7 +50,7 @@ export const Typography = memo(function Typography({
       // case "overline":
       //   return "text-xs font-medium";
       default:
-        return "text-base font-normal text-black";
+        return "text-base font-normal text-black leading-none";
     }
   }, [variant]);
 
