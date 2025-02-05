@@ -1,6 +1,6 @@
 import { createEntityAdapter, createSelector, createSlice, EntityState, PayloadAction } from "@reduxjs/toolkit";
 import { Cue } from "../../model/transcription/cue.model";
-import { RootState } from "../store-new";
+import { RootState } from "../store";
 
 type CueState = EntityState<Cue, string>;
 type CueUpdate = Pick<Cue, "id"> & Partial<Pick<Cue, "start" | "end" | "voiceId">>;

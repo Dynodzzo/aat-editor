@@ -1,6 +1,6 @@
 import { createEntityAdapter, createSelector, createSlice, EntityState, PayloadAction } from "@reduxjs/toolkit";
 import { Voice } from "../../model/transcription/voice.model";
-import { RootState } from "../store-new";
+import { RootState } from "../store";
 
 type VoiceState = EntityState<Voice, string>;
 type VoiceUpdate = Pick<Voice, "id"> & Partial<Pick<Voice, "name" | "color">>;

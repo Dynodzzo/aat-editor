@@ -1,7 +1,7 @@
 import { createEntityAdapter, createSelector, createSlice, EntityState, PayloadAction } from "@reduxjs/toolkit";
 import { AVAILABLE_LANGUAGES_IDS } from "../../constants/language.constants";
 import { VoiceTranslation } from "../../model/transcription/voice.model";
-import { RootState } from "../store-new";
+import { RootState } from "../store";
 import { addVoice } from "./voice.slice";
 
 type VoiceTranslationState = EntityState<VoiceTranslation, string>;
