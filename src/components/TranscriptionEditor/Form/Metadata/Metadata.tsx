@@ -32,9 +32,9 @@ export const MetadataForm = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2">
       <Typography variant="h2">Metadata</Typography>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-1">
         <InputField>
           <Label>
             <LabelText htmlFor="title">Title</LabelText>

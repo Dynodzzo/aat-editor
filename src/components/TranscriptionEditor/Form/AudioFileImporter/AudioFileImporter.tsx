@@ -3,7 +3,7 @@ import { useAudioFileSelector } from "../../../../hooks/useAudioFileSelector";
 import { updateAudioSource } from "../../../../store/features/audio.slice";
 import { useAppDispatch } from "../../../../store/hooks";
 
-export const AudioFileForm = () => {
+export const AudioFileImporter = () => {
   const { audioObjectURL, handleAudioFileChanged } = useAudioFileSelector();
   const dispatch = useAppDispatch();
 

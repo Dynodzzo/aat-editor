@@ -13,7 +13,7 @@ export const LanguagesForm = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2">
       <Typography variant="h2">Languages</Typography>
       <div className="flex flex-row gap-2">
         {AVAILABLE_LANGUAGES_IDS.map((id) => (

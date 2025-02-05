@@ -1,16 +1,16 @@
 import { memo } from "react";
 import { LanguagesForm } from "../Form/Languages/Languages";
 import { MetadataForm } from "../Form/Metadata/Metadata";
-import { VoicesForm } from "../Form/Voices/Voices";
+import { Voices } from "../Form/Voices/Voices";
 import { ConfigPanelLayout } from "./ConfigPanelLayout";
 
 export const ConfigPanel = memo(function ConfigPanel() {
   return (
-    <div className="p-6 bg-zinc-100">
+    <div className="p-6 bg-zinc-100 h-full overflow-auto">
       <ConfigPanelLayout>
         <MetadataForm />
         <LanguagesForm />
-        <VoicesForm />
+        <Voices />
       </ConfigPanelLayout>
     </div>
   );

@@ -8,7 +8,7 @@ import { LanguageId } from "../../../../model/transcription/language.model";
 import { RootState, store } from "../../../../store/store";
 import { Button } from "../../../ui/Button/Button";
 
-export const ExportActions = () => {
+export const ExportButton = () => {
   const linkRef = useRef<HTMLAnchorElement>(null);
 
   const getMetadataToExport = useCallback((state: RootState): MetadataExport => {

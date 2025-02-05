@@ -11,7 +11,7 @@ import { Voice } from "./Voice";
 
 const DEFAULT_VOICE_COLOR = "FFFFFF";
 
-export const VoicesForm = memo(function VoicesForm() {
+export const Voices = memo(function VoicesForm() {
   const dispatch = useAppDispatch();
   const languages = useAppSelector(selectActiveLanguages);
   const voicesIds = useAppSelector(selectVoicesIds);
@@ -26,7 +26,7 @@ export const VoicesForm = memo(function VoicesForm() {
   }, [voicesIds, dispatch]);
 
   return (
-    <div className="flex flex-col gap-4 w-full">
+    <div className="flex flex-col gap-4 w-full h-full">
       <div className="flex items-center relative">
         <Typography variant="h2">Voices</Typography>
         <div className="absolute right-0">
@@ -35,7 +35,7 @@ export const VoicesForm = memo(function VoicesForm() {
           </Button>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-2 gap-6 overflow-auto">
         {voicesIds.map((voiceId) => {
           return <Voice key={voiceId} voiceId={voiceId} languages={languages} />;
         })}
