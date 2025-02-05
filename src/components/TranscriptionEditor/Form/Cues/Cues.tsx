@@ -20,7 +20,7 @@ const ItemWrapper = forwardRef<HTMLDivElement, PropsWithChildren>(function ItemW
   return <div className="px-4 pt-4 last:pb-4" ref={ref} {...props} />;
 });
 
-export const CuesForm = memo(function CuesForm({ onPlaySprite }: CuesFormProps) {
+export const Cues = memo(function CuesForm({ onPlaySprite }: CuesFormProps) {
   const languages = useAppSelector(selectActiveLanguages);
   const cues = useAppSelector(selectCuesdsAndTimes);
   const duration = useAppSelector(selectAudioDuration);

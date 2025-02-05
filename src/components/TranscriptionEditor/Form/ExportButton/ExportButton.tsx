@@ -119,7 +119,9 @@ export const ExportButton = () => {
 
   return (
     <>
-      <Button onClick={handleLinkClick}>Export</Button>
+      <Button variant="inline" onClick={handleLinkClick}>
+        Export
+      </Button>
       <a ref={linkRef} target="_blank" rel="noreferrer noopener" download hidden></a>
     </>
   );

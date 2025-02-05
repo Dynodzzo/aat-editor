@@ -23,10 +23,12 @@ export const TranscriptionEditor = () => {
           <CuesPanel playSprite={playRegion} />
           <SidePanel play={() => play()} pause={pause} isPlaying={isPlaying} />
         </div>
-        <div>
-          <AudioFileImporter />
+        <div className="flex flex-col bg-zinc-100">
+          <div className="flex flex-row gap-4 justify-between">
+            <AudioFileImporter />
+            <ExportButton />
+          </div>
           <Waveform containerRef={containerRef} />
-          <ExportButton />
         </div>
       </div>
     </AudioCurrentTimeContext.Provider>

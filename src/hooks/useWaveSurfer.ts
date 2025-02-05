@@ -27,10 +27,11 @@ export const useWaveSurfer = (source: string, currentTimeRef: MutableRefObject<n
       waveColor: "gainsboro",
       progressColor: "darkgrey",
       cursorColor: "red",
-      cursorWidth: 1,
-      mediaControls: true,
+      cursorWidth: 2,
+      mediaControls: false,
       url: source,
       backend: "MediaElement",
+      height: 100,
     });
 
     ws.on("load", () => {

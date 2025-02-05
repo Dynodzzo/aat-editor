@@ -6,7 +6,7 @@ import { ConfigPanelLayout } from "./ConfigPanelLayout";
 
 export const ConfigPanel = memo(function ConfigPanel() {
   return (
-    <div className="p-6 bg-zinc-100 h-full overflow-auto">
+    <div className="px-6 pt-6 pb-2 bg-zinc-100 h-full overflow-auto">
       <ConfigPanelLayout>
         <MetadataForm />
         <LanguagesForm />
