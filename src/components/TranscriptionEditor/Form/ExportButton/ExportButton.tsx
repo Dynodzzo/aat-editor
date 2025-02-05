@@ -5,7 +5,7 @@ import { MetadataExport } from "../../../../model/export/metadata.export.schema"
 import { TranscriptionExport } from "../../../../model/export/transcription.export.schema";
 import { VoiceExport } from "../../../../model/export/voice.export.schema";
 import { LanguageId } from "../../../../model/transcription/language.model";
-import { RootState, store } from "../../../../store/store";
+import { RootState, store } from "../../../../store/store-new";
 import { Button } from "../../../ui/Button/Button";
 
 export const ExportButton = () => {
