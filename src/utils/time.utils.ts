@@ -1,21 +1,36 @@
+export type FormatDurationConfig = {
+  includeMilliseconds?: boolean;
+};
+
+const DEFAULT_FORMAT_DURATION_CONFIG: FormatDurationConfig = {
+  includeMilliseconds: true,
+};
+
 /**
  * Formats a duration in seconds to a string in the format "HH:MM:SS.SSS"
  * @param duration The duration in seconds (e.g. 123.456)
  * @returns The formatted duration string (e.g. "00:02:03.456")
  */
-export const formatDurationToISOTime = (duration: number): string => {
-  if (!duration) return "00:00:00.000";
+export const formatDurationToISOTime = (
+  duration: number,
+  config: FormatDurationConfig = DEFAULT_FORMAT_DURATION_CONFIG
+): string => {
+  if (!duration) return `00:00:00${config.includeMilliseconds ? ".000" : ""}`;
   const hours = Math.floor(duration / 3600);
   const minutes = Math.floor((duration % 3600) / 60);
   const seconds = Math.floor(duration % 60);
-  const milliseconds = Math.floor((duration % 1) * 1000);
 
   const hoursStr = String(hours).padStart(2, "0");
   const minutesStr = String(minutes).padStart(2, "0");
   const secondsStr = String(seconds).padStart(2, "0");
-  const millisecondsStr = String(milliseconds).padStart(3, "0");
 
-  return `${hoursStr}:${minutesStr}:${secondsStr}.${millisecondsStr}`;
+  if (config.includeMilliseconds) {
+    const milliseconds = Math.floor((duration % 1) * 1000);
+    const millisecondsStr = String(milliseconds).padStart(3, "0");
+    return `${hoursStr}:${minutesStr}:${secondsStr}.${millisecondsStr}`;
+  }
+
+  return `${hoursStr}:${minutesStr}:${secondsStr}`;
 };
 
 /**
