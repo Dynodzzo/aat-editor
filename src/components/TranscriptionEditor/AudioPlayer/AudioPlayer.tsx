@@ -10,10 +10,12 @@ import { AudioCurrentTimeContext } from "../Context/AudioCurrentTimeContext";
 type AudioPlayerProps = {
   play?: () => void;
   pause?: () => void;
+  playNextRegion?: () => void;
+  playPreviousRegion?: () => void;
   isPlaying?: boolean;
 };
 
-export const AudioPlayer = ({ play, pause, isPlaying }: AudioPlayerProps) => {
+export const AudioPlayer = ({ play, pause, playNextRegion, playPreviousRegion, isPlaying }: AudioPlayerProps) => {
   // const dispatch = useAppDispatch();
   const duration = useAppSelector(selectAudioDuration);
   const [progress, setProgress] = useState<number>(0);
@@ -28,11 +30,11 @@ export const AudioPlayer = ({ play, pause, isPlaying }: AudioPlayerProps) => {
   };
 
   const handlePreviousRegionClick = () => {
-    // dispatch(previousRegion());
+    playPreviousRegion?.();
   };
 
   const handleNextRegionClick = () => {
-    // dispatch(nextRegion());
+    playNextRegion?.();
   };
 
   const handleVolumeClick = () => {

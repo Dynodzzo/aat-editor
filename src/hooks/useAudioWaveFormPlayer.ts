@@ -13,12 +13,15 @@ export const useAudioWaveformPlayer = (source: string, currentTimeRef: MutableRe
 
   useWaveSurferZoom(waveSurferState);
 
-  const { regions, regionsHandlers, playRegion } = useAudioWaveFormRegions(waveSurferState);
+  const { regions, regionsHandlers, playRegion, playNextRegion, playPreviousRegion } = useAudioWaveFormRegions(
+    waveSurferState,
+    currentTimeRef
+  );
   useWaveSurferRegions(waveSurferState, regions, regionsHandlers);
 
   useEffect(() => {
     dispatch(updateAudioDuration(waveSurferState.duration));
   }, [dispatch, waveSurferState.duration]);
 
-  return { ...waveSurferState, playRegion };
+  return { ...waveSurferState, playRegion, playNextRegion, playPreviousRegion };
 };

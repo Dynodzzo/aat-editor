@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef } from "react";
+import { MutableRefObject, useCallback, useMemo, useRef } from "react";
 import { Region } from "wavesurfer.js/dist/plugins/regions.js";
 import { selectAllCues, updateCueEnd, updateCueStart } from "../store/features/cue.slice";
 import { selectAllVoices } from "../store/features/voice.slice";
@@ -8,7 +8,7 @@ import { WaveSurferState } from "./useWaveSurfer";
 
 const DEFAULT_REGION_COLOR = "rgba(0, 0, 0, 0.2)";
 
-export const useAudioWaveFormRegions = ({ play, pause }: WaveSurferState) => {
+export const useAudioWaveFormRegions = ({ play, pause }: WaveSurferState, currentTimeRef: MutableRefObject<number>) => {
   const dispatch = useAppDispatch();
   const cues = useAppSelector(selectAllCues);
   const voices = useAppSelector(selectAllVoices);
@@ -69,5 +69,24 @@ export const useAudioWaveFormRegions = ({ play, pause }: WaveSurferState) => {
     await play(region.start);
   };
 
-  return { regions, regionsHandlers, playRegion };
+  const playNextRegion = async () => {
+    const nextRegion = regions.find((region) => region.start > currentTimeRef.current);
+
+    if (!nextRegion) return;
+
+    await playRegion(nextRegion.id);
+  };
+
+  const playPreviousRegion = async () => {
+    const previousRegionIndex = Math.max(
+      ...regions.map((region, index) => (region.end < currentTimeRef.current ? index : 0))
+    );
+    const previousRegion = regions[previousRegionIndex];
+
+    if (!previousRegion) return;
+
+    await playRegion(previousRegion.id);
+  };
+
+  return { regions, regionsHandlers, playRegion, playNextRegion, playPreviousRegion };
 };

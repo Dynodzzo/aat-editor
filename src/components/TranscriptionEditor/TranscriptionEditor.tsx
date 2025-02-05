@@ -14,14 +14,21 @@ export const TranscriptionEditor = () => {
   const currentTimeRef = useRef<number>(0);
   const source = useAppSelector(selectAudioSource);
 
-  const { containerRef, playRegion, play, pause, isPlaying } = useAudioWaveformPlayer(source, currentTimeRef);
+  const { containerRef, playRegion, playNextRegion, playPreviousRegion, play, pause, isPlaying } =
+    useAudioWaveformPlayer(source, currentTimeRef);
 
   return (
     <AudioCurrentTimeContext.Provider value={currentTimeRef}>
       <div className="flex flex-col h-full max-h-full">
         <div className="grid grid-rows-1 grid-cols-[1fr_470px] bg-zinc-200 flex-1 overflow-auto">
           <CuesPanel playSprite={playRegion} />
-          <SidePanel play={() => play()} pause={pause} isPlaying={isPlaying} />
+          <SidePanel
+            play={() => play()}
+            pause={pause}
+            playNextRegion={playNextRegion}
+            playPreviousRegion={playPreviousRegion}
+            isPlaying={isPlaying}
+          />
         </div>
         <div className="flex flex-col bg-zinc-100">
           <div className="flex flex-row gap-4 justify-between">
