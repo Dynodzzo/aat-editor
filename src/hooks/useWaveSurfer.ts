@@ -1,7 +1,17 @@
 import { MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
 import WaveSurfer from "wavesurfer.js";
 
-export const useWaveSurfer = (source: string, currentTimeRef: MutableRefObject<number>) => {
+export type WaveSurferState = {
+  instance: WaveSurfer | null;
+  containerRef: React.RefObject<HTMLDivElement>;
+  duration: number;
+  isReady: boolean;
+  isPlaying: boolean;
+  play: (from?: number) => Promise<void>;
+  pause: (to?: number) => void;
+};
+
+export const useWaveSurfer = (source: string, currentTimeRef: MutableRefObject<number>): WaveSurferState => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [waveSurfer, setWaveSurfer] = useState<WaveSurfer | null>(null);
 
@@ -67,11 +77,13 @@ export const useWaveSurfer = (source: string, currentTimeRef: MutableRefObject<n
     async (from?: number) => {
       if (!waveSurfer) return;
 
+      // Makes sure the cursor starts from the correct position
       if (typeof from === "number" && from >= 0) waveSurfer.setTime(from);
+
       try {
         await waveSurfer.play();
       } catch (e) {
-        console.log("fail", e);
+        console.log("Failed to play", e);
       }
     },
     [waveSurfer]
@@ -79,19 +91,18 @@ export const useWaveSurfer = (source: string, currentTimeRef: MutableRefObject<n
 
   const pause = useCallback(
     (to?: number) => {
-      if (waveSurfer) {
-        waveSurfer.pause();
-        // Makes sure the cursor stops at the right position
-        if (typeof to === "number" && to >= 0) waveSurfer.setTime(to);
-      }
+      if (!waveSurfer) return;
+
+      waveSurfer.pause();
+      // Makes sure the cursor stops at the correct position
+      if (typeof to === "number" && to >= 0) waveSurfer.setTime(to);
     },
     [waveSurfer]
   );
 
   return {
-    waveSurfer,
+    instance: waveSurfer,
     containerRef,
-    currentTimeRef,
     duration,
     isReady,
     isPlaying,

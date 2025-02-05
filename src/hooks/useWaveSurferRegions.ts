@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import WaveSurfer from "wavesurfer.js";
 import RegionsPlugin, { Region, RegionParams } from "wavesurfer.js/dist/plugins/regions.js";
+import { WaveSurferState } from "./useWaveSurfer";
 
 type UseWaveSurferRegionsHandlers = {
   onRegionUpdate?: (region: Region, side?: "start" | "end") => void;
@@ -10,18 +10,17 @@ type UseWaveSurferRegionsHandlers = {
 };
 
 export const useWaveSurferRegions = (
-  waveSurfer: WaveSurfer | null,
+  { isReady, instance }: WaveSurferState,
   regions: RegionParams[],
-  isReady: boolean,
   regionsHandlers: UseWaveSurferRegionsHandlers
 ) => {
   const regionsPlugin = useRef<RegionsPlugin | null>(null);
 
   useEffect(() => {
-    if (!waveSurfer || !isReady) return;
+    if (!instance || !isReady) return;
 
     regionsPlugin.current = RegionsPlugin.create();
-    waveSurfer.registerPlugin(regionsPlugin.current);
+    instance.registerPlugin(regionsPlugin.current);
 
     return () => {
       if (regionsPlugin.current) {
@@ -29,7 +28,7 @@ export const useWaveSurferRegions = (
         regionsPlugin.current = null;
       }
     };
-  }, [waveSurfer, isReady]);
+  }, [isReady, instance]);
 
   useEffect(() => {
     if (!isReady) return;
