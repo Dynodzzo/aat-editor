@@ -1,10 +1,10 @@
 import { useContext, useState } from "react";
+import { AudioContext } from "../../../context/audio.context";
 import { useRequestAnimationFrame } from "../../../hooks/useRequestAnimationFrame";
 import { selectAudioDuration } from "../../../store/features/audio.slice";
 import { useAppSelector } from "../../../store/hooks";
 import { formatDurationToISOTime } from "../../../utils/time.utils";
 import { Typography } from "../../ui/Typography/Typography";
-import { AudioContext } from "../Context/AudioContext";
 
 export const Progress = () => {
   const duration = useAppSelector(selectAudioDuration);

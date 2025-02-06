@@ -1,12 +1,12 @@
 import { PlusCircleSolid } from "iconoir-react";
 import { memo, useContext } from "react";
+import { AudioContext } from "../../../context/audio.context";
 import { Cue } from "../../../model/transcription/cue.model";
 import { addCue } from "../../../store/features/cue.slice";
 import { useAppDispatch } from "../../../store/hooks";
 import { formatDurationToISOTime } from "../../../utils/time.utils";
 import { Button } from "../../ui/Button/Button";
 import { Typography } from "../../ui/Typography/Typography";
-import { AudioContext } from "../Context/AudioContext";
 
 export const Header = memo(function Header() {
   const dispatch = useAppDispatch();

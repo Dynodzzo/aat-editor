@@ -1,12 +1,12 @@
 import { ForwardedRef, forwardRef, memo, PropsWithChildren, useContext, useRef, useState } from "react";
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
+import { AudioContext } from "../../../../context/audio.context";
 import { useRequestAnimationFrame } from "../../../../hooks/useRequestAnimationFrame";
 import { selectAudioDuration } from "../../../../store/features/audio.slice";
 import { selectCuesdsAndTimes } from "../../../../store/features/cue.slice";
 import { selectActiveLanguages } from "../../../../store/features/language.slice";
 import { useAppSelector } from "../../../../store/hooks";
 import { formatISOTimeToDuration } from "../../../../utils/time.utils";
-import { AudioContext } from "../../Context/AudioContext";
 import { Cue } from "./Cue";
 
 const ItemWrapper = forwardRef<HTMLDivElement, PropsWithChildren>(function ItemWrapper(

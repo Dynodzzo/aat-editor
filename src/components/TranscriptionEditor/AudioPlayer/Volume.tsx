@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { SoundHigh } from "iconoir-react";
 import { useContext, useState } from "react";
-import { AudioContext } from "../Context/AudioContext";
+import { AudioContext } from "../../../context/audio.context";
 
 export const Volume = () => {
   const [isHidden, setIsHidden] = useState(true);

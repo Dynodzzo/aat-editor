@@ -1,6 +1,6 @@
 import { ForwardSolid, PauseSolid, PlaySolid } from "iconoir-react";
 import { useContext } from "react";
-import { AudioContext } from "../Context/AudioContext";
+import { AudioContext } from "../../../context/audio.context";
 import { PlaybackRate } from "./PlaybackRate";
 import { Progress } from "./Progress";
 import { Volume } from "./Volume";

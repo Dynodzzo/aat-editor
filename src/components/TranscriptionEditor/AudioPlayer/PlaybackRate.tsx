@@ -1,7 +1,7 @@
 import { Timer } from "iconoir-react";
 import { useContext, useId, useState } from "react";
+import { AudioContext } from "../../../context/audio.context";
 import { IconTrigger, Select, SelectItem } from "../../ui/Select/Select";
-import { AudioContext } from "../Context/AudioContext";
 
 const PLAYBACK_RATES = ["0.5", "0.75", "1", "1.25", "1.5", "2"] as const;
 

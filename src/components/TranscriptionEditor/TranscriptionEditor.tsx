@@ -1,8 +1,8 @@
 import { useRef } from "react";
+import { AudioContext, AudioContextState } from "../../context/audio.context";
 import { useAudioWaveformPlayer } from "../../hooks/useAudioWaveFormPlayer";
 import { selectAudioSource } from "../../store/features/audio.slice";
 import { useAppSelector } from "../../store/hooks";
-import { AudioContext, AudioContextState } from "./Context/AudioContext";
 import { CuesPanel } from "./CuesPanel/CuesPanel";
 import { AudioFileImporter } from "./Form/AudioFileImporter/AudioFileImporter";
 import { ExportButton } from "./Form/ExportButton/ExportButton";

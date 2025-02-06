@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import { PlaySolid, Trash } from "iconoir-react";
 import { memo, useCallback, useContext, useId } from "react";
+import { AudioContext } from "../../../../context/audio.context";
 import { Language } from "../../../../model/transcription/language.model";
 import {
   deleteCue,
@@ -17,7 +18,6 @@ import { InputFieldInline } from "../../../ui/InputField/InputFieldInline";
 import { Label } from "../../../ui/InputField/Label";
 import { LabelText } from "../../../ui/InputField/LabelText";
 import { Typography } from "../../../ui/Typography/Typography";
-import { AudioContext } from "../../Context/AudioContext";
 import { CueTranslation } from "./CueTranslation";
 import { CueVoice } from "./CueVoice";
 
