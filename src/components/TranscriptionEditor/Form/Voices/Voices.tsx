@@ -9,7 +9,7 @@ import { Typography } from "../../../ui/Typography/Typography";
 
 import { Voice } from "./Voice";
 
-const DEFAULT_VOICE_COLOR = "FFFFFF";
+const DEFAULT_VOICE_COLOR = "#FFFFFF";
 
 export const Voices = memo(function VoicesForm() {
   const dispatch = useAppDispatch();
