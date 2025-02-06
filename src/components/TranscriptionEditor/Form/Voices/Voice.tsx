@@ -34,16 +34,16 @@ export const Voice = memo(function Voice({ voiceId, languages }: VoiceProps) {
   );
 
   return (
-    <div className="flex flex-col gap-1 pl-1">
-      <div className="flex flex-row gap-4 items-center">
+    <div className="flex flex-col gap-1 p-1">
+      <div className="flex flex-row items-center justify-between">
         <ColorInput id={colorId} value={color} onChange={handleChangeColor} />
-        <InputFieldInline className="justify-between">
+        <InputFieldInline>
           <Label>
             <LabelText htmlFor={voiceId}>ID</LabelText>
           </Label>
           <Input
             id={voiceId}
-            className="text-right max-w-30"
+            className="text-right w-30"
             value={name}
             size="sm"
             variant="fill"

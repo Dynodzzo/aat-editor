@@ -9,5 +9,5 @@ export const InputFieldInline = memo(function InputFieldInline({
   className = "",
   children,
 }: PropsWithChildren<InputFieldInlineProps>) {
-  return <div className={clsx("flex flex-row gap-2 items-center grow", className)}>{children}</div>;
+  return <div className={clsx("flex flex-row gap-2 items-center", className)}>{children}</div>;
 });

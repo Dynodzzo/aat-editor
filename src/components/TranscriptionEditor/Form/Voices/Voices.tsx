@@ -35,7 +35,7 @@ export const Voices = memo(function VoicesForm() {
           </Button>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-6 overflow-auto">
+      <div className="grid grid-cols-2 gap-4 overflow-auto">
         {voicesIds.map((voiceId) => {
           return <Voice key={voiceId} voiceId={voiceId} languages={languages} />;
         })}

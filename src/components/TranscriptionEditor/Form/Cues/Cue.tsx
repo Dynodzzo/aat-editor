@@ -74,7 +74,7 @@ export const Cue = memo(function Cue({ index, cueId, languages, duration, isBein
 
   return (
     <div
-      className={clsx("px-6 py-4 flex flex-col gap-3 bg-zinc-50 rounded-sm", {
+      className={clsx("px-6 py-4 flex flex-col gap-3 group-even:bg-zinc-50 group-odd:bg-zinc-100 rounded-sm ", {
         "inset-ring-2 inset-ring-slate-500": isBeingPlayed,
       })}
     >

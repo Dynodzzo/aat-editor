@@ -34,25 +34,27 @@ export const MetadataForm = () => {
   return (
     <div className="flex flex-col gap-2">
       <Typography variant="h2">Metadata</Typography>
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-2">
         <InputField>
           <Label>
             <LabelText htmlFor="title">Title</LabelText>
           </Label>
           <Input id="title" value={title} variant="fill" onChange={handleTitleChange} />
         </InputField>
-        <InputField>
-          <Label>
-            <LabelText htmlFor="author">Author</LabelText>
-          </Label>
-          <Input id="author" value={author} variant="fill" onChange={handleAuthorChange} />
-        </InputField>
-        <InputField>
-          <Label>
-            <LabelText htmlFor="fileAuthor">File author</LabelText>
-          </Label>
-          <Input id="fileAuthor" value={fileAuthor} variant="fill" onChange={handleFileAuthorChange} />
-        </InputField>
+        <div className="flex flex-row gap-4">
+          <InputField>
+            <Label>
+              <LabelText htmlFor="author">Author</LabelText>
+            </Label>
+            <Input id="author" value={author} variant="fill" onChange={handleAuthorChange} />
+          </InputField>
+          <InputField>
+            <Label>
+              <LabelText htmlFor="fileAuthor">File author</LabelText>
+            </Label>
+            <Input id="fileAuthor" value={fileAuthor} variant="fill" onChange={handleFileAuthorChange} />
+          </InputField>
+        </div>
       </div>
     </div>
   );

@@ -34,13 +34,13 @@ export const VoiceTranslation = ({ voiceId, languageId, languageName }: VoiceTra
   if (!voiceTranslation) return null;
 
   return (
-    <InputFieldInline key={languageId} className="justify-between">
+    <InputFieldInline key={languageId} className="justify-end">
       <Label>
         <LabelText htmlFor={voiceTranslationId}>{languageName}</LabelText>
       </Label>
       <Input
         id={voiceTranslationId}
-        className="text-right max-w-30"
+        className="text-right w-30"
         value={voiceTranslation.value}
         size="sm"
         variant="fill"
