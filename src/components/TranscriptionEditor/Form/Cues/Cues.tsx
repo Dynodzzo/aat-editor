@@ -13,7 +13,7 @@ const ItemWrapper = forwardRef<HTMLDivElement, PropsWithChildren>(function ItemW
   props,
   ref: ForwardedRef<HTMLDivElement>
 ) {
-  return <div className="px-4 pt-4 last:pb-4 group" ref={ref} {...props} />;
+  return <div className="px-4 pt-4 last:pb-4" ref={ref} {...props} />;
 });
 
 export const Cues = memo(function CuesForm() {
@@ -63,7 +63,7 @@ export const Cues = memo(function CuesForm() {
         itemContent={(index, cue) => (
           <div key={cue.id}>
             <Cue
-              index={index.toString()}
+              index={index}
               cueId={cue.id}
               languages={languages}
               duration={duration}

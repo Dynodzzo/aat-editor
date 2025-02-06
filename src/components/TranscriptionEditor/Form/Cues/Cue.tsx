@@ -25,7 +25,7 @@ const DEFAULT_TIME_INPUT_VALUE = "00:00:00.000";
 const TIME_INPUTS_STEP = "0.001";
 
 type CueProps = {
-  index: string;
+  index: number;
   cueId: string;
   languages: Language[];
   duration?: number;
@@ -70,12 +70,16 @@ export const Cue = memo(function Cue({ index, cueId, languages, duration, isBein
     await playRegion?.(cue.id);
   }, [playRegion, cue]);
 
+  const isEven = (index: number) => index % 2 === 0;
+
   if (!cue) return null;
 
   return (
     <div
-      className={clsx("px-6 py-4 flex flex-col gap-3 group-even:bg-zinc-50 group-odd:bg-zinc-100 rounded-sm ", {
+      className={clsx("px-6 py-4 flex flex-col gap-3 rounded-sm ", {
         "inset-ring-2 inset-ring-slate-500": isBeingPlayed,
+        "bg-zinc-50": isEven(index),
+        "bg-zinc-100": !isEven(index),
       })}
     >
       <div className="flex flex-row items-center justify-between">
