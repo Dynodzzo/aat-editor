@@ -54,5 +54,5 @@ export const Typography = memo(function Typography({
     }
   }, [variant]);
 
-  return <div className={clsx(textSizeClass, className)}>{children}</div>;
+  return <span className={clsx(textSizeClass, className)}>{children}</span>;
 });

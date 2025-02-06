@@ -1,4 +1,5 @@
 import { createContext, MutableRefObject } from "react";
+import WaveSurfer from "wavesurfer.js";
 
 export type AudioContextControls = {
   play?: (from?: number) => Promise<void>;
@@ -6,13 +7,13 @@ export type AudioContextControls = {
   playRegion?: (id: string) => Promise<void>;
   playNextRegion?: () => Promise<void>;
   playPreviousRegion?: () => Promise<void>;
-  setTime?: (time: number) => void;
 };
 
 export type AudioContextState = {
   currentTimeRef: MutableRefObject<number>;
   isPlaying: boolean;
   playerControls: AudioContextControls;
+  waveSurferInstance?: WaveSurfer | null;
 };
 
 export const INITIAL_STATE: AudioContextState = {

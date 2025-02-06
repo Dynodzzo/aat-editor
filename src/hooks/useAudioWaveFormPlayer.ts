@@ -28,6 +28,5 @@ export const useAudioWaveformPlayer = (source: string, currentTimeRef: MutableRe
     playRegion,
     playNextRegion,
     playPreviousRegion,
-    setTime: (time: number) => waveSurferState.instance?.setTime(time),
   };
 };

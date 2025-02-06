@@ -13,19 +13,19 @@ export const TranscriptionEditor = () => {
   const currentTimeRef = useRef<number>(0);
   const source = useAppSelector(selectAudioSource);
 
-  const { containerRef, playRegion, playNextRegion, playPreviousRegion, play, pause, setTime, isPlaying } =
+  const { containerRef, isPlaying, instance, playRegion, playNextRegion, playPreviousRegion, play, pause } =
     useAudioWaveformPlayer(source, currentTimeRef);
 
   const audioContext: AudioContextState = {
     currentTimeRef,
     isPlaying,
+    waveSurferInstance: instance,
     playerControls: {
       play,
       pause,
       playRegion,
       playNextRegion,
       playPreviousRegion,
-      setTime,
     },
   };
 

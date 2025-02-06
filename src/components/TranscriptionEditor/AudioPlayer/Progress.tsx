@@ -8,10 +8,7 @@ import { AudioContext } from "../Context/AudioContext";
 
 export const Progress = () => {
   const duration = useAppSelector(selectAudioDuration);
-  const {
-    currentTimeRef,
-    playerControls: { setTime },
-  } = useContext(AudioContext);
+  const { currentTimeRef, waveSurferInstance } = useContext(AudioContext);
   const [progress, setProgress] = useState<number>(0);
 
   useRequestAnimationFrame(() => {
@@ -24,7 +21,7 @@ export const Progress = () => {
     const { left, width } = progressBar.getBoundingClientRect();
     const clickX = event.clientX - left;
     const newTime = (clickX / width) * duration;
-    setTime?.(newTime);
+    waveSurferInstance?.setTime?.(newTime);
   };
 
   return (
