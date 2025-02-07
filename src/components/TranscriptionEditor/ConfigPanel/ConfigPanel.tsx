@@ -11,7 +11,7 @@ export const ConfigPanel = memo(function ConfigPanel() {
 
   return (
     <div className="relative h-full overflow-auto">
-      <div className="px-6 pt-6 pb-2 bg-zinc-100 h-full overflow-auto" onScroll={handleScroll}>
+      <div className="px-6 pt-4 pb-2 bg-zinc-100 h-full overflow-auto" onScroll={handleScroll}>
         <ConfigPanelLayout>
           <MetadataForm />
           <LanguagesForm />

@@ -15,7 +15,7 @@ const ItemWrapper = forwardRef<HTMLDivElement, PropsWithChildren>(function ItemW
   props,
   ref: ForwardedRef<HTMLDivElement>
 ) {
-  return <div className="px-4 pt-4 last:pb-4" ref={ref} {...props} />;
+  return <div className="px-4 pt-2 first:pt-4 last:pb-4" ref={ref} {...props} />;
 });
 
 export const Cues = memo(function CuesForm() {

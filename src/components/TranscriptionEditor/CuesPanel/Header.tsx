@@ -24,7 +24,7 @@ export const Header = memo(function Header() {
   };
 
   return (
-    <div className="bg-zinc-50 px-6 py-5">
+    <div className="bg-zinc-50 px-6 py-4 shadow-[0_2px_2px_0] shadow-zinc-300 z-10">
       <div className="flex flex-row items-center relative w-full">
         <Typography variant="h2">Editor</Typography>
         <div className="absolute right-0">
