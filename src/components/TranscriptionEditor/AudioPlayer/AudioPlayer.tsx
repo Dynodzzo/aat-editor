@@ -2,7 +2,7 @@ import { ForwardSolid, PauseSolid, PlaySolid } from "iconoir-react";
 import { useContext } from "react";
 import { AudioContext } from "../../../context/audio.context";
 import { PlaybackRate } from "./PlaybackRate";
-import { Progress } from "./Progress";
+import { ProgressBar } from "./ProgressBar";
 import { Volume } from "./Volume";
 
 export const AudioPlayer = () => {
@@ -30,7 +30,7 @@ export const AudioPlayer = () => {
 
   return (
     <div className="flex flex-col">
-      <Progress />
+      <ProgressBar />
       <div className="controls bg-gray-300 flex flex-row justify-center items-center px-6 py-4 relative">
         <div className="absolute left-6 h-full">
           <Volume />
