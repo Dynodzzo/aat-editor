@@ -2,11 +2,13 @@ import { ForwardedRef, forwardRef, memo, PropsWithChildren, useContext, useRef, 
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
 import { AudioContext } from "../../../../context/audio.context";
 import { useRequestAnimationFrame } from "../../../../hooks/useRequestAnimationFrame";
+import { useScrollOverlay } from "../../../../hooks/useScrollOverlay";
 import { selectAudioDuration } from "../../../../store/features/audio.slice";
 import { selectCuesdsAndTimes } from "../../../../store/features/cue.slice";
 import { selectActiveLanguages } from "../../../../store/features/language.slice";
 import { useAppSelector } from "../../../../store/hooks";
 import { formatISOTimeToDuration } from "../../../../utils/time.utils";
+import { ScrollOverlay } from "../../../ui/ScrollOverlay/ScrollOverlay";
 import { Cue } from "./Cue";
 
 const ItemWrapper = forwardRef<HTMLDivElement, PropsWithChildren>(function ItemWrapper(
@@ -17,6 +19,7 @@ const ItemWrapper = forwardRef<HTMLDivElement, PropsWithChildren>(function ItemW
 });
 
 export const Cues = memo(function CuesForm() {
+  const { showScrollOverlay, handleScroll } = useScrollOverlay({ threshold: 40 });
   const languages = useAppSelector(selectActiveLanguages);
   const cues = useAppSelector(selectCuesdsAndTimes);
   const duration = useAppSelector(selectAudioDuration);
@@ -54,11 +57,12 @@ export const Cues = memo(function CuesForm() {
   });
 
   return (
-    <div className="flex flex-col overflow-auto h-full">
+    <div className="flex flex-col overflow-auto h-full relative">
       <Virtuoso
         ref={virtuosoRef}
         totalCount={cues.length}
         data={cues}
+        onScroll={handleScroll}
         components={{ Item: ItemWrapper }}
         itemContent={(index, cue) => (
           <div key={cue.id}>
@@ -72,6 +76,7 @@ export const Cues = memo(function CuesForm() {
           </div>
         )}
       />
+      <ScrollOverlay isVisible={showScrollOverlay} colorClass="to-zinc-200" />
     </div>
   );
 });
