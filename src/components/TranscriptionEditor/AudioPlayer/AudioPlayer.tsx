@@ -1,12 +1,15 @@
+import clsx from "clsx";
 import { ForwardSolid, PauseSolid, PlaySolid } from "iconoir-react";
 import { useContext } from "react";
 import { AudioContext } from "../../../context/audio.context";
+import { selectAudioSource } from "../../../store/features/audio.slice";
+import { useAppSelector } from "../../../store/hooks";
 import { PlaybackRate } from "./PlaybackRate";
 import { ProgressBar } from "./ProgressBar";
 import { Volume } from "./Volume";
 
 export const AudioPlayer = () => {
-  // const dispatch = useAppDispatch();
+  const source = useAppSelector(selectAudioSource);
 
   const {
     isPlaying,
@@ -29,7 +32,7 @@ export const AudioPlayer = () => {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col relative">
       <ProgressBar />
       <div className="controls bg-gray-300 flex flex-row justify-center items-center px-6 py-4 relative">
         <div className="absolute left-6 h-full">
@@ -59,6 +62,11 @@ export const AudioPlayer = () => {
           <PlaybackRate />
         </div>
       </div>
+      <div
+        className={clsx("bg-gray-500/60 size-full absolute top-0 left-0", {
+          hidden: !!source,
+        })}
+      />
     </div>
   );
 };
