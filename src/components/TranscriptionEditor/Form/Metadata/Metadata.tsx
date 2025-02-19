@@ -7,7 +7,7 @@ import {
   updateTitle,
 } from "../../../../store/features/metadata.slice";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
-import { Input } from "../../../ui/Input/Input";
+import { Input } from "../../../ui/Input2/Input";
 import { InputField } from "../../../ui/InputField/InputField";
 import { Label } from "../../../ui/InputField/Label";
 import { LabelText } from "../../../ui/InputField/LabelText";

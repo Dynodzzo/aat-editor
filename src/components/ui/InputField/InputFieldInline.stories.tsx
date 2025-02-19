@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { useState } from "react";
 import { useArgs } from "storybook/internal/preview-api";
-import { Input } from "../Input/Input";
-import { InputArgs } from "../Input/Input.stories";
+import { Input } from "../Input2/Input";
+import { InputArgs } from "../Input2/Input.stories";
 import { InputFieldInline } from "./InputFieldInline";
 import { Label } from "./Label";
 import { LabelArgs } from "./Label.stories";

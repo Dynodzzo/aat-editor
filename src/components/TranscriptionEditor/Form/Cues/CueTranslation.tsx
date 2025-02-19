@@ -5,7 +5,7 @@ import {
   updateCueTranslation,
 } from "../../../../store/features/cue-translation.slice";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
-import { Input } from "../../../ui/Input/Input";
+import { Input } from "../../../ui/Input2/Input";
 import { InputField } from "../../../ui/InputField/InputField";
 import { Label } from "../../../ui/InputField/Label";
 import { LabelInfo } from "../../../ui/InputField/LabelInfo";

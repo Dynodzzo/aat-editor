@@ -13,7 +13,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
 import { formatDurationToISOTime } from "../../../../utils/time.utils";
 import { Button } from "../../../ui/Button/Button";
-import { Input } from "../../../ui/Input/Input";
+import { Input } from "../../../ui/Input2/Input";
 import { InputFieldInline } from "../../../ui/InputField/InputFieldInline";
 import { Label } from "../../../ui/InputField/Label";
 import { LabelText } from "../../../ui/InputField/LabelText";
