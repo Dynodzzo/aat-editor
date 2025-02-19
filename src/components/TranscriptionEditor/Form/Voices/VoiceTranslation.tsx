@@ -5,7 +5,7 @@ import {
   updateVoiceTranslation,
 } from "../../../../store/features/voice-translation.slice";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
-import { Input } from "../../../ui/Input2/Input";
+import { Input } from "../../../ui/Input/Input";
 import { InputFieldInline } from "../../../ui/InputField/InputFieldInline";
 import { Label } from "../../../ui/InputField/Label";
 import { LabelText } from "../../../ui/InputField/LabelText";

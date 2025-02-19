@@ -3,7 +3,7 @@ import { Language } from "../../../../model/transcription/language.model";
 import { selectVoiceById, updateVoiceColor, updateVoiceName } from "../../../../store/features/voice.slice";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
 import { ColorInput } from "../../../ui/ColorInput/ColorInput";
-import { Input } from "../../../ui/Input2/Input";
+import { Input } from "../../../ui/Input/Input";
 import { InputFieldInline } from "../../../ui/InputField/InputFieldInline";
 import { Label } from "../../../ui/InputField/Label";
 import { LabelText } from "../../../ui/InputField/LabelText";
