@@ -37,6 +37,10 @@ export default tseslint.config(
           alwaysTryTypes: true,
           paths: ["src"],
         },
+        node: {
+          extensions: [".js", ".jsx", ".ts", ".tsx"],
+          moduleDirectory: ["node_modules", "src/"],
+        },
       },
     },
     rules: {
