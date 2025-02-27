@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
+import { useId } from "react";
 import { useArgs } from "storybook/internal/preview-api";
-import { Select, SelectItem } from "./Select";
+import { Select, SelectInputTrigger, SelectItem } from "./Select";
 
 const meta = {
   component: Select,
@@ -15,24 +16,29 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 type StoryArgs = {
   value: string;
-  placeholder?: string;
-  decorator?: JSX.Element;
+  trigger: JSX.Element;
 };
 
 const defaultArgs: StoryArgs = {
   value: "",
-  placeholder: "Select...",
+  trigger: <></>,
 };
 
 const renderFunction = function Render(args: StoryArgs) {
   const [storyArgs, updateArgs] = useArgs<StoryArgs>();
+  const id = useId();
 
   function onChange(currentValue: string) {
     updateArgs({ value: currentValue });
   }
 
   return (
-    <Select {...args} value={storyArgs.value} onChange={onChange}>
+    <Select
+      {...args}
+      value={storyArgs.value}
+      trigger={<SelectInputTrigger id={id} placeholder="Select a fruit" className="min-w-32" />}
+      onChange={onChange}
+    >
       <SelectItem value="Apple">Apple</SelectItem>
       <SelectItem value="Banana">Banana</SelectItem>
       <SelectItem value="Kiwi">Kiwi</SelectItem>
