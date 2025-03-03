@@ -1,30 +1,31 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { PlaySolid } from "iconoir-react";
-import { Button, ButtonType } from "./Button";
+import { IconButton, IconButtonType } from "./IconButton";
 
 const meta = {
-  component: Button,
+  component: IconButton,
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof Button>;
+} satisfies Meta<typeof IconButton>;
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 type StoryArgs = {
-  type?: ButtonType;
-  prefix?: JSX.Element;
+  type?: IconButtonType;
+  icon: JSX.Element;
 };
 
 const renderFunction = function Render(args: StoryArgs) {
-  return <Button {...args}>Button</Button>;
+  return <IconButton {...args}>Button</IconButton>;
 };
 
 export const Primary: Story = {
   args: {
     type: "primary",
+    icon: <PlaySolid width={16} height={16} />,
   },
   render: renderFunction,
 };
@@ -32,14 +33,7 @@ export const Primary: Story = {
 export const Secondary: Story = {
   args: {
     type: "secondary",
-  },
-  render: renderFunction,
-};
-
-export const WithPrefix: Story = {
-  args: {
-    type: "primary",
-    prefix: <PlaySolid width={16} height={16} />,
+    icon: <PlaySolid width={16} height={16} />,
   },
   render: renderFunction,
 };

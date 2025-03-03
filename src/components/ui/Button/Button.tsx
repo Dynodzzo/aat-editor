@@ -1,46 +1,34 @@
 import clsx from "clsx";
 import { memo, useMemo } from "react";
 
-export type ButtonVariant = "outline" | "inline";
-
-export type ButtonStyle = "primary" | "secondary";
+export type ButtonType = "primary" | "secondary";
 
 type ButtonProps = {
-  variant?: ButtonVariant;
-  style?: ButtonStyle;
+  type?: ButtonType;
   prefix?: JSX.Element;
   disabled?: boolean;
   onClick?: () => void;
 };
 
+const BUTTON_TYPE_STYLES: Record<ButtonType, string> = {
+  primary:
+    "bg-neutral-800 inset-ring inset-ring-neutral-600 text-neutral-100 hover:bg-neutral-700 hover:inset-ring-neutral-400 active:inset-ring-2",
+  secondary: "bg-transparent text-neutral-600 hover:bg-neutral-50 active:bg-neutral-200",
+};
+
+const BUTTON_STYLES = "p-2 rounded-sm flex flex-row gap-1 items-center font-medium text-xs cursor-pointer";
+
 export const Button = memo(function ColorIndicator({
-  variant = "outline",
-  style = "primary",
+  type = "primary",
   prefix,
   disabled,
   onClick,
   children,
 }: React.PropsWithChildren<ButtonProps>) {
-  const variantClass = useMemo(() => (variant === "outline" ? "inset-ring" : "border-none"), [variant]);
-
-  const styleClass = useMemo(
-    () =>
-      style === "primary"
-        ? "text-slate-600 hover:bg-zinc-100 active:bg-slate-200"
-        : "text-zinc-500 hover:bg-zinc-100 active:bg-zinc-200",
-    [style]
-  );
+  const buttonTypeStyles = useMemo(() => BUTTON_TYPE_STYLES[type], [type]);
 
   return (
-    <button
-      className={clsx(
-        `px-2 py-2 rounded-md flex flex-row gap-1 items-center font-medium text-sm cursor-pointer`,
-        variantClass,
-        styleClass
-      )}
-      onClick={onClick}
-      disabled={disabled}
-    >
+    <button className={clsx(BUTTON_STYLES, buttonTypeStyles)} onClick={onClick} disabled={disabled}>
       {prefix}
       {children}
     </button>
