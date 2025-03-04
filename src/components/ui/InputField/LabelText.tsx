@@ -6,7 +6,7 @@ type LabelTextProps = {
 
 export const LabelText = memo(function LabelText({ htmlFor, children }: PropsWithChildren<LabelTextProps>) {
   return (
-    <label htmlFor={htmlFor} className="text-zinc-600 font-medium">
+    <label htmlFor={htmlFor} className="text-neutral-800 text-xs font-normal">
       {children}
     </label>
   );

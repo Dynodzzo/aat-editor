@@ -51,38 +51,9 @@ const InputFieldTemplate: Story = {
   },
 };
 
-export const FillMedium: Story = {
+export const Default: Story = {
   args: {
     ...defaultArgs,
-    variant: "fill",
-    size: "md",
-  },
-  ...InputFieldTemplate,
-};
-
-export const FillSmall: Story = {
-  args: {
-    ...defaultArgs,
-    variant: "fill",
-    size: "sm",
-  },
-  ...InputFieldTemplate,
-};
-
-export const OutlineMedium: Story = {
-  args: {
-    ...defaultArgs,
-    variant: "outline",
-    size: "md",
-  },
-  ...InputFieldTemplate,
-};
-
-export const OutlineSmall: Story = {
-  args: {
-    ...defaultArgs,
-    variant: "outline",
-    size: "sm",
   },
   ...InputFieldTemplate,
 };
