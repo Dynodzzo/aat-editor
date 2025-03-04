@@ -20,7 +20,7 @@ export const Select = ({ value, trigger, onChange, children }: PropsWithChildren
     <RadixSelect.Root value={value} onValueChange={handleChange}>
       {trigger}
       <RadixSelect.Portal>
-        <RadixSelect.Content className="flex flex-column bg-zinc-100 rounded-md shadow-lg ring ring-zinc-300 overflow-hidden">
+        <RadixSelect.Content className="flex flex-column bg-neutral-50 rounded-sm shadow-lg ring ring-neutral-200 overflow-hidden cursor-pointer">
           <RadixSelect.Viewport className="flex flex-col gap-2">{children}</RadixSelect.Viewport>
         </RadixSelect.Content>
       </RadixSelect.Portal>
@@ -35,7 +35,7 @@ type SelectItemProps = {
 export const SelectItem = ({ value, children }: PropsWithChildren<SelectItemProps>) => {
   return (
     <RadixSelect.Item
-      className="text-zinc-500 px-4 py-2 data-highlighted:bg-zinc-50 data-highlighted:outline-none"
+      className="text-neutral-500 px-4 py-2 data-highlighted:bg-neutral-100 data-highlighted:outline-none"
       value={value}
     >
       <RadixSelect.ItemText>{children}</RadixSelect.ItemText>
@@ -61,17 +61,18 @@ export const SelectInputTrigger = ({
     <RadixSelect.Trigger
       id={id}
       className={clsx(
-        "h-min px-2 py-1 flex flex-row items-center gap-1 rounded-md bg-transparent inset-ring inset-ring-zinc-300 text-zinc-500 data-placeholder:italic data-placeholder:text-zinc-400 cursor-pointer",
+        "px-2 py-1 flex flex-row items-center justify-between gap-1 bg-neutral-50 ring-1 ring-neutral-200 rounded-sm data-placeholder:italic data-placeholder:text-neutral-400 font-normal text-sm text-neutral-500 cursor-pointer focus-visible:outline-none",
+        "focus-within:ring-2 focus-within:ring-neutral-400",
         className
       )}
     >
-      <span className="flex-auto text-sm font-normal text-left">
+      <span className={""}>
         <RadixSelect.Value placeholder={placeholder}></RadixSelect.Value>
       </span>
       {decorator && decorator}
       {showArrow && (
-        <RadixSelect.Icon className="text-zinc-500">
-          <NavArrowDown width={24} height={24} />
+        <RadixSelect.Icon>
+          <NavArrowDown width={16} height={16} />
         </RadixSelect.Icon>
       )}
     </RadixSelect.Trigger>
@@ -82,12 +83,12 @@ export const IconTrigger = ({ id, icon, className }: { id: string; icon?: JSX.El
   return (
     <RadixSelect.Trigger
       id={id}
-      className={clsx("px-2 py-1 flex flex-row items-center gap-1 cursor-pointer", className)}
+      className={clsx("px-2 py-1 flex flex-row items-center gap-1 text-neutral-500 cursor-pointer", className)}
     >
       <span className="flex-auto text-xs font-normal text-left leading-none">
         <RadixSelect.Value></RadixSelect.Value>
       </span>
-      <RadixSelect.Icon className="text-zinc-500">{icon}</RadixSelect.Icon>
+      <RadixSelect.Icon>{icon}</RadixSelect.Icon>
     </RadixSelect.Trigger>
   );
 };
