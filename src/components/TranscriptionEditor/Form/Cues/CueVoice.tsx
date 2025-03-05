@@ -4,7 +4,8 @@ import { useAppSelector } from "../../../../store/hooks";
 import { ColorIndicator } from "../../../ui/ColorIndicator/ColorIndicator";
 import { Label } from "../../../ui/InputField/Label";
 import { LabelText } from "../../../ui/InputField/LabelText";
-import { Select, InputSelectTrigger, SelectItem } from "../../../ui/Select/Select";
+import { InputTrigger } from "../../../ui/Select/InputTrigger";
+import { Select, SelectItem } from "../../../ui/Select/Select";
 
 type CueVoiceProps = {
   value: string;
@@ -36,7 +37,7 @@ export const CueVoice = memo(function CueVoice({ value, onChangeVoice }: CueVoic
       <Select
         value={value}
         trigger={
-          <InputSelectTrigger
+          <InputTrigger
             id={voiceId}
             placeholder="Select voice"
             decorator={displayColorIndicator ? <ColorIndicator color={voiceColor} /> : <></>}

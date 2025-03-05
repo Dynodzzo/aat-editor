@@ -1,8 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { MoreVert } from "iconoir-react";
+import { MoreVert, NavArrowDown } from "iconoir-react";
 import { useArgs } from "storybook/internal/preview-api";
-import { ChipSelectTrigger, Select, InputSelectTrigger, SelectItem, IconSelectTrigger } from "./Select";
+import { ChipTrigger } from "./ChipTrigger";
+import { IconTrigger } from "./IconTrigger";
+import { InputTrigger } from "./InputTrigger";
+import { Select, SelectItem } from "./Select";
+import { TextTrigger } from "./TextTrigger";
 
 const meta = {
   component: Select,
@@ -21,7 +25,7 @@ type StoryArgs = {
 
 const defaultArgs: StoryArgs = {
   value: "",
-  trigger: <InputSelectTrigger id={"1"} placeholder="Select a fruit" className="min-w-32" />,
+  trigger: <InputTrigger id={"1"} placeholder="Select a fruit" className="min-w-32" />,
 };
 
 const renderFunction = function Render(args: StoryArgs) {
@@ -48,18 +52,26 @@ export const Default: Story = {
   render: renderFunction,
 };
 
-export const ChipTrigger: Story = {
+export const WithChipTrigger: Story = {
   args: {
     ...defaultArgs,
-    trigger: <ChipSelectTrigger id={"2"} color="SteelBlue" placeholder="Select a fruit" />,
+    trigger: <ChipTrigger id={"2"} color="SteelBlue" placeholder="Select a fruit" />,
   },
   render: renderFunction,
 };
 
-export const IconTrigger: Story = {
+export const WithIconTrigger: Story = {
   args: {
     ...defaultArgs,
-    trigger: <IconSelectTrigger id={"3"} icon={<MoreVert width={16} height={16} />} />,
+    trigger: <IconTrigger id={"3"} icon={<MoreVert width={16} height={16} />} />,
+  },
+  render: renderFunction,
+};
+
+export const WithTextTrigger: Story = {
+  args: {
+    ...defaultArgs,
+    trigger: <TextTrigger id={"4"} icon={<NavArrowDown width={16} height={16} />} />,
   },
   render: renderFunction,
 };

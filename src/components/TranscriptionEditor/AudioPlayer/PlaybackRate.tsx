@@ -1,7 +1,8 @@
 import { Timer } from "iconoir-react";
 import { useContext, useId, useState } from "react";
 import { AudioContext } from "../../../context/audio.context";
-import { IconSelectTrigger, Select, SelectItem } from "../../ui/Select/Select";
+import { IconTrigger } from "../../ui/Select/IconTrigger";
+import { Select, SelectItem } from "../../ui/Select/Select";
 
 const PLAYBACK_RATES = ["0.5", "0.75", "1", "1.25", "1.5", "2"] as const;
 
@@ -20,7 +21,7 @@ export const PlaybackRate = () => {
       <Select
         value={rate}
         trigger={
-          <IconSelectTrigger
+          <IconTrigger
             id={selectId}
             icon={<Timer className="text-gray-600" width={16} height={16} strokeWidth={2.2} />}
             className="text-gray-600 text-xs font-normal h-full"

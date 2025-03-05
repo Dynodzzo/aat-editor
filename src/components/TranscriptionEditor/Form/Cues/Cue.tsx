@@ -120,15 +120,10 @@ export const Cue = memo(function Cue({ index, cueId, languages, duration, isBein
           </InputFieldInline>
         </div>
         <div className="actions flex flex-row items-center">
-          <Button variant="inline" style="secondary" onClick={handleDelete} prefix={<Trash width={20} height={20} />}>
+          <Button type="secondary" onClick={handleDelete} prefix={<Trash width={20} height={20} />}>
             Delete
           </Button>
-          <Button
-            variant="inline"
-            style="primary"
-            onClick={() => void handleListen()}
-            prefix={<PlaySolid width={20} height={20} />}
-          >
+          <Button type="primary" onClick={() => void handleListen()} prefix={<PlaySolid width={20} height={20} />}>
             Listen
           </Button>
         </div>
