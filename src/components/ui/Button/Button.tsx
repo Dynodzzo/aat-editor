@@ -18,7 +18,7 @@ const BUTTON_TYPE_STYLES: Record<ButtonType, string> = {
 
 const BUTTON_STYLES = "p-2 rounded-sm flex flex-row gap-1 items-center font-medium text-xs cursor-pointer";
 
-export const Button = memo(function ColorIndicator({
+export const Button = memo(function Button({
   type = "primary",
   prefix,
   disabled,

@@ -99,7 +99,7 @@ export const Cue = memo(function Cue({ index, cueId, languageId, isBeingPlayed }
 
   return (
     <div
-      className={clsx("group py-3 grid grid-cols-[min-content_1fr] grid-rows-[min-content_min-content] gap-y-2", {
+      className={clsx("group py-3 grid grid-cols-[min-content_1fr] auto-rows-min gap-y-2", {
         "inset-ring-2 inset-ring-slate-500": isBeingPlayed,
         "bg-zinc-50": isEven,
         "bg-zinc-100": !isEven,
@@ -145,11 +145,13 @@ export const Cue = memo(function Cue({ index, cueId, languageId, isBeingPlayed }
           </div>
         </div>
       </div>
-      <div></div>
       {hasNote && isNoteVisible && (
-        <div className="note px-4.5">
-          <TransformableInput value={note} className="italic font-light text-xs text-neutral-500" />
-        </div>
+        <>
+          <div></div>
+          <div className="note px-4.5">
+            <TransformableInput value={note} className="italic font-light text-xs text-neutral-500" />
+          </div>
+        </>
       )}
     </div>
   );

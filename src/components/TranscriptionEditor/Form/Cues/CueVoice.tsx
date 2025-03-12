@@ -1,10 +1,8 @@
+import { VisuallyHidden } from "radix-ui";
 import { memo, useCallback, useId, useMemo } from "react";
 import { makeSelectVoiceColorById, selectVoicesIdsAndNames } from "../../../../store/features/voice.slice";
 import { useAppSelector } from "../../../../store/hooks";
-import { ColorIndicator } from "../../../ui/ColorIndicator/ColorIndicator";
-import { Label } from "../../../ui/InputField/Label";
-import { LabelText } from "../../../ui/InputField/LabelText";
-import { InputTrigger } from "../../../ui/Select/InputTrigger";
+import { ChipTrigger } from "../../../ui/Select/ChipTrigger";
 import { Select, SelectItem } from "../../../ui/Select/Select";
 
 type CueVoiceProps = {
@@ -20,8 +18,6 @@ export const CueVoice = memo(function CueVoice({ value, onChangeVoice }: CueVoic
   const voicesIdsAndNames = useAppSelector(selectVoicesIdsAndNames);
   const voiceColor = useAppSelector((state) => selectVoiceColorById(state, value));
 
-  const displayColorIndicator = !!voiceColor;
-
   const handleVoiceChange = useCallback(
     (newVoiceId: string) => {
       onChangeVoice(newVoiceId);
@@ -31,19 +27,12 @@ export const CueVoice = memo(function CueVoice({ value, onChangeVoice }: CueVoic
 
   return (
     <div className="flex flex-row items-center gap-2">
-      <Label>
-        <LabelText htmlFor={voiceId}>Voice</LabelText>
-      </Label>
+      <VisuallyHidden.Root>
+        <label htmlFor={voiceId}>Voice</label>
+      </VisuallyHidden.Root>
       <Select
         value={value}
-        trigger={
-          <InputTrigger
-            id={voiceId}
-            placeholder="Select voice"
-            decorator={displayColorIndicator ? <ColorIndicator color={voiceColor} /> : <></>}
-            className="min-w-32"
-          />
-        }
+        trigger={<ChipTrigger id={voiceId} placeholder="Select voice" color={voiceColor} />}
         onChange={handleVoiceChange}
       >
         {voicesIdsAndNames.map(({ id, name }) => (

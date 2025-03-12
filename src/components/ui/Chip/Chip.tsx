@@ -8,7 +8,7 @@ type ChipProps = {
   onClick?: (event: React.SyntheticEvent<HTMLDivElement>) => void;
 };
 
-export const Chip = memo(function ColorIndicator({ value, id, highlighted, onClick }: ChipProps) {
+export const Chip = memo(function Chip({ value, id, highlighted, onClick }: ChipProps) {
   const containerClass = useMemo(() => {
     return highlighted
       ? "inset-ring-2 inset-ring-slate-600 text-slate-600"
