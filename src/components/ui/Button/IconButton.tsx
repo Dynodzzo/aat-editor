@@ -7,6 +7,7 @@ type IconButtonProps = {
   type?: IconButtonType;
   icon: JSX.Element;
   disabled?: boolean;
+  className?: string;
   onClick?: () => void;
 };
 
@@ -18,16 +19,17 @@ const ICON_BUTTON_TYPE_STYLES: Record<IconButtonType, string> = {
 
 const ICON_BUTTON_STYLES = "p-1 rounded-full grid place-content-center cursor-pointer";
 
-export const IconButton = memo(function ColorIndicator({
+export const IconButton = memo(function IconButton({
   type = "primary",
   icon,
   disabled,
+  className,
   onClick,
 }: React.PropsWithChildren<IconButtonProps>) {
   const iconButtonTypeStyles = useMemo(() => ICON_BUTTON_TYPE_STYLES[type], [type]);
 
   return (
-    <button className={clsx(ICON_BUTTON_STYLES, iconButtonTypeStyles)} onClick={onClick} disabled={disabled}>
+    <button className={clsx(ICON_BUTTON_STYLES, iconButtonTypeStyles, className)} onClick={onClick} disabled={disabled}>
       {icon}
     </button>
   );
