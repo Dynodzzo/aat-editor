@@ -69,7 +69,7 @@ export const Cues = memo(function CuesForm() {
             <Cue
               index={index}
               cueId={cue.id}
-              languages={languages}
+              languageId={languages[0].id}
               duration={duration}
               isBeingPlayed={playingCues.includes(index)}
             />

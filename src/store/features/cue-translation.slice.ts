@@ -45,7 +45,7 @@ export const {
   selectIds: selectCueTranslationsIds,
 } = cueTranslationAdapter.getSelectors((state: RootState) => state.cueTranslations);
 
-export const selectCueTranslationsByCueId = createSelector(
+const selectCueTranslationsByCueId = createSelector(
   selectAllCueTranslations,
   (_state: RootState, cueId: string) => cueId,
   (cueTranslations, cueId) => cueTranslations.filter((cueTranslation) => cueTranslation.cueId === cueId)

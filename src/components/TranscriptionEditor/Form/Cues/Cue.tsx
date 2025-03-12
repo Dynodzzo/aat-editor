@@ -1,8 +1,8 @@
 import clsx from "clsx";
-import { PlaySolid, Trash } from "iconoir-react";
-import { memo, useCallback, useContext, useId } from "react";
+import { MoreVert, Page, PlaySolid } from "iconoir-react";
+import { memo, useCallback, useContext, useState } from "react";
 import { AudioContext } from "../../../../context/audio.context";
-import { Language } from "../../../../model/transcription/language.model";
+import { selectCueTranslationsByCueIdAndLanguageId } from "../../../../store/features/cue-translation.slice";
 import {
   deleteCue,
   selectCueById,
@@ -11,35 +11,39 @@ import {
   updateCueVoiceId,
 } from "../../../../store/features/cue.slice";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
-import { formatDurationToISOTime } from "../../../../utils/time.utils";
-import { Button } from "../../../ui/Button/Button";
-import { Input } from "../../../ui/Input/Input";
-import { InputFieldInline } from "../../../ui/InputField/InputFieldInline";
-import { Label } from "../../../ui/InputField/Label";
-import { LabelText } from "../../../ui/InputField/LabelText";
-import { Typography } from "../../../ui/Typography/Typography";
-import { CueTranslation } from "./CueTranslation";
+import { IconButton } from "../../../ui/Button/IconButton";
+import { DropdownMenu, DropdownMenuItem } from "../../../ui/DropDownMenu/DropDownMenu";
+import { TransformableInput } from "../../../ui/Input/TransformableInput";
 import { CueVoice } from "./CueVoice";
-
-const DEFAULT_TIME_INPUT_VALUE = "00:00:00.000";
-const TIME_INPUTS_STEP = "0.001";
+import { Timecodes } from "./Timecodes";
 
 type CueProps = {
   index: number;
   cueId: string;
-  languages: Language[];
-  duration?: number;
+  languageId: string;
+  duration: number;
   isBeingPlayed?: boolean;
 };
 
-export const Cue = memo(function Cue({ index, cueId, languages, duration, isBeingPlayed }: CueProps) {
-  const startId = useId();
-  const endId = useId();
+export const Cue = memo(function Cue({ index, cueId, languageId, isBeingPlayed }: CueProps) {
+  const [isNoteVisible, setIsNoteVisible] = useState(false);
   const dispatch = useAppDispatch();
   const cue = useAppSelector((state) => selectCueById(state, cueId));
   const {
     playerControls: { playRegion },
   } = useContext(AudioContext);
+
+  const translations = useAppSelector((state) => selectCueTranslationsByCueIdAndLanguageId(state, cueId, languageId));
+
+  let hasNote = false;
+  let text = "";
+  let note = "";
+
+  if (translations) {
+    hasNote = Boolean(translations.note);
+    text = translations.text;
+    note = translations.note;
+  }
 
   const handleChangeStart = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,73 +70,87 @@ export const Cue = memo(function Cue({ index, cueId, languages, duration, isBein
     dispatch(deleteCue(cue.id));
   }, [dispatch, cue]);
 
-  const handleListen = useCallback(async () => {
-    await playRegion?.(cue.id);
+  const handleToggleNote = useCallback(() => {
+    setIsNoteVisible((previousIsNoteVisible) => !previousIsNoteVisible);
+  }, []);
+
+  const handleMenuOptionSelected = useCallback(
+    (value: string) => {
+      switch (value) {
+        case "delete":
+          handleDelete();
+          break;
+        case "add_note":
+          break;
+        default:
+          break;
+      }
+    },
+    [handleDelete]
+  );
+
+  const handleListen = useCallback(() => {
+    void playRegion?.(cue.id);
   }, [playRegion, cue]);
 
-  const isEven = (index: number) => index % 2 === 0;
+  const isEven = index % 2 === 0;
 
   if (!cue) return null;
 
   return (
     <div
-      className={clsx("px-6 py-4 flex flex-col gap-3 rounded-sm ", {
+      className={clsx("group py-3 grid grid-cols-[min-content_1fr] grid-rows-[min-content_min-content] gap-y-2", {
         "inset-ring-2 inset-ring-slate-500": isBeingPlayed,
-        "bg-zinc-50": isEven(index),
-        "bg-zinc-100": !isEven(index),
+        "bg-zinc-50": isEven,
+        "bg-zinc-100": !isEven,
       })}
     >
-      <div className="flex flex-row items-center justify-between">
-        <div className="flex flex-row items-center gap-4">
-          <Typography variant="h3">#{index}</Typography>
+      <div className="prefix pl-4.5 text-neutral-800 flex flex-row items-center">
+        <span className="size-6 leading-6 text-xs font-bold group-hover:hidden align-middle text-center">
+          {index + 1}
+        </span>
+        <IconButton
+          className="size-6 hidden group-hover:block"
+          type="secondary"
+          onClick={handleListen}
+          icon={<PlaySolid width={16} height={16} />}
+        />
+      </div>
+      <div className="content flex flex-col gap-3 w-full">
+        <div className="cue-header px-4.5 flex flex-row items-center justify-between">
+          <div className="left-group flex flex-row items-center gap-2">
+            <Timecodes
+              startTime={cue.start}
+              endTime={cue.end}
+              onChangeStartTime={handleChangeStart}
+              onChangeEndTime={handleChangeEnd}
+            />
+            {hasNote && (
+              <IconButton
+                type={isNoteVisible ? "primary" : "secondary"}
+                icon={<Page width={12} height={12} />}
+                onClick={handleToggleNote}
+              />
+            )}
+          </div>
           <CueVoice value={cue.voiceId} onChangeVoice={handleChangeVoice} />
-          <InputFieldInline>
-            <Label>
-              <LabelText htmlFor={startId}>From</LabelText>
-            </Label>
-            <Input
-              id={startId}
-              type="time"
-              value={cue.start}
-              size="sm"
-              min={DEFAULT_TIME_INPUT_VALUE}
-              max={duration ? formatDurationToISOTime(duration) : DEFAULT_TIME_INPUT_VALUE}
-              step={TIME_INPUTS_STEP}
-              className="min-w-36"
-              onChange={handleChangeStart}
-            />
-          </InputFieldInline>
-          <InputFieldInline>
-            <Label>
-              <LabelText htmlFor={endId}>To</LabelText>
-            </Label>
-            <Input
-              id={endId}
-              type="time"
-              value={cue.end}
-              size="sm"
-              min={DEFAULT_TIME_INPUT_VALUE}
-              max={duration ? formatDurationToISOTime(duration) : DEFAULT_TIME_INPUT_VALUE}
-              step={TIME_INPUTS_STEP}
-              className="min-w-36"
-              onChange={handleChangeEnd}
-            />
-          </InputFieldInline>
         </div>
-        <div className="actions flex flex-row items-center">
-          <Button type="secondary" onClick={handleDelete} prefix={<Trash width={20} height={20} />}>
-            Delete
-          </Button>
-          <Button type="primary" onClick={() => void handleListen()} prefix={<PlaySolid width={20} height={20} />}>
-            Listen
-          </Button>
+        <div className="cue-transcript px-4.5">
+          <div className="top-row flex flex-row items-center">
+            <TransformableInput value={text} className="grow font-normal text-sm text-neutral-500" />
+            <DropdownMenu icon={<IconButton type="secondary" icon={<MoreVert width={12} height={12} />} />}>
+              <DropdownMenuItem onSelect={() => void handleMenuOptionSelected("delete")}>Delete</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => void handleMenuOptionSelected("add_note")}>Add note</DropdownMenuItem>
+            </DropdownMenu>
+          </div>
         </div>
       </div>
-      <div className="transcripts flex flex-col gap-3">
-        {languages.map(({ id: languageId, name }) => {
-          return <CueTranslation key={languageId} cueId={cueId} languageId={languageId} languageName={name} />;
-        })}
-      </div>
+      <div></div>
+      {hasNote && isNoteVisible && (
+        <div className="note px-4.5">
+          <TransformableInput value={note} className="italic font-light text-xs text-neutral-500" />
+        </div>
+      )}
     </div>
   );
 });
