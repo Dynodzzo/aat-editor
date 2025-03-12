@@ -46,9 +46,9 @@ export const TransformableInput = memo(function Input({
   return (
     <div
       className={clsx(
-        "h-4 border-1 border-transparent rounded-sm flex items-center",
+        "min-h-4 border-1 border-transparent rounded-sm flex items-stretch",
         "hover:not-focus-within:border-dashed hover:border-neutral-200",
-        "focus-within:border-solid focus-within:border-neutral-200 focus-within:bg-neutral-50",
+        "focus-within:border-solid focus-within:border-neutral-200 focus-within:bg-white",
         className
       )}
     >
@@ -73,7 +73,7 @@ export const TransformableInput = memo(function Input({
         </>
       )}
       {!isEditing && (
-        <span tabIndex={0} onFocus={handleFocus} className={clsx("w-full")}>
+        <span tabIndex={0} onFocus={handleFocus} className={clsx("w-full min-h-full")}>
           {value}
         </span>
       )}

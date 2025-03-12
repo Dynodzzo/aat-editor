@@ -1,0 +1,59 @@
+import clsx from "clsx";
+import { Separator } from "radix-ui";
+import { useCallback, useState } from "react";
+import { selectCueTranslationsByCueIdAndLanguageId } from "../../../../store/features/cue-translation.slice";
+import { selectCueById } from "../../../../store/features/cue.slice";
+import { useAppSelector } from "../../../../store/hooks";
+import { Cue } from "./Cue";
+
+type CueContainerProps = {
+  id: string;
+  index: number;
+  duration: number;
+  isBeingPlayed?: boolean;
+};
+
+export const CueContainer = ({ id, index, duration, isBeingPlayed }: CueContainerProps) => {
+  const contentLanguageId = "fr";
+  const translationLanguageId = "en";
+  const [isNoteVisible, setIsNoteVisible] = useState(false);
+
+  const cue = useAppSelector((state) => selectCueById(state, id));
+  const transcriptions = useAppSelector((state) =>
+    selectCueTranslationsByCueIdAndLanguageId(state, id, contentLanguageId)
+  );
+  const translations = useAppSelector((state) =>
+    selectCueTranslationsByCueIdAndLanguageId(state, id, translationLanguageId)
+  );
+
+  const hasNote = Boolean(translations!.note || transcriptions!.note);
+
+  const handleToggleNote = useCallback(() => {
+    setIsNoteVisible((previousIsNoteVisible) => !previousIsNoteVisible);
+  }, []);
+
+  if (!id) return null;
+
+  return (
+    <div className={clsx("group flex flex-row", { "inset-ring-2 inset-ring-slate-500": isBeingPlayed })}>
+      <Cue
+        cue={cue}
+        index={index}
+        duration={duration}
+        translation={transcriptions!}
+        hasNote={hasNote}
+        isNoteVisible={isNoteVisible}
+        toggleNote={handleToggleNote}
+      />
+      <Separator.Root orientation="vertical" className="w-px bg-neutral-200" />
+      <Cue
+        cue={cue}
+        duration={duration}
+        translation={translations!}
+        hasNote={hasNote}
+        isNoteVisible={isNoteVisible}
+        toggleNote={handleToggleNote}
+      />
+    </div>
+  );
+};

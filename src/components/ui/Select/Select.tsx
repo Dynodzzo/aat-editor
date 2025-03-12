@@ -18,7 +18,7 @@ export const Select = ({ value, trigger, onChange, children }: PropsWithChildren
     <RadixSelect.Root value={value} onValueChange={handleChange}>
       {trigger}
       <RadixSelect.Portal>
-        <RadixSelect.Content className="flex flex-column bg-neutral-50 rounded-sm shadow-lg ring ring-neutral-200 overflow-hidden cursor-pointer">
+        <RadixSelect.Content className="min-w-30 flex flex-column bg-neutral-50 rounded-sm shadow-lg ring ring-neutral-200 overflow-hidden cursor-pointer">
           <RadixSelect.Viewport className="flex flex-col gap-2">{children}</RadixSelect.Viewport>
         </RadixSelect.Content>
       </RadixSelect.Portal>

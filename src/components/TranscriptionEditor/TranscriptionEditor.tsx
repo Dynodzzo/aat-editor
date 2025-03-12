@@ -32,11 +32,11 @@ export const TranscriptionEditor = () => {
   return (
     <AudioContext.Provider value={audioContext}>
       <div className="flex flex-col h-full max-h-full">
-        <div className="grid grid-rows-1 grid-cols-[1fr_470px] bg-zinc-200 flex-1 overflow-auto">
+        <div className="grid grid-rows-1 grid-cols-[1fr_470px] flex-1 overflow-auto">
           <CuesPanel />
           <SidePanel />
         </div>
-        <div className="flex flex-col bg-zinc-100">
+        <div className="flex flex-col">
           <div className="flex flex-row gap-4 justify-between">
             <AudioFileImporter />
             <ExportButton />

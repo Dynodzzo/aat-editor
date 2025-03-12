@@ -26,7 +26,7 @@ export const DropdownMenu = memo(function DropdownMenu({
         <RadixDropdownMenu.Content
           align="start"
           sideOffset={10}
-          className={clsx("flex flex-col bg-neutral-50 ring ring-neutral-200 rounded-sm shadow-lg min-w-30")}
+          className={clsx("min-w-30 flex flex-col bg-neutral-50 ring ring-neutral-200 rounded-sm shadow-lg")}
         >
           {children}
         </RadixDropdownMenu.Content>
@@ -42,7 +42,7 @@ export const DropdownMenuItem = memo(function DropdownMenuItem({
   return (
     <RadixDropdownMenu.Item
       onSelect={onSelect}
-      className={clsx("px-4 py-2 cursor-pointer text-sm text-neutral-500 hover:bg-neutral-100")}
+      className={clsx("px-4 py-2 cursor-pointer text-sm text-neutral-500 hover:bg-neutral-100 hover:outline-none")}
     >
       {children}
     </RadixDropdownMenu.Item>

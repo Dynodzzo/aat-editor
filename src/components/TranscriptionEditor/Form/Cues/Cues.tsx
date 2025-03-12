@@ -1,26 +1,20 @@
-import { ForwardedRef, forwardRef, memo, PropsWithChildren, useContext, useRef, useState } from "react";
+import { Separator } from "radix-ui";
+import { memo, useContext, useRef, useState } from "react";
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
 import { AudioContext } from "../../../../context/audio.context";
 import { useRequestAnimationFrame } from "../../../../hooks/useRequestAnimationFrame";
 import { useScrollOverlay } from "../../../../hooks/useScrollOverlay";
 import { selectAudioDuration } from "../../../../store/features/audio.slice";
 import { selectCuesdsAndTimes } from "../../../../store/features/cue.slice";
-import { selectActiveLanguages } from "../../../../store/features/language.slice";
+// import { selectActiveLanguages } from "../../../../store/features/language.slice";
 import { useAppSelector } from "../../../../store/hooks";
 import { formatISOTimeToDuration } from "../../../../utils/time.utils";
 import { ScrollOverlay } from "../../../ui/ScrollOverlay/ScrollOverlay";
-import { Cue } from "./Cue";
-
-const ItemWrapper = forwardRef<HTMLDivElement, PropsWithChildren>(function ItemWrapper(
-  props,
-  ref: ForwardedRef<HTMLDivElement>
-) {
-  return <div className="px-4 pt-2 first:pt-4 last:pb-4" ref={ref} {...props} />;
-});
+import { CueContainer } from "./CueContainer";
 
 export const Cues = memo(function CuesForm() {
   const { showScrollOverlay, handleScroll } = useScrollOverlay({ threshold: 40 });
-  const languages = useAppSelector(selectActiveLanguages);
+  // const languages = useAppSelector(selectActiveLanguages);
   const cues = useAppSelector(selectCuesdsAndTimes);
   const duration = useAppSelector(selectAudioDuration);
 
@@ -63,20 +57,36 @@ export const Cues = memo(function CuesForm() {
         totalCount={cues.length}
         data={cues}
         onScroll={handleScroll}
-        components={{ Item: ItemWrapper }}
         itemContent={(index, cue) => (
-          <div key={cue.id}>
-            <Cue
+          <>
+            {index > 0 && (
+              <div className="flex flex-row items-stretch">
+                <div className="px-4 grow bg-transparent">
+                  <Separator.Root
+                    orientation="horizontal"
+                    className="w-full h-px [background:repeating-linear-gradient(90deg,#E5E5E5,#E5E5E5_4px,transparent_4px,transparent_8px)]"
+                  />
+                </div>
+                <Separator.Root orientation="vertical" className="w-px bg-neutral-200" />
+                <div className="px-4 grow">
+                  <Separator.Root
+                    orientation="horizontal"
+                    className="w-full h-px [background:repeating-linear-gradient(90deg,#E5E5E5,#E5E5E5_4px,transparent_4px,transparent_8px)]"
+                  />
+                </div>
+              </div>
+            )}
+            <CueContainer
+              key={cue.id}
               index={index}
-              cueId={cue.id}
-              languageId={languages[0].id}
+              id={cue.id}
               duration={duration}
               isBeingPlayed={playingCues.includes(index)}
             />
-          </div>
+          </>
         )}
       />
-      <ScrollOverlay isVisible={showScrollOverlay} colorClass="to-zinc-200" />
+      <ScrollOverlay isVisible={showScrollOverlay} colorClass="to-white" />
     </div>
   );
 });
