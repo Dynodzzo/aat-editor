@@ -1,20 +1,19 @@
-import { Separator } from "radix-ui";
 import { memo, useContext, useRef, useState } from "react";
-import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
+import { GroupedVirtuoso, VirtuosoHandle } from "react-virtuoso";
 import { AudioContext } from "../../../../context/audio.context";
 import { useRequestAnimationFrame } from "../../../../hooks/useRequestAnimationFrame";
 import { useScrollOverlay } from "../../../../hooks/useScrollOverlay";
 import { selectAudioDuration } from "../../../../store/features/audio.slice";
 import { selectCuesdsAndTimes } from "../../../../store/features/cue.slice";
-// import { selectActiveLanguages } from "../../../../store/features/language.slice";
 import { useAppSelector } from "../../../../store/hooks";
 import { formatISOTimeToDuration } from "../../../../utils/time.utils";
 import { ScrollOverlay } from "../../../ui/ScrollOverlay/ScrollOverlay";
 import { CueContainer } from "./CueContainer";
+import { CuesSeparator } from "./CuesSeparator";
+import { Header } from "./Header";
 
 export const Cues = memo(function CuesForm() {
   const { showScrollOverlay, handleScroll } = useScrollOverlay({ threshold: 40 });
-  // const languages = useAppSelector(selectActiveLanguages);
   const cues = useAppSelector(selectCuesdsAndTimes);
   const duration = useAppSelector(selectAudioDuration);
 
@@ -52,34 +51,19 @@ export const Cues = memo(function CuesForm() {
 
   return (
     <div className="flex flex-col overflow-auto h-full relative">
-      <Virtuoso
+      <GroupedVirtuoso
         ref={virtuosoRef}
-        totalCount={cues.length}
+        groupCounts={[cues.length]}
         data={cues}
         onScroll={handleScroll}
-        itemContent={(index, cue) => (
+        groupContent={() => <Header />}
+        itemContent={(index) => (
           <>
-            {index > 0 && (
-              <div className="flex flex-row items-stretch">
-                <div className="px-4 grow bg-transparent">
-                  <Separator.Root
-                    orientation="horizontal"
-                    className="w-full h-px [background:repeating-linear-gradient(90deg,#E5E5E5,#E5E5E5_4px,transparent_4px,transparent_8px)]"
-                  />
-                </div>
-                <Separator.Root orientation="vertical" className="w-px bg-neutral-200" />
-                <div className="px-4 grow">
-                  <Separator.Root
-                    orientation="horizontal"
-                    className="w-full h-px [background:repeating-linear-gradient(90deg,#E5E5E5,#E5E5E5_4px,transparent_4px,transparent_8px)]"
-                  />
-                </div>
-              </div>
-            )}
+            {index > 0 && <CuesSeparator />}
             <CueContainer
-              key={cue.id}
+              key={cues[index].id}
               index={index}
-              id={cue.id}
+              id={cues[index].id}
               duration={duration}
               isBeingPlayed={playingCues.includes(index)}
             />

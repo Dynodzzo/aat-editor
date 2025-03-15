@@ -21,7 +21,7 @@ export const TextTrigger = ({
         className
       )}
     >
-      <span className="flex-auto text-xs font-normal text-left leading-none">
+      <span className="flex-auto text-sm font-normal text-left leading-none">
         <RadixSelect.Value></RadixSelect.Value>
       </span>
       <RadixSelect.Icon className={clsx({ "text-neutral-600": !disabled, "text-neutral-300": disabled })}>
