@@ -39,8 +39,8 @@ export const Input = memo(function Input({
   return (
     <div
       className={clsx(
-        "px-2 py-1 bg-neutral-50 ring-1 ring-neutral-200 rounded-sm",
-        "focus-within:ring-2 focus-within:ring-neutral-400",
+        "px-2 py-1 bg-neutral-50 inset-ring-1 inset-ring-neutral-200 rounded-sm",
+        "focus-within:inset-ring-2 focus-within:inset-ring-neutral-400",
         className
       )}
     >
