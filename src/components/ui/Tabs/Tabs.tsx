@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { Tabs as RadixTabs } from "radix-ui";
 import { PropsWithChildren } from "react";
 
@@ -9,6 +10,10 @@ type TabTriggerProps = {
   value: string;
 };
 
+type TabListProps = {
+  className?: string;
+};
+
 type TabContentProps = {
   value: string;
 };
@@ -17,8 +22,8 @@ export const Tabs = ({ defaultValue, children }: PropsWithChildren<TabsProps>) =
   return <RadixTabs.Root defaultValue={defaultValue}>{children}</RadixTabs.Root>;
 };
 
-export const TabsList = ({ children }: PropsWithChildren) => {
-  return <RadixTabs.List className="px-4 h-12 flex flex-row gap-3">{children}</RadixTabs.List>;
+export const TabsList = ({ className, children }: PropsWithChildren<TabListProps>) => {
+  return <RadixTabs.List className={clsx("px-4 h-12 flex flex-row gap-3", className)}>{children}</RadixTabs.List>;
 };
 
 export const TabTrigger = ({ label, value }: TabTriggerProps) => {

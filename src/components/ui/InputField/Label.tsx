@@ -1,5 +1,10 @@
+import clsx from "clsx";
 import { memo, PropsWithChildren } from "react";
 
-export const Label = memo(function Label({ children }: PropsWithChildren) {
-  return <div className="flex flex-row justify-between items-end">{children}</div>;
+type LabelProps = {
+  className?: string;
+};
+
+export const Label = memo(function Label({ className, children }: PropsWithChildren<LabelProps>) {
+  return <div className={clsx("flex flex-row justify-between", className)}>{children}</div>;
 });

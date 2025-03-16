@@ -2,18 +2,20 @@ import clsx from "clsx";
 import { Switch as RadixSwitch } from "radix-ui";
 
 type SwitchProps = {
+  id?: string;
   checked: boolean;
   disabled?: boolean;
   onChange?: (checked: boolean) => void;
 };
 
-export const Switch = ({ checked, disabled = false, onChange }: SwitchProps) => {
+export const Switch = ({ id, checked, disabled = false, onChange }: SwitchProps) => {
   const handleCheckedChange = (checked: boolean) => {
     onChange?.(checked);
   };
 
   return (
     <RadixSwitch.Root
+      id={id}
       checked={checked}
       disabled={disabled}
       onCheckedChange={handleCheckedChange}

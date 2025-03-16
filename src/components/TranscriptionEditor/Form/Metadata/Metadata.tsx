@@ -11,7 +11,6 @@ import { Input } from "../../../ui/Input/Input";
 import { InputField } from "../../../ui/InputField/InputField";
 import { Label } from "../../../ui/InputField/Label";
 import { LabelText } from "../../../ui/InputField/LabelText";
-import { Typography } from "../../../ui/Typography/Typography";
 
 export const MetadataForm = () => {
   const dispatch = useAppDispatch();
@@ -32,29 +31,26 @@ export const MetadataForm = () => {
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      <Typography variant="h2">Metadata</Typography>
-      <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-4">
+      <InputField className="flex-1">
+        <Label>
+          <LabelText htmlFor="title">Title</LabelText>
+        </Label>
+        <Input id="title" value={title} variant="fill" onChange={handleTitleChange} />
+      </InputField>
+      <div className="flex flex-row gap-4">
+        <InputField className="flex-1">
+          <Label>
+            <LabelText htmlFor="author">Author</LabelText>
+          </Label>
+          <Input id="author" value={author} variant="fill" onChange={handleAuthorChange} />
+        </InputField>
         <InputField>
           <Label>
-            <LabelText htmlFor="title">Title</LabelText>
+            <LabelText htmlFor="fileAuthor">Transcription author</LabelText>
           </Label>
-          <Input id="title" value={title} variant="fill" onChange={handleTitleChange} />
+          <Input id="fileAuthor" value={fileAuthor} variant="fill" onChange={handleFileAuthorChange} />
         </InputField>
-        <div className="flex flex-row gap-4">
-          <InputField>
-            <Label>
-              <LabelText htmlFor="author">Author</LabelText>
-            </Label>
-            <Input id="author" value={author} variant="fill" onChange={handleAuthorChange} />
-          </InputField>
-          <InputField>
-            <Label>
-              <LabelText htmlFor="fileAuthor">File author</LabelText>
-            </Label>
-            <Input id="fileAuthor" value={fileAuthor} variant="fill" onChange={handleFileAuthorChange} />
-          </InputField>
-        </div>
       </div>
     </div>
   );

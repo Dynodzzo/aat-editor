@@ -1,5 +1,28 @@
 @import "tailwindcss";
 
+@theme {
+  --animate-expand: expand 150ms ease-in-out;
+  --animate-retract: retract 150ms ease-in-out;
+
+  @keyframes expand {
+    0% {
+      height: 0;
+    }
+    100% {
+      height: var(--radix-collapsible-content-height);
+    }
+  }
+
+  @keyframes retract {
+    0% {
+      height: var(--radix-collapsible-content-height);
+    }
+    100% {
+      height: 0;
+    }
+  }
+}
+
 html,
 body {
   height: 100%;

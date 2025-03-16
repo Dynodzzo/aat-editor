@@ -49,27 +49,32 @@ export const Cues = memo(function CuesForm() {
     }
   });
 
+  const cuesEmpty = cues.length === 0;
+
   return (
-    <div className="flex flex-col overflow-auto h-full relative">
-      <GroupedVirtuoso
-        ref={virtuosoRef}
-        groupCounts={[cues.length]}
-        data={cues}
-        onScroll={handleScroll}
-        groupContent={() => <Header />}
-        itemContent={(index) => (
-          <>
-            {index > 0 && <CuesSeparator />}
-            <CueContainer
-              key={cues[index].id}
-              index={index}
-              id={cues[index].id}
-              duration={duration}
-              isBeingPlayed={playingCues.includes(index)}
-            />
-          </>
-        )}
-      />
+    <div className="flex flex-col overflow-auto flex-1 relative">
+      {cuesEmpty && <Header />}
+      {!cuesEmpty && (
+        <GroupedVirtuoso
+          ref={virtuosoRef}
+          groupCounts={[cues.length]}
+          data={cues}
+          onScroll={handleScroll}
+          groupContent={() => <Header />}
+          itemContent={(index) => (
+            <>
+              {index > 0 && <CuesSeparator />}
+              <CueContainer
+                key={cues[index].id}
+                index={index}
+                id={cues[index].id}
+                duration={duration}
+                isBeingPlayed={playingCues.includes(index)}
+              />
+            </>
+          )}
+        />
+      )}
       <ScrollOverlay isVisible={showScrollOverlay} colorClass="to-white" />
     </div>
   );

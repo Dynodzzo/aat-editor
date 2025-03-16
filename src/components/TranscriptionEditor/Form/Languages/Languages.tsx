@@ -2,7 +2,6 @@ import { AVAILABLE_LANGUAGES_IDS } from "../../../../constants/language.constant
 import { LanguageId } from "../../../../model/transcription/language.model";
 import { toggleLanguage } from "../../../../store/features/language.slice";
 import { useAppDispatch } from "../../../../store/hooks";
-import { Typography } from "../../../ui/Typography/Typography";
 import { Language } from "./Language";
 
 export const LanguagesForm = () => {
@@ -13,13 +12,10 @@ export const LanguagesForm = () => {
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      <Typography variant="h2">Languages</Typography>
-      <div className="flex flex-row gap-2">
-        {AVAILABLE_LANGUAGES_IDS.map((id) => (
-          <Language key={id} id={id} onToggle={handleChangeLanguages} />
-        ))}
-      </div>
+    <div className="flex flex-col gap-4">
+      {AVAILABLE_LANGUAGES_IDS.map((id) => (
+        <Language key={id} languageId={id} onToggle={handleChangeLanguages} />
+      ))}
     </div>
   );
 };
