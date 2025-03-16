@@ -19,11 +19,11 @@ export const Language = ({ languageId, disabled = false, onToggle }: LanguagePro
 
   return (
     <div
-      className={clsx("flex flex-row h-[31px] items-center cursor-pointer [&_*]:cursor-pointer", {
+      className={clsx("flex flex-row h-6 items-center cursor-pointer [&_*]:cursor-pointer", {
         "opacity-50": disabled,
       })}
     >
-      <Label className="flex-1 h-full [&_*]:w-full [&_*]:leading-[31px]">
+      <Label className="flex-1 h-full [&_*]:w-full [&_*]:leading-6">
         <LabelText htmlFor={id}>{name}</LabelText>
       </Label>
       <Switch id={id} checked={isActive} onChange={() => onToggle(languageId)} />

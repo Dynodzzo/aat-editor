@@ -4,6 +4,7 @@ import { PropsWithChildren } from "react";
 
 type TabsProps = {
   defaultValue: string;
+  onChange: (value: string) => void;
 };
 type TabTriggerProps = {
   label: string;
@@ -15,11 +16,17 @@ type TabListProps = {
 };
 
 type TabContentProps = {
+  className?: string;
+  hidden?: boolean;
   value: string;
 };
 
-export const Tabs = ({ defaultValue, children }: PropsWithChildren<TabsProps>) => {
-  return <RadixTabs.Root defaultValue={defaultValue}>{children}</RadixTabs.Root>;
+export const Tabs = ({ defaultValue, onChange, children }: PropsWithChildren<TabsProps>) => {
+  return (
+    <RadixTabs.Root defaultValue={defaultValue} onValueChange={onChange}>
+      {children}
+    </RadixTabs.Root>
+  );
 };
 
 export const TabsList = ({ className, children }: PropsWithChildren<TabListProps>) => {
@@ -37,9 +44,9 @@ export const TabTrigger = ({ label, value }: TabTriggerProps) => {
   );
 };
 
-export const TabContent = ({ value, children }: PropsWithChildren<TabContentProps>) => {
+export const TabContent = ({ value, hidden = false, className, children }: PropsWithChildren<TabContentProps>) => {
   return (
-    <RadixTabs.Content className="p-4" value={value}>
+    <RadixTabs.Content className={className} value={value} forceMount hidden={hidden}>
       {children}
     </RadixTabs.Content>
   );

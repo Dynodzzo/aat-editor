@@ -1,5 +1,6 @@
-import { memo, useContext, useRef, useState } from "react";
-import { GroupedVirtuoso, VirtuosoHandle } from "react-virtuoso";
+import { defaultRangeExtractor, Range, useVirtualizer } from "@tanstack/react-virtual";
+import { Separator } from "radix-ui";
+import { memo, useCallback, useContext, useRef, useState } from "react";
 import { AudioContext } from "../../../../context/audio.context";
 import { useRequestAnimationFrame } from "../../../../hooks/useRequestAnimationFrame";
 import { useScrollOverlay } from "../../../../hooks/useScrollOverlay";
@@ -19,8 +20,22 @@ export const Cues = memo(function CuesForm() {
 
   const { currentTimeRef } = useContext(AudioContext);
 
-  const virtuosoRef = useRef<VirtuosoHandle>(null);
   const [playingCues, setPlayingCues] = useState<number[]>([]);
+
+  const parentRef = useRef<HTMLDivElement>(null);
+  const count = cues.length + 1; // add one to account for the fixed header
+  const virtualizer = useVirtualizer({
+    count,
+    overscan: 3,
+    scrollPaddingStart: 48,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 45,
+    rangeExtractor: useCallback((range: Range) => {
+      const next = new Set([0, ...defaultRangeExtractor(range)]);
+      return [...next];
+    }, []),
+  });
+  const items = virtualizer.getVirtualItems();
 
   useRequestAnimationFrame(() => {
     const currentTime = currentTimeRef?.current;
@@ -32,49 +47,73 @@ export const Cues = memo(function CuesForm() {
           const isCueEndLessThanCurrentTime = formatISOTimeToDuration(end) >= currentTime;
           return isCueStartGreaterThanCurrentTime && isCueEndLessThanCurrentTime;
         })
-        .map((cue) => cues.findIndex((c) => c.id === cue.id));
+        .map((cue) => cues.findIndex((c) => c.id === cue.id) + 1); // add one to the index to account for the fixed header
 
       if (!cuesBeingPlayed.length && playingCues.length) return setPlayingCues([]);
 
-      const cuesKeysBeingPlayed = cuesBeingPlayed.map((index) => index);
-
-      if (playingCues.join() !== cuesKeysBeingPlayed.join()) {
-        setPlayingCues(cuesKeysBeingPlayed);
-        const lastCueBeingPlayed = cuesKeysBeingPlayed.at(-1);
+      if (playingCues.join() !== cuesBeingPlayed.join()) {
+        setPlayingCues(cuesBeingPlayed);
+        const lastCueBeingPlayed = cuesBeingPlayed.at(-1);
 
         if (lastCueBeingPlayed !== undefined) {
-          virtuosoRef.current?.scrollToIndex({ index: lastCueBeingPlayed, align: "start", behavior: "smooth" });
+          const isTargetCueVirtualized = items.some((item) => item.index === lastCueBeingPlayed);
+
+          virtualizer?.scrollToIndex(lastCueBeingPlayed, {
+            align: "start",
+            behavior: isTargetCueVirtualized ? "smooth" : "auto",
+          });
         }
       }
     }
   });
 
-  const cuesEmpty = cues.length === 0;
+  const isSticky = (index: number) => index === 0;
 
   return (
-    <div className="flex flex-col overflow-auto flex-1 relative">
-      {cuesEmpty && <Header />}
-      {!cuesEmpty && (
-        <GroupedVirtuoso
-          ref={virtuosoRef}
-          groupCounts={[cues.length]}
-          data={cues}
-          onScroll={handleScroll}
-          groupContent={() => <Header />}
-          itemContent={(index) => (
-            <>
-              {index > 0 && <CuesSeparator />}
-              <CueContainer
-                key={cues[index].id}
-                index={index}
-                id={cues[index].id}
-                duration={duration}
-                isBeingPlayed={playingCues.includes(index)}
-              />
-            </>
-          )}
-        />
-      )}
+    <div className="flex flex-col flex-1 items-stretch relative">
+      {
+        <div ref={parentRef} className="h-full overflow-auto contain-strict" onScroll={handleScroll}>
+          <div style={{ height: virtualizer.getTotalSize() }} className="w-full relative">
+            {items.map(({ key, index, start }) => (
+              <div
+                key={key}
+                data-index={index}
+                ref={virtualizer.measureElement}
+                style={{
+                  ...(isSticky(index)
+                    ? {
+                        zIndex: 10,
+                        position: "sticky",
+                      }
+                    : {
+                        position: "absolute",
+                        transform: `translateY(${start}px)`,
+                      }),
+                }}
+                className="w-full top-0 left-0"
+              >
+                {index === 0 && <Header />}
+                {index > 1 && <CuesSeparator />}
+                {index > 0 && (
+                  <CueContainer
+                    key={cues[index - 1].id}
+                    index={index - 1}
+                    id={cues[index - 1].id}
+                    duration={duration}
+                    isBeingPlayed={playingCues.includes(index)}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+          <div
+            className="w-full flex flex-row justify-center"
+            style={{ height: parentRef.current ? parentRef.current?.clientHeight - virtualizer.getTotalSize() : 0 }}
+          >
+            <Separator.Root orientation="vertical" className="w-px h-auto bg-neutral-200" />
+          </div>
+        </div>
+      }
       <ScrollOverlay isVisible={showScrollOverlay} colorClass="to-white" />
     </div>
   );

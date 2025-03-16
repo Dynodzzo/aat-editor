@@ -35,7 +35,12 @@ export const CueContainer = ({ id, index, duration, isBeingPlayed }: CueContaine
   if (!id) return null;
 
   return (
-    <div className={clsx("group flex flex-row", { "inset-ring-2 inset-ring-slate-500": isBeingPlayed })}>
+    <div
+      className={clsx("group flex flex-row", {
+        "[background-size:10px_10px]  [background-image:repeating-linear-gradient(45deg,#f8f8f8_0,#f8f8f8_1px,#ffffff_0,#ffffff_50%)]":
+          isBeingPlayed,
+      })}
+    >
       <Cue
         cue={cue}
         index={index}

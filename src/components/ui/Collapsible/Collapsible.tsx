@@ -2,7 +2,6 @@ import clsx from "clsx";
 import { NavArrowDown } from "iconoir-react";
 import { Collapsible as RadixCollapsible } from "radix-ui";
 import { PropsWithChildren } from "react";
-import { IconButton } from "../Button/IconButton";
 
 type CollapsibleProps = {
   className?: string;
@@ -26,10 +25,10 @@ export const Collapsible = ({ children, className, ...props }: PropsWithChildren
 
 export const CollapsibleHeader = ({ className, children }: PropsWithChildren<CollapsibleHeaderProps>) => {
   return (
-    <div className={clsx("collapsible-header flex flex-row items-center justify-between bg-white", className)}>
+    <div className={clsx("collapsible-header flex flex-row gap-2 items-center justify-between", className)}>
       {children}
-      <RadixCollapsible.Trigger className="collapsible-trigger data-[state=open]:rotate-180 transition-transform">
-        <IconButton icon={<NavArrowDown width={16} height={16} />} type="secondary" className="" />
+      <RadixCollapsible.Trigger className="collapsible-trigger data-[state=open]:rotate-180 transition-transform cursor-pointer">
+        <NavArrowDown width={16} height={16} />
       </RadixCollapsible.Trigger>
     </div>
   );

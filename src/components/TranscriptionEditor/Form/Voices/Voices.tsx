@@ -13,23 +13,23 @@ export const Voices = memo(function VoicesForm() {
   const voicesIds = useAppSelector(selectVoicesIds);
 
   return (
-    <div className="flex flex-col gap-2 w-full h-full bg-white">
+    <div className="flex flex-col gap-2 w-full h-full">
       <Header voicesCount={voicesIds.length} />
       <Separator.Root orientation="horizontal" className="w-full h-px bg-neutral-200" />
       <div className="flex flex-col gap-2 items-stretch overflow-auto w-full">
         {voicesIds.map((voiceId, index) => {
           return (
-            <>
+            <div key={voiceId} className="flex flex-col gap-2">
               {index > 0 && <Separator.Root orientation="horizontal" className="w-full h-px bg-neutral-200" />}
-              <Collapsible key={voiceId} className="w-full ">
+              <Collapsible className="w-full">
                 <CollapsibleHeader>
                   <Voice voiceId={voiceId} languages={languages} />
                 </CollapsibleHeader>
-                <CollapsibleContent className="pt-2">
+                <CollapsibleContent>
                   <VoiceTranslations voiceId={voiceId} />
                 </CollapsibleContent>
               </Collapsible>
-            </>
+            </div>
           );
         })}
       </div>

@@ -32,7 +32,7 @@ export const MetadataForm = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      <InputField className="flex-1">
+      <InputField>
         <Label>
           <LabelText htmlFor="title">Title</LabelText>
         </Label>
@@ -45,7 +45,7 @@ export const MetadataForm = () => {
           </Label>
           <Input id="author" value={author} variant="fill" onChange={handleAuthorChange} />
         </InputField>
-        <InputField>
+        <InputField className="flex-1">
           <Label>
             <LabelText htmlFor="fileAuthor">Transcription author</LabelText>
           </Label>
