@@ -37,13 +37,11 @@ export const TranscriptionEditor = () => {
         <div className="flex flex-col flex-1 bg-neutral-100 overflow-hidden">
           <TopActions />
 
-          <div className="flex flex-row flex-1 border-1 border-neutral-200 rounded-tr-lg overflow-hidden">
+          <div className="flex flex-row flex-1 border-t-1 border-r-1 border-b-1 border-neutral-200 rounded-tr-lg overflow-hidden">
             <CuesPanel />
             <Separator.Root orientation="vertical" className="w-px bg-neutral-200" />
             <SidePanel />
           </div>
-
-          <Separator.Root orientation="horizontal" className="w-full h-px bg-neutral-200" />
 
           <div className="flex flex-col border-r-1 border-neutral-200">
             {!source && <AudioFileImporter />}
