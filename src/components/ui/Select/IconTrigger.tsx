@@ -5,9 +5,9 @@ export const IconTrigger = ({ id, icon, className }: { id: string; icon?: JSX.El
   return (
     <RadixSelect.Trigger
       id={id}
-      className={clsx("px-2 py-1 flex flex-row items-center gap-1 text-neutral-500 cursor-pointer", className)}
+      className={clsx("flex flex-row items-center gap-1 text-neutral-500 cursor-pointer", className)}
     >
-      <span className="flex-auto text-xs font-normal text-left leading-none">
+      <span className="flex-auto font-normal text-left leading-none">
         <RadixSelect.Value></RadixSelect.Value>
       </span>
       <RadixSelect.Icon>{icon}</RadixSelect.Icon>

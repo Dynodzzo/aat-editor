@@ -28,16 +28,16 @@ export const ProgressBar = () => {
   };
 
   return (
-    <div className="progress flex flex-col gap-1 items-stretch px-6 pt-4 pb-2 bg-zinc-100">
+    <div className="progress flex flex-col items-stretch px-6 pt-3 pb-2">
       <Progress progress={progress} onClick={handleClick} />
       <div className="flex flex-row justify-between">
         <Typography>
-          <span className="text-zinc-500 font-normal text-sm">
+          <span className="text-neutral-500 font-normal text-[10px]">
             {formatDurationToISOTime(currentTimeRef.current, { includeMilliseconds: false })}
           </span>
         </Typography>
         <Typography>
-          <span className="text-zinc-500 font-normal text-sm">
+          <span className="text-neutral-500 font-normal text-[10px]">
             {formatDurationToISOTime(duration, { includeMilliseconds: false })}
           </span>
         </Typography>

@@ -17,14 +17,14 @@ export const PlaybackRate = () => {
   };
 
   return (
-    <div className="volume flex flex-row items-center cursor-pointer h-full">
+    <div className="playback-rate flex flex-row items-center cursor-pointer h-full">
       <Select
         value={rate}
         trigger={
           <IconTrigger
             id={selectId}
-            icon={<Timer className="text-gray-600" width={16} height={16} strokeWidth={2.2} />}
-            className="text-gray-600 text-xs font-normal h-full"
+            icon={<Timer className="text-neutral-500" width={16} height={16} strokeWidth={2.2} />}
+            className="text-neutral-500 font-normal text-[10px] h-full"
           />
         }
         onChange={handleRateChange}

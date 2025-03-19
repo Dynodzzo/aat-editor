@@ -33,18 +33,18 @@ export const Volume = () => {
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
     >
-      <button className="grid place-items-center text-gray-600 cursor-pointer">
-        <SoundHigh className="text-gray-600" width={16} height={16} strokeWidth={2.2} />
+      <button className="grid place-items-center text-neutral-500 cursor-pointer">
+        <SoundHigh width={16} height={16} strokeWidth={2.2} />
       </button>
       <div
         className={clsx("transition-all ", {
           "w-0 opacity-0": isHidden,
-          "w-15 opacity-100": !isHidden,
+          "w-12 opacity-100": !isHidden,
         })}
       >
         <Slider value={volume} onChange={handleVolumeBarClick} />
       </div>
-      <span className="text-gray-600 text-xs font-normal">{volume}%</span>
+      <span className="text-neutral-500 text-[10px] font-normal">{volume}%</span>
     </div>
   );
 };

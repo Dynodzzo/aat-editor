@@ -16,10 +16,10 @@ export const Slider = ({ value, onChange }: SliderProps) => {
       value={[value]}
       onValueChange={handleValueChange}
     >
-      <RadixSlider.Track className="relative h-2 grow rounded-full bg-gray-100 overflow-clip">
-        <RadixSlider.Range className="absolute h-full bg-gray-600" />
+      <RadixSlider.Track className="relative h-1 grow rounded-full bg-neutral-200 overflow-clip">
+        <RadixSlider.Range className="absolute h-full bg-neutral-800" />
       </RadixSlider.Track>
-      <RadixSlider.Thumb className="block size-3 rounded-[10px] bg-zinc-50 shadow-gray-600 shadow-xs" />
+      <RadixSlider.Thumb className="block size-3 rounded-full bg-neutral-100 shadow-neutral-600 shadow-xs" />
     </RadixSlider.Root>
   );
 };

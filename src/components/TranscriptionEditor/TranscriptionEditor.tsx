@@ -1,3 +1,4 @@
+import { Separator } from "radix-ui";
 import { useRef } from "react";
 import { AudioContext, AudioContextState } from "../../context/audio.context";
 import { useAudioWaveformPlayer } from "../../hooks/useAudioWaveFormPlayer";
@@ -32,10 +33,13 @@ export const TranscriptionEditor = () => {
   return (
     <AudioContext.Provider value={audioContext}>
       <div className="flex flex-col h-full max-h-full">
-        <div className="grid grid-rows-1 grid-cols-[1fr_400px] flex-1 overflow-auto">
+        <div className="flex flex-row flex-1 overflow-auto">
           <CuesPanel />
+          <Separator.Root orientation="vertical" className="w-px bg-neutral-200" />
           <SidePanel />
         </div>
+
+        <Separator.Root orientation="horizontal" className="w-full h-px bg-neutral-200" />
         <div className="flex flex-col">
           <div className="flex flex-row gap-4 justify-between">
             <AudioFileImporter />

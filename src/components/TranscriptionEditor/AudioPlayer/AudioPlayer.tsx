@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { ForwardSolid, PauseSolid, PlaySolid } from "iconoir-react";
+import { Separator } from "radix-ui";
 import { useContext } from "react";
 import { AudioContext } from "../../../context/audio.context";
 import { selectAudioSource } from "../../../store/features/audio.slice";
@@ -34,28 +35,24 @@ export const AudioPlayer = () => {
   return (
     <div className="flex flex-col relative">
       <ProgressBar />
-      <div className="controls bg-gray-300 flex flex-row justify-center items-center px-6 py-4 relative">
+      <Separator.Root orientation="horizontal" className="w-full h-px bg-neutral-200" />
+      <div className="controls flex flex-row justify-center items-center px-6 py-1 relative">
         <div className="absolute left-6 h-full">
           <Volume />
         </div>
-        <div className="playback-controls flex flex-row gap-4">
-          <button
-            className="grid place-items-center text-gray-600 cursor-pointer"
-            onClick={() => void handlePreviousRegionClick()}
-          >
-            <ForwardSolid className="rotate-180" width={20} height={20} />
+        <div className="playback-controls flex flex-row gap-2 text-neutral-800">
+          <button className="grid place-items-center cursor-pointer" onClick={() => void handlePreviousRegionClick()}>
+            <ForwardSolid className="rotate-180" width={16} height={16} />
           </button>
-          <button
-            className="bg-gray-600 rounded-full w-10 h-10 grid place-items-center text-zinc-100 cursor-pointer"
-            onClick={() => void handleTogglePlay()}
-          >
-            {!isPlaying ? <PlaySolid className="translate-x-[1px]" /> : <PauseSolid />}
+          <button className="w-8 h-8 grid place-items-center cursor-pointer" onClick={() => void handleTogglePlay()}>
+            {!isPlaying ? (
+              <PlaySolid className="translate-x-[1px]" width={16} height={16} />
+            ) : (
+              <PauseSolid width={16} height={16} />
+            )}
           </button>
-          <button
-            className="grid place-items-center text-gray-600 cursor-pointer"
-            onClick={() => void handleNextRegionClick()}
-          >
-            <ForwardSolid width={20} height={20} />
+          <button className="grid place-items-center cursor-pointer" onClick={() => void handleNextRegionClick()}>
+            <ForwardSolid width={16} height={16} />
           </button>
         </div>
         <div className="absolute right-6 h-full">
