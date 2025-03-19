@@ -1,21 +1,25 @@
 import { NavArrowDown, Plus } from "iconoir-react";
 import { Separator } from "radix-ui";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { AudioContext } from "../../../../context/audio.context";
 import { Cue } from "../../../../model/transcription/cue.model";
+import { Language } from "../../../../model/transcription/language.model";
 import { addCue } from "../../../../store/features/cue.slice";
-import { selectActiveLanguages } from "../../../../store/features/language.slice";
-import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
+import { useAppDispatch } from "../../../../store/hooks";
 import { formatDurationToISOTime } from "../../../../utils/time.utils";
 import { Button } from "../../../ui/Button/Button";
 import { Select, SelectItem } from "../../../ui/Select/Select";
 import { TextTrigger } from "../../../ui/Select/TextTrigger";
 
-export const Header = () => {
+type HeaderProps = {
+  translationLanguage: string;
+  languages: Language[];
+  onLanguageChange: (languageId: string) => void;
+};
+
+export const Header = ({ translationLanguage, languages, onLanguageChange }: HeaderProps) => {
   const dispatch = useAppDispatch();
   const { currentTimeRef } = useContext(AudioContext);
-  const languages = useAppSelector(selectActiveLanguages);
-  const [currentLanguage, setCurrentLanguage] = useState("");
 
   const handleAddCue = () => {
     const newCue: Cue = {
@@ -26,10 +30,6 @@ export const Header = () => {
     };
 
     dispatch(addCue(newCue));
-  };
-
-  const handleLanguageChange = (languageId: string) => {
-    setCurrentLanguage(languageId);
   };
 
   return (
@@ -44,8 +44,9 @@ export const Header = () => {
       <div className="px-4 flex-1">
         <Select
           trigger={<TextTrigger id="translation-language" icon={<NavArrowDown width={16} height={16} />} />}
-          value={currentLanguage}
-          onChange={handleLanguageChange}
+          value={translationLanguage}
+          disabled={!languages.length}
+          onChange={onLanguageChange}
         >
           {languages.map(({ id, name }) => (
             <SelectItem key={id} value={id}>

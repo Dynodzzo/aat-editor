@@ -43,6 +43,7 @@ export const TranscriptionImporter = ({ onFileImported }: TranscriptionImporterP
             title: fileData.title,
             author: fileData.author,
             fileAuthor: fileData.fileAuthor,
+            contentLanguage: fileData.contentLanguage,
           })
         );
 

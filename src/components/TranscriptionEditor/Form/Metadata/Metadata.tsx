@@ -1,8 +1,13 @@
+import { AVAILABLE_LANGUAGES } from "../../../../constants/language.constants";
+import { LanguageId } from "../../../../model/transcription/language.model";
+import { activateLanguage } from "../../../../store/features/language.slice";
 import {
   selectAuthor,
+  selectContentLanguage,
   selectFileAuthor,
   selectTitle,
   updateAuthor,
+  updateContentLanguage,
   updateFileAuthor,
   updateTitle,
 } from "../../../../store/features/metadata.slice";
@@ -11,12 +16,15 @@ import { Input } from "../../../ui/Input/Input";
 import { InputField } from "../../../ui/InputField/InputField";
 import { Label } from "../../../ui/InputField/Label";
 import { LabelText } from "../../../ui/InputField/LabelText";
+import { InputTrigger } from "../../../ui/Select/InputTrigger";
+import { Select, SelectItem } from "../../../ui/Select/Select";
 
 export const MetadataForm = () => {
   const dispatch = useAppDispatch();
   const title = useAppSelector(selectTitle);
   const author = useAppSelector(selectAuthor);
   const fileAuthor = useAppSelector(selectFileAuthor);
+  const contentLanguage = useAppSelector(selectContentLanguage);
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(updateTitle(event.target.value));
@@ -28,6 +36,11 @@ export const MetadataForm = () => {
 
   const handleFileAuthorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(updateFileAuthor(event.target.value));
+  };
+
+  const handleContentLanguageChange = (value: string) => {
+    dispatch(updateContentLanguage(value));
+    dispatch(activateLanguage(value as LanguageId));
   };
 
   return (
@@ -52,6 +65,22 @@ export const MetadataForm = () => {
           <Input id="fileAuthor" value={fileAuthor} variant="fill" onChange={handleFileAuthorChange} />
         </InputField>
       </div>
+      <InputField>
+        <Label>
+          <LabelText htmlFor="title">Content language</LabelText>
+        </Label>
+        <Select
+          trigger={<InputTrigger id="content-language" placeholder="French" />}
+          value={contentLanguage}
+          onChange={handleContentLanguageChange}
+        >
+          {AVAILABLE_LANGUAGES.map(({ id, name }) => (
+            <SelectItem key={id} value={id}>
+              {name}
+            </SelectItem>
+          ))}
+        </Select>
+      </InputField>
     </div>
   );
 };

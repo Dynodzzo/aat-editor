@@ -4,10 +4,11 @@ import { PropsWithChildren } from "react";
 type SelectProps = {
   value: string;
   trigger: JSX.Element;
+  disabled?: boolean;
   onChange?: (value: string) => void;
 };
 
-export const Select = ({ value, trigger, onChange, children }: PropsWithChildren<SelectProps>) => {
+export const Select = ({ value, trigger, disabled, onChange, children }: PropsWithChildren<SelectProps>) => {
   const handleChange = (currentValue: string) => {
     if (onChange) {
       onChange(currentValue);
@@ -15,7 +16,7 @@ export const Select = ({ value, trigger, onChange, children }: PropsWithChildren
   };
 
   return (
-    <RadixSelect.Root value={value} onValueChange={handleChange}>
+    <RadixSelect.Root value={value} onValueChange={handleChange} disabled={disabled}>
       {trigger}
       <RadixSelect.Portal>
         <RadixSelect.Content className="min-w-30 flex flex-column bg-neutral-50 rounded-sm shadow-lg ring ring-neutral-200 overflow-hidden cursor-pointer">

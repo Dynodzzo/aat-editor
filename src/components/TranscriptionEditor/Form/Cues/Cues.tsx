@@ -1,11 +1,13 @@
 import { defaultRangeExtractor, Range, useVirtualizer } from "@tanstack/react-virtual";
 import { Separator } from "radix-ui";
-import { memo, useCallback, useContext, useRef, useState } from "react";
+import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { AudioContext } from "../../../../context/audio.context";
 import { useRequestAnimationFrame } from "../../../../hooks/useRequestAnimationFrame";
 import { useScrollOverlay } from "../../../../hooks/useScrollOverlay";
 import { selectAudioDuration } from "../../../../store/features/audio.slice";
 import { selectCuesdsAndTimes } from "../../../../store/features/cue.slice";
+import { selectActiveLanguages } from "../../../../store/features/language.slice";
+import { selectContentLanguage } from "../../../../store/features/metadata.slice";
 import { useAppSelector } from "../../../../store/hooks";
 import { formatISOTimeToDuration } from "../../../../utils/time.utils";
 import { ScrollOverlay } from "../../../ui/ScrollOverlay/ScrollOverlay";
@@ -13,10 +15,22 @@ import { CueContainer } from "./CueContainer";
 import { CuesSeparator } from "./CuesSeparator";
 import { Header } from "./Header";
 
-export const Cues = memo(function CuesForm() {
+export const Cues = memo(function Cues() {
   const { showScrollOverlay, handleScroll } = useScrollOverlay({ threshold: 40 });
   const cues = useAppSelector(selectCuesdsAndTimes);
   const duration = useAppSelector(selectAudioDuration);
+  const contentLanguage = useAppSelector(selectContentLanguage);
+  const languages = useAppSelector(selectActiveLanguages);
+  const [translationLanguage, setTranslationLanguage] = useState("");
+
+  const availableLanguages = useMemo(
+    () => languages.filter(({ id }) => id !== contentLanguage),
+    [languages, contentLanguage]
+  );
+
+  useEffect(() => {
+    if (availableLanguages.length) setTranslationLanguage(availableLanguages[0].id);
+  }, [availableLanguages]);
 
   const { currentTimeRef } = useContext(AudioContext);
 
@@ -67,6 +81,10 @@ export const Cues = memo(function CuesForm() {
     }
   });
 
+  const handleTranslationLanguageChange = useCallback((languageId: string) => {
+    setTranslationLanguage(languageId);
+  }, []);
+
   const isSticky = (index: number) => index === 0;
 
   return (
@@ -92,7 +110,13 @@ export const Cues = memo(function CuesForm() {
                 }}
                 className="w-full top-0 left-0"
               >
-                {index === 0 && <Header />}
+                {index === 0 && (
+                  <Header
+                    translationLanguage={translationLanguage}
+                    languages={availableLanguages}
+                    onLanguageChange={handleTranslationLanguageChange}
+                  />
+                )}
                 {index > 1 && <CuesSeparator />}
                 {index > 0 && (
                   <CueContainer
@@ -101,6 +125,7 @@ export const Cues = memo(function CuesForm() {
                     id={cues[index - 1].id}
                     duration={duration}
                     isBeingPlayed={playingCues.includes(index)}
+                    translationLanguage={translationLanguage}
                   />
                 )}
               </div>

@@ -133,7 +133,7 @@ export const Cue = memo(function Cue({ index, cue, translation, isNoteVisible, h
         <div className="cue-transcript px-4.5">
           <div className="top-row flex flex-row items-center">
             <TransformableInput
-              value={translation.text}
+              value={translation?.text}
               onChange={handleChangeText}
               className="grow font-normal text-sm text-neutral-500"
             />
@@ -149,7 +149,7 @@ export const Cue = memo(function Cue({ index, cue, translation, isNoteVisible, h
           <div></div>
           <div className="note px-4.5">
             <TransformableInput
-              value={translation.note}
+              value={translation?.note}
               onChange={handleChangeNote}
               className="italic font-light text-xs text-neutral-500"
             />

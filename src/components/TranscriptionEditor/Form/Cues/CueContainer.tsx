@@ -3,6 +3,7 @@ import { Separator } from "radix-ui";
 import { useCallback, useState } from "react";
 import { selectCueTranslationsByCueIdAndLanguageId } from "../../../../store/features/cue-translation.slice";
 import { selectCueById } from "../../../../store/features/cue.slice";
+import { selectContentLanguage } from "../../../../store/features/metadata.slice";
 import { useAppSelector } from "../../../../store/hooks";
 import { Cue } from "./Cue";
 
@@ -11,22 +12,22 @@ type CueContainerProps = {
   index: number;
   duration: number;
   isBeingPlayed?: boolean;
+  translationLanguage?: string;
 };
 
-export const CueContainer = ({ id, index, duration, isBeingPlayed }: CueContainerProps) => {
-  const contentLanguageId = "fr";
-  const translationLanguageId = "en";
+export const CueContainer = ({ id, index, duration, isBeingPlayed, translationLanguage }: CueContainerProps) => {
+  const contentLanguage = useAppSelector(selectContentLanguage);
   const [isNoteVisible, setIsNoteVisible] = useState(false);
 
   const cue = useAppSelector((state) => selectCueById(state, id));
   const transcriptions = useAppSelector((state) =>
-    selectCueTranslationsByCueIdAndLanguageId(state, id, contentLanguageId)
+    selectCueTranslationsByCueIdAndLanguageId(state, id, contentLanguage)
   );
   const translations = useAppSelector((state) =>
-    selectCueTranslationsByCueIdAndLanguageId(state, id, translationLanguageId)
+    selectCueTranslationsByCueIdAndLanguageId(state, id, translationLanguage ?? "")
   );
 
-  const hasNote = Boolean(translations!.note || transcriptions!.note);
+  const hasNote = Boolean(translations?.note ?? transcriptions?.note);
 
   const handleToggleNote = useCallback(() => {
     setIsNoteVisible((previousIsNoteVisible) => !previousIsNoteVisible);

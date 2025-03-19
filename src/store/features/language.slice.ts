@@ -22,6 +22,9 @@ const languageSlice = createSlice({
       const previousValue = state.entities[action.payload].isActive;
       languageAdapter.updateOne(state, { id: action.payload, changes: { isActive: !previousValue } });
     },
+    activateLanguage: (state: LanguageState, action: PayloadAction<LanguageId>) => {
+      languageAdapter.updateOne(state, { id: action.payload, changes: { isActive: true } });
+    },
   },
 });
 
@@ -35,4 +38,4 @@ export const selectActiveLanguages = createSelector(selectAllLanguages, (languag
   languages.filter((language) => language.isActive)
 );
 
-export const { toggleLanguage } = languageSlice.actions;
+export const { toggleLanguage, activateLanguage } = languageSlice.actions;

@@ -26,7 +26,7 @@ export const Language = ({ languageId, disabled = false, onToggle }: LanguagePro
       <Label className="flex-1 h-full [&_*]:w-full [&_*]:leading-6">
         <LabelText htmlFor={id}>{name}</LabelText>
       </Label>
-      <Switch id={id} checked={isActive} onChange={() => onToggle(languageId)} />
+      <Switch id={id} checked={isActive} onChange={() => onToggle(languageId)} disabled={disabled} />
     </div>
   );
 };
