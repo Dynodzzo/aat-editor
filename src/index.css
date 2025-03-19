@@ -23,6 +23,14 @@
   }
 }
 
+.waveform ::part(region-content) {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 90%;
+  font-size: small;
+}
+
 html,
 body {
   height: 100%;

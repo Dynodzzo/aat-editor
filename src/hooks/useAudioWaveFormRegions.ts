@@ -1,5 +1,6 @@
 import { MutableRefObject, useCallback, useMemo, useRef } from "react";
 import { Region } from "wavesurfer.js/dist/plugins/regions.js";
+import { selectCuesTranslationsByLanguageId } from "../store/features/cue-translation.slice";
 import { selectAllCues, updateCueEnd, updateCueStart } from "../store/features/cue.slice";
 import { selectAllVoices } from "../store/features/voice.slice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
@@ -10,7 +11,9 @@ const DEFAULT_REGION_COLOR = "rgba(0, 0, 0, 0.2)";
 
 export const useAudioWaveFormRegions = ({ play, pause }: WaveSurferState, currentTimeRef: MutableRefObject<number>) => {
   const dispatch = useAppDispatch();
+  const contentLanguageId = "fr";
   const cues = useAppSelector(selectAllCues);
+  const transcriptions = useAppSelector((state) => selectCuesTranslationsByLanguageId(state, contentLanguageId));
   const voices = useAppSelector(selectAllVoices);
   const activeRegionId = useRef<string>("");
 
@@ -23,12 +26,12 @@ export const useAudioWaveFormRegions = ({ play, pause }: WaveSurferState, curren
         end: formatISOTimeToDuration(cue.end),
         // TODO Extract the magic constant
         color: voice ? voice.color + "44" : DEFAULT_REGION_COLOR,
-        content: voice?.name,
+        content: transcriptions.find((transcription) => transcription.cueId === cue.id)?.text,
         drag: true,
         resize: true,
       };
     });
-  }, [cues, voices]);
+  }, [cues, transcriptions, voices]);
 
   const handleRegionUpdated = useCallback(
     ({ id, start, end }: Region) => {

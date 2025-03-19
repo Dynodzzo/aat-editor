@@ -57,4 +57,11 @@ export const selectCueTranslationsByCueIdAndLanguageId = createSelector(
   (cueTranslations, languageId) => cueTranslations.find((cueTranslation) => cueTranslation.languageId === languageId)
 );
 
+export const selectCuesTranslationsByLanguageId = createSelector(
+  selectAllCueTranslations,
+  (_state: RootState, languageId: string) => ({ languageId }),
+  (cueTranslations, { languageId }) =>
+    cueTranslations.filter((cueTranslation) => cueTranslation.languageId === languageId)
+);
+
 export const { initializeCuesTranslations, updateCueTranslation } = cueTranslationSlice.actions;
