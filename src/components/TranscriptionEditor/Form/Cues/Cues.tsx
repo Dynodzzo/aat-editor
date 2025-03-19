@@ -70,7 +70,7 @@ export const Cues = memo(function CuesForm() {
   const isSticky = (index: number) => index === 0;
 
   return (
-    <div className="flex flex-col flex-1 items-stretch relative">
+    <div className="flex flex-col flex-1 items-stretch relative bg-white">
       {
         <div ref={parentRef} className="h-full overflow-auto contain-strict" onScroll={handleScroll}>
           <div style={{ height: virtualizer.getTotalSize() }} className="w-full relative">

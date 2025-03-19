@@ -36,7 +36,7 @@ export const CueContainer = ({ id, index, duration, isBeingPlayed }: CueContaine
 
   return (
     <div
-      className={clsx("group flex flex-row", {
+      className={clsx("group flex flex-row bg-white", {
         "[background-size:10px_10px]  [background-image:repeating-linear-gradient(45deg,#f8f8f8_0,#f8f8f8_1px,#ffffff_0,#ffffff_50%)]":
           isBeingPlayed,
       })}

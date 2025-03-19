@@ -1,3 +1,4 @@
+import { Download } from "iconoir-react";
 import { useCallback, useRef } from "react";
 import { CueExport } from "../../../../model/export/cue.export.schema";
 import { TranslationExport } from "../../../../model/export/language.export.schema";
@@ -6,7 +7,7 @@ import { TranscriptionExport } from "../../../../model/export/transcription.expo
 import { VoiceExport } from "../../../../model/export/voice.export.schema";
 import { LanguageId } from "../../../../model/transcription/language.model";
 import { RootState, store } from "../../../../store/store";
-import { Button } from "../../../ui/Button/Button";
+import { IconButton } from "../../../ui/Button/IconButton";
 
 export const ExportButton = () => {
   const linkRef = useRef<HTMLAnchorElement>(null);
@@ -119,7 +120,7 @@ export const ExportButton = () => {
 
   return (
     <>
-      <Button onClick={handleLinkClick}>Export</Button>
+      <IconButton type="secondary" icon={<Download width={18} height={18} />} onClick={handleLinkClick} />
       <a ref={linkRef} target="_blank" rel="noreferrer noopener" download hidden></a>
     </>
   );

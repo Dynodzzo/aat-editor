@@ -16,7 +16,7 @@ export const ConfigPanel = memo(function ConfigPanel() {
   };
 
   return (
-    <div className="relative h-full overflow-auto">
+    <div className="relative h-full overflow-auto bg-white">
       <div className="h-full overflow-auto" onScroll={handleScroll}>
         <ConfigPanelLayout>
           <Tabs defaultValue={activeTab} onChange={handleTabChange}>
@@ -37,7 +37,7 @@ export const ConfigPanel = memo(function ConfigPanel() {
           </Tabs>
         </ConfigPanelLayout>
       </div>
-      <ScrollOverlay isVisible={showScrollOverlay} colorClass="to-zinc-100" />
+      <ScrollOverlay isVisible={showScrollOverlay} colorClass="to-white" />
     </div>
   );
 });

@@ -6,8 +6,9 @@ import { selectAudioSource } from "../../store/features/audio.slice";
 import { useAppSelector } from "../../store/hooks";
 import { CuesPanel } from "./CuesPanel/CuesPanel";
 import { AudioFileImporter } from "./Form/AudioFileImporter/AudioFileImporter";
-import { ExportButton } from "./Form/ExportButton/ExportButton";
+import { RightActions } from "./RightActions/RightActions";
 import { SidePanel } from "./SidePanel/SidePanel";
+import { TopActions } from "./TopActions/TopActions";
 import { Waveform } from "./WaveForm/WaveForm";
 
 export const TranscriptionEditor = () => {
@@ -32,21 +33,24 @@ export const TranscriptionEditor = () => {
 
   return (
     <AudioContext.Provider value={audioContext}>
-      <div className="flex flex-col h-full max-h-full">
-        <div className="flex flex-row flex-1 overflow-auto">
-          <CuesPanel />
-          <Separator.Root orientation="vertical" className="w-px bg-neutral-200" />
-          <SidePanel />
-        </div>
+      <div className="flex flex-row items-stretch h-full max-h-full w-full">
+        <div className="flex flex-col flex-1 bg-neutral-100 overflow-hidden">
+          <TopActions />
 
-        <Separator.Root orientation="horizontal" className="w-full h-px bg-neutral-200" />
-        <div className="flex flex-col">
-          <div className="flex flex-row gap-4 justify-between">
-            <AudioFileImporter />
-            <ExportButton />
+          <div className="flex flex-row flex-1 border-1 border-neutral-200 rounded-tr-lg overflow-hidden">
+            <CuesPanel />
+            <Separator.Root orientation="vertical" className="w-px bg-neutral-200" />
+            <SidePanel />
           </div>
-          <Waveform containerRef={containerRef} />
+
+          <Separator.Root orientation="horizontal" className="w-full h-px bg-neutral-200" />
+
+          <div className="flex flex-col border-r-1 border-neutral-200">
+            {!source && <AudioFileImporter />}
+            <Waveform containerRef={containerRef} />
+          </div>
         </div>
+        <RightActions />
       </div>
     </AudioContext.Provider>
   );
