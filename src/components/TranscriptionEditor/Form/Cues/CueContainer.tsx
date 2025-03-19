@@ -17,8 +17,6 @@ type CueContainerProps = {
 
 export const CueContainer = ({ id, index, duration, isBeingPlayed, translationLanguage }: CueContainerProps) => {
   const contentLanguage = useAppSelector(selectContentLanguage);
-  const [isNoteVisible, setIsNoteVisible] = useState(false);
-
   const cue = useAppSelector((state) => selectCueById(state, id));
   const transcriptions = useAppSelector((state) =>
     selectCueTranslationsByCueIdAndLanguageId(state, id, contentLanguage)
@@ -27,10 +25,20 @@ export const CueContainer = ({ id, index, duration, isBeingPlayed, translationLa
     selectCueTranslationsByCueIdAndLanguageId(state, id, translationLanguage ?? "")
   );
 
-  const hasNote = Boolean(translations?.note ?? transcriptions?.note);
+  const [isNoteVisible, setIsNoteVisible] = useState(false);
+  const [hasNote, setHasNote] = useState(Boolean(translations?.note ?? transcriptions?.note));
 
   const handleToggleNote = useCallback(() => {
     setIsNoteVisible((previousIsNoteVisible) => !previousIsNoteVisible);
+  }, []);
+
+  const handleAddNote = useCallback(() => {
+    setHasNote(true);
+    setIsNoteVisible(true);
+  }, []);
+
+  const handleRemoveNote = useCallback(() => {
+    setHasNote(false);
   }, []);
 
   if (!id) return null;
@@ -49,7 +57,9 @@ export const CueContainer = ({ id, index, duration, isBeingPlayed, translationLa
         translation={transcriptions!}
         hasNote={hasNote}
         isNoteVisible={isNoteVisible}
-        toggleNote={handleToggleNote}
+        onToggleNote={handleToggleNote}
+        onAddNote={handleAddNote}
+        onRemoveNote={handleRemoveNote}
       />
       <Separator.Root orientation="vertical" className="w-px bg-neutral-200" />
       <Cue
@@ -58,7 +68,9 @@ export const CueContainer = ({ id, index, duration, isBeingPlayed, translationLa
         translation={translations!}
         hasNote={hasNote}
         isNoteVisible={isNoteVisible}
-        toggleNote={handleToggleNote}
+        onToggleNote={handleToggleNote}
+        onAddNote={handleAddNote}
+        onRemoveNote={handleRemoveNote}
       />
     </div>
   );

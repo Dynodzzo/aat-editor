@@ -19,10 +19,21 @@ type CueProps = {
   hasNote: boolean;
   isNoteVisible: boolean;
   duration: number;
-  toggleNote: () => void;
+  onToggleNote: () => void;
+  onAddNote: () => void;
+  onRemoveNote: () => void;
 };
 
-export const Cue = memo(function Cue({ index, cue, translation, isNoteVisible, hasNote, toggleNote }: CueProps) {
+export const Cue = memo(function Cue({
+  index,
+  cue,
+  translation,
+  isNoteVisible,
+  hasNote,
+  onToggleNote,
+  onAddNote,
+  onRemoveNote,
+}: CueProps) {
   const dispatch = useAppDispatch();
   const {
     playerControls: { playRegion },
@@ -64,21 +75,6 @@ export const Cue = memo(function Cue({ index, cue, translation, isNoteVisible, h
   const handleDelete = useCallback(() => {
     dispatch(deleteCue(cue.id));
   }, [dispatch, cue]);
-
-  const handleMenuOptionSelected = useCallback(
-    (value: string) => {
-      switch (value) {
-        case "delete":
-          handleDelete();
-          break;
-        case "add_note":
-          break;
-        default:
-          break;
-      }
-    },
-    [handleDelete]
-  );
 
   const handleListen = useCallback(() => {
     void playRegion?.(cue.id);
@@ -124,7 +120,7 @@ export const Cue = memo(function Cue({ index, cue, translation, isNoteVisible, h
               <IconButton
                 type={isNoteVisible ? "primary" : "secondary"}
                 icon={<Page width={12} height={12} />}
-                onClick={toggleNote}
+                onClick={onToggleNote}
               />
             )}
           </div>
@@ -138,8 +134,9 @@ export const Cue = memo(function Cue({ index, cue, translation, isNoteVisible, h
               className="grow font-normal text-sm text-neutral-500"
             />
             <DropdownMenu icon={<IconButton type="secondary" icon={<MoreVert width={12} height={12} />} />}>
-              <DropdownMenuItem onSelect={() => void handleMenuOptionSelected("delete")}>Delete</DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => void handleMenuOptionSelected("add_note")}>Add note</DropdownMenuItem>
+              <DropdownMenuItem onSelect={handleDelete}>Delete</DropdownMenuItem>
+              {!hasNote && <DropdownMenuItem onSelect={onAddNote}>Add note</DropdownMenuItem>}
+              {hasNote && <DropdownMenuItem onSelect={onRemoveNote}>Remove note</DropdownMenuItem>}
             </DropdownMenu>
           </div>
         </div>
