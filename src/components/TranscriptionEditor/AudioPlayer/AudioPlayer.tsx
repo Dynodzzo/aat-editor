@@ -60,7 +60,7 @@ export const AudioPlayer = () => {
         </div>
       </div>
       <div
-        className={clsx("bg-gray-500/60 size-full absolute top-0 left-0", {
+        className={clsx("bg-neutral-500/40 size-full absolute top-0 left-0", {
           hidden: !!source,
         })}
       />
