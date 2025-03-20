@@ -3,12 +3,11 @@ import { useState } from "react";
 export const useAudioFileSelector = () => {
   const [audioObjectURL, setAudioObjectURL] = useState<string>("");
 
-  const handleAudioFileChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const audioFile = event.target.files?.[0];
-    if (!audioFile) return;
+  const handleAudioFileChanged = (file: File) => {
+    if (!file) return;
 
     if (audioObjectURL) URL.revokeObjectURL(audioObjectURL);
-    const currentAudioObjectURL = URL.createObjectURL(audioFile);
+    const currentAudioObjectURL = URL.createObjectURL(file);
     setAudioObjectURL(currentAudioObjectURL);
   };
 

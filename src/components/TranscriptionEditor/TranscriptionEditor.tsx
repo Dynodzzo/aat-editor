@@ -43,7 +43,7 @@ export const TranscriptionEditor = () => {
             <SidePanel />
           </div>
 
-          <div className="flex flex-col border-r-1 border-neutral-200">
+          <div className="flex flex-col border-r-1 border-neutral-200 p-1 bg-white">
             {!source && <AudioFileImporter />}
             <Waveform containerRef={containerRef} />
           </div>
