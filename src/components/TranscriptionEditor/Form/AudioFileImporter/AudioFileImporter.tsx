@@ -59,7 +59,7 @@ export const AudioFileImporter = () => {
     <>
       <div
         className={clsx(
-          "drop-zone custom-dashed-border flex flex-col items-center justify-center w-full h-[100px] rounded-lg",
+          "drop-zone custom-dashed-border flex flex-col items-center justify-center w-full h-[115px] rounded-lg",
           isDraggingOver ? "bg-violet-50 cursor-copy" : "bg-neutral-50 cursor-pointer"
         )}
         data-draggedover={isDraggingOver}

@@ -15,8 +15,17 @@ export const TranscriptionEditor = () => {
   const currentTimeRef = useRef<number>(0);
   const source = useAppSelector(selectAudioSource);
 
-  const { containerRef, isPlaying, instance, playRegion, playNextRegion, playPreviousRegion, play, pause } =
-    useAudioWaveformPlayer(source, currentTimeRef);
+  const {
+    containerRef,
+    isPlaying,
+    loadingState,
+    instance,
+    playRegion,
+    playNextRegion,
+    playPreviousRegion,
+    play,
+    pause,
+  } = useAudioWaveformPlayer(source, currentTimeRef);
 
   const audioContext: AudioContextState = {
     currentTimeRef,
@@ -45,7 +54,7 @@ export const TranscriptionEditor = () => {
 
           <div className="flex flex-col border-r-1 border-neutral-200 p-1 bg-white">
             {!source && <AudioFileImporter />}
-            <Waveform containerRef={containerRef} />
+            <Waveform containerRef={containerRef} loadingState={loadingState} />
           </div>
         </div>
         <RightActions />

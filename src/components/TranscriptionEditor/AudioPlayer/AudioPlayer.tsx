@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import { ForwardSolid, PauseSolid, PlaySolid } from "iconoir-react";
 import { Separator } from "radix-ui";
 import { useContext } from "react";
@@ -33,7 +32,7 @@ export const AudioPlayer = () => {
   };
 
   return (
-    <div className="flex flex-col relative">
+    <div className="flex flex-col relative" hidden={!source}>
       <ProgressBar />
       <Separator.Root orientation="horizontal" className="w-full h-px bg-neutral-200" />
       <div className="controls flex flex-row justify-center items-center px-6 py-1 relative">
@@ -59,11 +58,6 @@ export const AudioPlayer = () => {
           <PlaybackRate />
         </div>
       </div>
-      <div
-        className={clsx("bg-neutral-500/40 size-full absolute top-0 left-0", {
-          hidden: !!source,
-        })}
-      />
     </div>
   );
 };

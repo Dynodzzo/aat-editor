@@ -1,11 +1,13 @@
 import { MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
 import WaveSurfer from "wavesurfer.js";
 
+export type AudioPlayerLoadingState = "idle" | "loading" | "ready" | "error";
+
 export type WaveSurferState = {
   instance: WaveSurfer | null;
   containerRef: React.RefObject<HTMLDivElement>;
   duration: number;
-  isReady: boolean;
+  loadingState: AudioPlayerLoadingState;
   isPlaying: boolean;
   play: (from?: number) => Promise<void>;
   pause: (to?: number) => void;
@@ -15,7 +17,7 @@ export const useWaveSurfer = (source: string, currentTimeRef: MutableRefObject<n
   const containerRef = useRef<HTMLDivElement>(null);
   const [waveSurfer, setWaveSurfer] = useState<WaveSurfer | null>(null);
 
-  const [isReady, setIsReady] = useState<boolean>(false);
+  const [loadingState, setLoadingState] = useState<AudioPlayerLoadingState>("idle");
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [duration, setDuration] = useState<number>(0);
 
@@ -35,14 +37,14 @@ export const useWaveSurfer = (source: string, currentTimeRef: MutableRefObject<n
     });
 
     ws.on("load", () => {
-      setIsReady(false);
+      setLoadingState("loading");
       setIsPlaying(false);
       currentTimeRef.current = 0;
     });
 
     ws.on("ready", (duration: number) => {
       ws.zoom(70);
-      setIsReady(true);
+      setLoadingState("ready");
       setDuration(duration);
       currentTimeRef.current = 0;
     });
@@ -60,7 +62,7 @@ export const useWaveSurfer = (source: string, currentTimeRef: MutableRefObject<n
     });
 
     ws.on("destroy", () => {
-      setIsReady(false);
+      setLoadingState("idle");
       setIsPlaying(false);
       currentTimeRef.current = 0;
     });
@@ -105,7 +107,7 @@ export const useWaveSurfer = (source: string, currentTimeRef: MutableRefObject<n
     instance: waveSurfer,
     containerRef,
     duration,
-    isReady,
+    loadingState,
     isPlaying,
     play,
     pause,

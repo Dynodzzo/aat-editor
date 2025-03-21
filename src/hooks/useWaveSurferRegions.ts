@@ -10,11 +10,12 @@ type UseWaveSurferRegionsHandlers = {
 };
 
 export const useWaveSurferRegions = (
-  { isReady, instance }: WaveSurferState,
+  { loadingState, instance }: WaveSurferState,
   regions: RegionParams[],
   regionsHandlers: UseWaveSurferRegionsHandlers
 ) => {
   const regionsPlugin = useRef<RegionsPlugin | null>(null);
+  const isReady = loadingState === "ready";
 
   useEffect(() => {
     if (!instance || !isReady) return;
