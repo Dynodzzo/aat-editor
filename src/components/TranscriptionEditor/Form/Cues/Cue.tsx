@@ -8,7 +8,7 @@ import { deleteCue, updateCueEnd, updateCueStart, updateCueVoiceId } from "../..
 import { useAppDispatch } from "../../../../store/hooks";
 import { IconButton } from "../../../ui/Button/IconButton";
 import { DropdownMenu, DropdownMenuItem } from "../../../ui/DropDownMenu/DropDownMenu";
-import { TransformableInput } from "../../../ui/Input/TransformableInput";
+import { AutoHeightTextarea } from "../../../ui/Input/AutoHeightTextarea";
 import { CueVoice } from "./CueVoice";
 import { Timecodes } from "./Timecodes";
 
@@ -42,14 +42,14 @@ export const Cue = memo(function Cue({
   const showPrefix = index !== undefined;
 
   const handleChangeStart = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       dispatch(updateCueStart({ id: cue.id, start: event.target.value }));
     },
     [dispatch, cue]
   );
 
   const handleChangeEnd = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       dispatch(updateCueEnd({ id: cue.id, end: event.target.value }));
     },
     [dispatch, cue]
@@ -62,12 +62,12 @@ export const Cue = memo(function Cue({
     [dispatch, cue]
   );
 
-  const handleChangeText = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeText = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (!translation) return;
     dispatch(updateCueTranslation({ id: translation.id, text: event.target.value, note: translation.note }));
   };
 
-  const handleChangeNote = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeNote = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (!translation) return;
     dispatch(updateCueTranslation({ id: translation.id, text: translation.text, note: event.target.value }));
   };
@@ -109,7 +109,7 @@ export const Cue = memo(function Cue({
 
       <div className="content flex flex-col gap-3 w-full">
         <div className="cue-header px-4.5 flex flex-row items-center justify-between">
-          <div className="left-group flex flex-row items-center gap-2">
+          <div className="left-group flex flex-row items-center">
             <Timecodes
               startTime={cue.start}
               endTime={cue.end}
@@ -128,7 +128,7 @@ export const Cue = memo(function Cue({
         </div>
         <div className="cue-transcript px-4.5">
           <div className="top-row flex flex-row items-center">
-            <TransformableInput
+            <AutoHeightTextarea
               value={translation?.text}
               onChange={handleChangeText}
               className="grow font-normal text-sm text-neutral-500"
@@ -145,7 +145,7 @@ export const Cue = memo(function Cue({
         <>
           <div></div>
           <div className="note px-4.5">
-            <TransformableInput
+            <AutoHeightTextarea
               value={translation?.note}
               onChange={handleChangeNote}
               className="italic font-light text-xs text-neutral-500"

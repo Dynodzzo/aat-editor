@@ -1,12 +1,12 @@
 import { ArrowRight } from "iconoir-react";
 import { useId } from "react";
-import { TransformableInput } from "../../../ui/Input/TransformableInput";
+import { AutoHeightTextarea } from "../../../ui/Input/AutoHeightTextarea";
 
 type TimecodesProps = {
   startTime: string;
   endTime: string;
-  onChangeStartTime: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onChangeEndTime: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangeStartTime: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onChangeEndTime: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
 };
 
 // const DEFAULT_TIME_INPUT_VALUE = "00:00:00.000";
@@ -18,7 +18,7 @@ export const Timecodes = ({ startTime, endTime, onChangeStartTime, onChangeEndTi
 
   return (
     <div className="flex flex-row gap-2 items-center">
-      <TransformableInput
+      <AutoHeightTextarea
         id={startId}
         value={startTime}
         label="From"
@@ -26,7 +26,7 @@ export const Timecodes = ({ startTime, endTime, onChangeStartTime, onChangeEndTi
         onChange={onChangeStartTime}
       />
       <ArrowRight className="text-neutral-500" width={10} height={10} />
-      <TransformableInput
+      <AutoHeightTextarea
         id={endId}
         value={endTime}
         label="To"
