@@ -1,5 +1,5 @@
 import { ArrowRight } from "iconoir-react";
-import { useId } from "react";
+import { memo, useId } from "react";
 import { AutoHeightTextarea } from "../../../ui/Input/AutoHeightTextarea";
 
 type TimecodesProps = {
@@ -12,7 +12,12 @@ type TimecodesProps = {
 // const DEFAULT_TIME_INPUT_VALUE = "00:00:00.000";
 // const TIME_INPUTS_STEP = "0.001";
 
-export const Timecodes = ({ startTime, endTime, onChangeStartTime, onChangeEndTime }: TimecodesProps) => {
+export const Timecodes = memo(function Timecodes({
+  startTime,
+  endTime,
+  onChangeStartTime,
+  onChangeEndTime,
+}: TimecodesProps) {
   const startId = useId();
   const endId = useId();
 
@@ -35,4 +40,4 @@ export const Timecodes = ({ startTime, endTime, onChangeStartTime, onChangeEndTi
       />
     </div>
   );
-};
+});

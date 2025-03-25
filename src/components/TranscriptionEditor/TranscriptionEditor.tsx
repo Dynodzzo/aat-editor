@@ -1,5 +1,5 @@
 import { Separator } from "radix-ui";
-import { useRef } from "react";
+import { memo, useMemo, useRef } from "react";
 import { AudioContext, AudioContextState } from "../../context/audio.context";
 import { useAudioWaveformPlayer } from "../../hooks/useAudioWaveFormPlayer";
 import { selectAudioSource } from "../../store/features/audio.slice";
@@ -11,7 +11,7 @@ import { SidePanel } from "./SidePanel/SidePanel";
 import { TopActions } from "./TopActions/TopActions";
 import { Waveform } from "./WaveForm/WaveForm";
 
-export const TranscriptionEditor = () => {
+export const TranscriptionEditor = memo(function TranscriptionEditor() {
   const currentTimeRef = useRef<number>(0);
   const source = useAppSelector(selectAudioSource);
 
@@ -27,18 +27,21 @@ export const TranscriptionEditor = () => {
     pause,
   } = useAudioWaveformPlayer(source, currentTimeRef);
 
-  const audioContext: AudioContextState = {
-    currentTimeRef,
-    isPlaying,
-    waveSurferInstance: instance,
-    playerControls: {
-      play,
-      pause,
-      playRegion,
-      playNextRegion,
-      playPreviousRegion,
-    },
-  };
+  const audioContext: AudioContextState = useMemo(
+    () => ({
+      currentTimeRef,
+      isPlaying,
+      waveSurferInstance: instance,
+      playerControls: {
+        play,
+        pause,
+        playRegion,
+        playNextRegion,
+        playPreviousRegion,
+      },
+    }),
+    [currentTimeRef, isPlaying, instance, play, pause, playRegion, playNextRegion, playPreviousRegion]
+  );
 
   return (
     <AudioContext.Provider value={audioContext}>
@@ -61,4 +64,4 @@ export const TranscriptionEditor = () => {
       </div>
     </AudioContext.Provider>
   );
-};
+});

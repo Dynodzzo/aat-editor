@@ -5,7 +5,7 @@ import { AudioContext } from "../../../../context/audio.context";
 import { useRequestAnimationFrame } from "../../../../hooks/useRequestAnimationFrame";
 import { useScrollOverlay } from "../../../../hooks/useScrollOverlay";
 import { selectAudioDuration } from "../../../../store/features/audio.slice";
-import { selectCuesdsAndTimes } from "../../../../store/features/cue.slice";
+import { selectAllCues } from "../../../../store/features/cue.slice";
 import { selectActiveLanguages } from "../../../../store/features/language.slice";
 import { selectContentLanguage } from "../../../../store/features/metadata.slice";
 import { useAppSelector } from "../../../../store/hooks";
@@ -17,7 +17,7 @@ import { Header } from "./Header";
 
 export const Cues = memo(function Cues() {
   const { showScrollOverlay, handleScroll } = useScrollOverlay({ threshold: 40 });
-  const cues = useAppSelector(selectCuesdsAndTimes);
+  const cues = useAppSelector(selectAllCues);
   const duration = useAppSelector(selectAudioDuration);
   const contentLanguage = useAppSelector(selectContentLanguage);
   const languages = useAppSelector(selectActiveLanguages);

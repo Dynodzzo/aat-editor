@@ -1,6 +1,6 @@
-import { memo, useCallback, useId } from "react";
+import { memo, useCallback, useDeferredValue, useId } from "react";
 import { Language } from "../../../../model/transcription/language.model";
-import { selectVoiceById, updateVoiceColor, updateVoiceName } from "../../../../store/features/voice.slice";
+import { selectOneVoiceById, updateVoiceColor, updateVoiceName } from "../../../../store/features/voice.slice";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
 import { ColorInput } from "../../../ui/ColorInput/ColorInput";
 import { Input } from "../../../ui/Input/Input";
@@ -16,7 +16,8 @@ type VoiceProps = {
 export const Voice = memo(function Voice({ voiceId }: VoiceProps) {
   const colorId = useId();
   const dispatch = useAppDispatch();
-  const { id, color, name } = useAppSelector((state) => selectVoiceById(state, voiceId));
+  const { id, color, name } = useAppSelector((state) => selectOneVoiceById(state, voiceId));
+  const deferredColor = useDeferredValue(color);
 
   const handleChangeColor = useCallback(
     (newColor: string) => {
@@ -52,7 +53,7 @@ export const Voice = memo(function Voice({ voiceId }: VoiceProps) {
           <Label>
             <LabelText htmlFor={colorId}>Color</LabelText>
           </Label>
-          <ColorInput id={colorId} value={color} onChange={handleChangeColor} />
+          <ColorInput id={colorId} value={deferredColor} onChange={handleChangeColor} />
         </InputFieldInline>
       </div>
     </div>

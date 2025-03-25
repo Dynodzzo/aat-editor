@@ -1,4 +1,5 @@
-import { createEntityAdapter, createSelector, createSlice, EntityState, PayloadAction } from "@reduxjs/toolkit";
+import { createEntityAdapter, createSlice, EntityState, PayloadAction } from "@reduxjs/toolkit";
+import { createIdSelector, createSelector } from "redux-views";
 import { AVAILABLE_LANGUAGES_IDS } from "../../constants/language.constants";
 import { CueTranslation } from "../../model/transcription/cue.model";
 import { RootState } from "../store";
@@ -45,21 +46,22 @@ export const {
   selectIds: selectCueTranslationsIds,
 } = cueTranslationAdapter.getSelectors((state: RootState) => state.cueTranslations);
 
+type TranslationIdSelectorKeys = { cueId: string; languageId: string };
+const selectTranslationsByCueId = createIdSelector<TranslationIdSelectorKeys>(({ cueId }) => cueId);
+const selectTranslationsByLanguageId = createIdSelector<TranslationIdSelectorKeys>(({ languageId }) => languageId);
+
 const selectCueTranslationsByCueId = createSelector(
-  selectAllCueTranslations,
-  (_state: RootState, cueId: string) => cueId,
+  [selectAllCueTranslations, selectTranslationsByCueId],
   (cueTranslations, cueId) => cueTranslations.filter((cueTranslation) => cueTranslation.cueId === cueId)
 );
 
 export const selectCueTranslationsByCueIdAndLanguageId = createSelector(
-  selectCueTranslationsByCueId,
-  (_state: RootState, _cueId: string, languageId: string) => languageId,
+  [selectCueTranslationsByCueId, selectTranslationsByLanguageId],
   (cueTranslations, languageId) => cueTranslations.find((cueTranslation) => cueTranslation.languageId === languageId)
 );
 
 export const selectCuesTranslationsByLanguageId = createSelector(
-  selectAllCueTranslations,
-  (_state: RootState, languageId: string) => languageId,
+  [selectAllCueTranslations, selectTranslationsByLanguageId],
   (cueTranslations, languageId) => cueTranslations.filter((cueTranslation) => cueTranslation.languageId === languageId)
 );
 

@@ -6,11 +6,11 @@ const WAVE_SURFER_ZOOM_MAX = 150;
 const WAVE_SURFER_ZOOM_DEFAULT = 70;
 const WAVE_SURFER_ZOOM_STEP = 0.1;
 
-export const useWaveSurferZoom = ({ instance, isReady, containerRef }: WaveSurferState) => {
+export const useWaveSurferZoom = ({ instance, loadingState, containerRef }: WaveSurferState) => {
   const zoom = useRef<number>(WAVE_SURFER_ZOOM_DEFAULT);
 
   useEffect(() => {
-    if (!instance || !isReady) return;
+    if (!instance || loadingState !== "ready") return;
 
     const waveSurferContainer = containerRef.current;
 
@@ -32,5 +32,5 @@ export const useWaveSurferZoom = ({ instance, isReady, containerRef }: WaveSurfe
     return () => {
       waveSurferContainer?.removeEventListener("wheel", handleWheel);
     };
-  }, [instance, isReady, containerRef]);
+  }, [instance, loadingState, containerRef]);
 };

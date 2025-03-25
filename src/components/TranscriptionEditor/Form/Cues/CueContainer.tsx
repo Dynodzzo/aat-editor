@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { Separator } from "radix-ui";
-import { useCallback, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { selectCueTranslationsByCueIdAndLanguageId } from "../../../../store/features/cue-translation.slice";
 import { selectCueById } from "../../../../store/features/cue.slice";
 import { selectContentLanguage } from "../../../../store/features/metadata.slice";
@@ -15,14 +15,20 @@ type CueContainerProps = {
   translationLanguage?: string;
 };
 
-export const CueContainer = ({ id, index, duration, isBeingPlayed, translationLanguage }: CueContainerProps) => {
+export const CueContainer = memo(function CueContainer({
+  id,
+  index,
+  duration,
+  isBeingPlayed,
+  translationLanguage,
+}: CueContainerProps) {
   const contentLanguage = useAppSelector(selectContentLanguage);
   const cue = useAppSelector((state) => selectCueById(state, id));
   const transcriptions = useAppSelector((state) =>
-    selectCueTranslationsByCueIdAndLanguageId(state, id, contentLanguage)
+    selectCueTranslationsByCueIdAndLanguageId(state, { cueId: id, languageId: contentLanguage })
   );
   const translations = useAppSelector((state) =>
-    selectCueTranslationsByCueIdAndLanguageId(state, id, translationLanguage ?? "")
+    selectCueTranslationsByCueIdAndLanguageId(state, { cueId: id, languageId: translationLanguage ?? "" })
   );
 
   const [isNoteVisible, setIsNoteVisible] = useState(false);
@@ -74,4 +80,4 @@ export const CueContainer = ({ id, index, duration, isBeingPlayed, translationLa
       />
     </div>
   );
-};
+});

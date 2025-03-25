@@ -31,8 +31,11 @@ export const AudioPlayer = () => {
     await playNextRegion?.();
   };
 
+  if (!source) return null;
+
   return (
-    <div className="flex flex-col relative" hidden={!source}>
+    <div className="flex flex-col relative">
+      <Separator.Root orientation="horizontal" className="w-full h-px bg-neutral-200" />
       <ProgressBar />
       <Separator.Root orientation="horizontal" className="w-full h-px bg-neutral-200" />
       <div className="controls flex flex-row justify-center items-center px-6 py-1 relative">

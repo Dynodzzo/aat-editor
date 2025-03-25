@@ -1,6 +1,6 @@
 import { NavArrowDown, Plus } from "iconoir-react";
 import { Separator } from "radix-ui";
-import { useContext } from "react";
+import { memo, useContext } from "react";
 import { AudioContext } from "../../../../context/audio.context";
 import { Cue } from "../../../../model/transcription/cue.model";
 import { Language } from "../../../../model/transcription/language.model";
@@ -17,7 +17,7 @@ type HeaderProps = {
   onLanguageChange: (languageId: string) => void;
 };
 
-export const Header = ({ translationLanguage, languages, onLanguageChange }: HeaderProps) => {
+export const Header = memo(function Header({ translationLanguage, languages, onLanguageChange }: HeaderProps) {
   const dispatch = useAppDispatch();
   const { currentTimeRef } = useContext(AudioContext);
 
@@ -57,4 +57,4 @@ export const Header = ({ translationLanguage, languages, onLanguageChange }: Hea
       </div>
     </div>
   );
-};
+});

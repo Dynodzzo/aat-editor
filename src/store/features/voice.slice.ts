@@ -1,4 +1,5 @@
-import { createEntityAdapter, createSelector, createSlice, EntityState, PayloadAction } from "@reduxjs/toolkit";
+import { createEntityAdapter, createSlice, EntityState, PayloadAction } from "@reduxjs/toolkit";
+import { createIdSelector, createSelector } from "redux-views";
 import { Voice } from "../../model/transcription/voice.model";
 import { RootState } from "../store";
 
@@ -31,15 +32,19 @@ export default voiceSlice;
 
 export const {
   selectAll: selectAllVoices,
-  selectById: selectVoiceById,
+  selectById: selectOneVoiceById,
   selectIds: selectVoicesIds,
 } = voiceAdapter.getSelectors((state: RootState) => state.voices);
 
-export const selectVoicesIdsAndNames = createSelector(selectAllVoices, (voices) =>
+export const selectVoicesIdsAndNames = createSelector([selectAllVoices], (voices) =>
   voices.map((voice) => ({ id: voice.id, name: voice.name }))
 );
-export const selectVoiceColorById = createSelector(selectVoiceById, (voice) => voice?.color);
 
-export const makeSelectVoiceColorById = () => createSelector(selectVoiceById, (voice) => voice?.color);
+const selectVoiceById = createIdSelector<string>((voiceId) => voiceId);
+
+export const selectVoiceColorById = createSelector(
+  [selectAllVoices, selectVoiceById],
+  (voices, voice) => voices.find((currentVoice) => currentVoice.id === voice)?.color
+);
 
 export const { initializeVoices, addVoice, updateVoiceColor, updateVoiceName } = voiceSlice.actions;

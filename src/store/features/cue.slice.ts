@@ -1,4 +1,5 @@
-import { createEntityAdapter, createSelector, createSlice, EntityState, PayloadAction } from "@reduxjs/toolkit";
+import { createEntityAdapter, createSlice, EntityState, PayloadAction } from "@reduxjs/toolkit";
+import { createSelector } from "redux-views";
 import { Cue } from "../../model/transcription/cue.model";
 import { RootState } from "../store";
 
@@ -37,13 +38,11 @@ const cueSlice = createSlice({
 export default cueSlice;
 
 export const {
-  selectAll: selectAllCues,
+  selectAll,
   selectById: selectCueById,
   selectIds: selectCuesIds,
 } = cueAdapter.getSelectors((state: RootState) => state.cues);
 
-export const selectCuesdsAndTimes = createSelector(selectAllCues, (cues) =>
-  cues.map(({ id, start, end }) => ({ id, start, end }))
-);
-
 export const { initializeCues, addCue, updateCueStart, updateCueEnd, updateCueVoiceId, deleteCue } = cueSlice.actions;
+
+export const selectAllCues = createSelector([selectAll], (cues) => cues);

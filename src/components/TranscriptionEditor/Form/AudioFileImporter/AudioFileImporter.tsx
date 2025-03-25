@@ -1,12 +1,12 @@
 import clsx from "clsx";
 import { Upload } from "iconoir-react";
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { useAudioFileSelector } from "../../../../hooks/useAudioFileSelector";
 import { updateAudioSource } from "../../../../store/features/audio.slice";
 import { useAppDispatch } from "../../../../store/hooks";
 import { Toast } from "../../../ui/Toast/Toast";
 
-export const AudioFileImporter = () => {
+export const AudioFileImporter = memo(function AudioFileImporter() {
   const { audioObjectURL, handleAudioFileChanged } = useAudioFileSelector();
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const [isFileTypeWarningVisible, setIsFileTypeWarningVisible] = useState(false);
@@ -81,4 +81,4 @@ export const AudioFileImporter = () => {
       />
     </>
   );
-};
+});

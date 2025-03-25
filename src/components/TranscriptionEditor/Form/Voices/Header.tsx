@@ -22,6 +22,7 @@ export const Header = ({ voicesCount }: HeaderProps) => {
     };
     dispatch(addVoice(newVoice));
   }, [voicesCount, dispatch]);
+
   return (
     <div className="header flex flex-row items-center justify-between mt-[-8px]">
       <h2 className="text-xs font-semibold">

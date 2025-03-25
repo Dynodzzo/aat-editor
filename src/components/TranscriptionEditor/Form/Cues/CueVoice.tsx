@@ -1,6 +1,6 @@
 import { VisuallyHidden } from "radix-ui";
-import { memo, useCallback, useId, useMemo } from "react";
-import { makeSelectVoiceColorById, selectVoicesIdsAndNames } from "../../../../store/features/voice.slice";
+import { memo, useCallback, useDeferredValue, useId } from "react";
+import { selectVoiceColorById, selectVoicesIdsAndNames } from "../../../../store/features/voice.slice";
 import { useAppSelector } from "../../../../store/hooks";
 import { ChipTrigger } from "../../../ui/Select/ChipTrigger";
 import { Select, SelectItem } from "../../../ui/Select/Select";
@@ -12,11 +12,9 @@ type CueVoiceProps = {
 
 export const CueVoice = memo(function CueVoice({ value, onChangeVoice }: CueVoiceProps) {
   const voiceId = useId();
-
-  const selectVoiceColorById = useMemo(makeSelectVoiceColorById, []);
-
   const voicesIdsAndNames = useAppSelector(selectVoicesIdsAndNames);
   const voiceColor = useAppSelector((state) => selectVoiceColorById(state, value));
+  const deferredVoiceColor = useDeferredValue(voiceColor);
 
   const handleVoiceChange = useCallback(
     (newVoiceId: string) => {
@@ -32,7 +30,7 @@ export const CueVoice = memo(function CueVoice({ value, onChangeVoice }: CueVoic
       </VisuallyHidden.Root>
       <Select
         value={value}
-        trigger={<ChipTrigger id={voiceId} placeholder="Select voice" color={voiceColor} />}
+        trigger={<ChipTrigger id={voiceId} placeholder="Select voice" color={deferredVoiceColor!} />}
         onChange={handleVoiceChange}
       >
         {voicesIdsAndNames.map(({ id, name }) => (

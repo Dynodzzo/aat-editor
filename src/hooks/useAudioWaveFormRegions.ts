@@ -14,7 +14,9 @@ export const useAudioWaveFormRegions = ({ play, pause }: WaveSurferState, curren
   const dispatch = useAppDispatch();
   const contentLanguage = useAppSelector(selectContentLanguage);
   const cues = useAppSelector(selectAllCues);
-  const transcriptions = useAppSelector((state) => selectCuesTranslationsByLanguageId(state, contentLanguage));
+  const transcriptions = useAppSelector((state) =>
+    selectCuesTranslationsByLanguageId(state, { cueId: "", languageId: contentLanguage })
+  );
   const voices = useAppSelector(selectAllVoices);
   const activeRegionId = useRef<string>("");
 

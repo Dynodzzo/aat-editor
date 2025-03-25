@@ -1,4 +1,5 @@
-import { createEntityAdapter, createSelector, createSlice, EntityState, PayloadAction } from "@reduxjs/toolkit";
+import { createEntityAdapter, createSlice, EntityState, PayloadAction } from "@reduxjs/toolkit";
+import { createSelector } from "redux-views";
 import { AVAILABLE_LANGUAGES } from "../../constants/language.constants";
 import { Language, LanguageId } from "../../model/transcription/language.model";
 import { RootState } from "../store";
@@ -34,7 +35,7 @@ export const { selectById: selectLanguageById, selectAll: selectAllLanguages } =
   (state: RootState) => state.languages
 );
 
-export const selectActiveLanguages = createSelector(selectAllLanguages, (languages) =>
+export const selectActiveLanguages = createSelector([selectAllLanguages], (languages) =>
   languages.filter((language) => language.isActive)
 );
 
