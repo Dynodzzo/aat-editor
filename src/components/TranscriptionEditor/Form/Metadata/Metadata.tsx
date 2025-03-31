@@ -26,16 +26,16 @@ export const MetadataForm = () => {
   const fileAuthor = useAppSelector(selectFileAuthor);
   const contentLanguage = useAppSelector(selectContentLanguage);
 
-  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(updateTitle(event.target.value));
+  const handleTitleChange = (value: string) => {
+    dispatch(updateTitle(value));
   };
 
-  const handleAuthorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(updateAuthor(event.target.value));
+  const handleAuthorChange = (value: string) => {
+    dispatch(updateAuthor(value));
   };
 
-  const handleFileAuthorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(updateFileAuthor(event.target.value));
+  const handleFileAuthorChange = (value: string) => {
+    dispatch(updateFileAuthor(value));
   };
 
   const handleContentLanguageChange = (value: string) => {

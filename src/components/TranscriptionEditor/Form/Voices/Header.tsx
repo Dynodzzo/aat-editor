@@ -5,7 +5,7 @@ import { addVoice } from "../../../../store/features/voice.slice";
 import { useAppDispatch } from "../../../../store/hooks";
 import { Button } from "../../../ui/Button/Button";
 
-const DEFAULT_VOICE_COLOR = "#FFFFFF";
+const DEFAULT_VOICE_COLOR = "#D6D6D6";
 
 type HeaderProps = {
   voicesCount: number;

@@ -1,8 +1,7 @@
 import clsx from "clsx";
 import { Separator } from "radix-ui";
 import { memo, useCallback, useState } from "react";
-import { selectCueTranslationsByCueIdAndLanguageId } from "../../../../store/features/cue-translation.slice";
-import { selectCueById } from "../../../../store/features/cue.slice";
+import { selectCueNoteTranslationByCueIdAndLanguageId } from "../../../../store/features/cue-translation.slice";
 import { selectContentLanguage } from "../../../../store/features/metadata.slice";
 import { useAppSelector } from "../../../../store/hooks";
 import { Cue } from "./Cue";
@@ -23,16 +22,22 @@ export const CueContainer = memo(function CueContainer({
   translationLanguage,
 }: CueContainerProps) {
   const contentLanguage = useAppSelector(selectContentLanguage);
-  const cue = useAppSelector((state) => selectCueById(state, id));
-  const transcriptions = useAppSelector((state) =>
-    selectCueTranslationsByCueIdAndLanguageId(state, { cueId: id, languageId: contentLanguage })
+
+  const cueTranscriptionNote = useAppSelector((state) =>
+    selectCueNoteTranslationByCueIdAndLanguageId(state, {
+      cueId: id,
+      languageId: contentLanguage,
+    })
   );
-  const translations = useAppSelector((state) =>
-    selectCueTranslationsByCueIdAndLanguageId(state, { cueId: id, languageId: translationLanguage ?? "" })
+  const cueTranslationNote = useAppSelector((state) =>
+    selectCueNoteTranslationByCueIdAndLanguageId(state, {
+      cueId: id,
+      languageId: translationLanguage ?? "",
+    })
   );
 
   const [isNoteVisible, setIsNoteVisible] = useState(false);
-  const [hasNote, setHasNote] = useState(Boolean(translations?.note ?? transcriptions?.note));
+  const [hasNote, setHasNote] = useState(Boolean(!!cueTranscriptionNote || !!cueTranslationNote));
 
   const handleToggleNote = useCallback(() => {
     setIsNoteVisible((previousIsNoteVisible) => !previousIsNoteVisible);
@@ -57,10 +62,10 @@ export const CueContainer = memo(function CueContainer({
       })}
     >
       <Cue
-        cue={cue}
+        cueId={id}
         index={index}
         duration={duration}
-        translation={transcriptions!}
+        languageId={contentLanguage}
         hasNote={hasNote}
         isNoteVisible={isNoteVisible}
         onToggleNote={handleToggleNote}
@@ -69,9 +74,9 @@ export const CueContainer = memo(function CueContainer({
       />
       <Separator.Root orientation="vertical" className="w-px bg-neutral-200" />
       <Cue
-        cue={cue}
+        cueId={id}
         duration={duration}
-        translation={translations!}
+        languageId={translationLanguage ?? ""}
         hasNote={hasNote}
         isNoteVisible={isNoteVisible}
         onToggleNote={handleToggleNote}

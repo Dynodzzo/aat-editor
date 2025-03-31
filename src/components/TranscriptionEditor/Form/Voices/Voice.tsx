@@ -27,8 +27,8 @@ export const Voice = memo(function Voice({ voiceId }: VoiceProps) {
   );
 
   const handleChangeName = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      dispatch(updateVoiceName({ id, name: event.target.value }));
+    (value: string) => {
+      dispatch(updateVoiceName({ id, name: value }));
     },
     [dispatch, id]
   );

@@ -1,4 +1,4 @@
-import { MutableRefObject, useCallback, useMemo, useRef } from "react";
+import { MutableRefObject, useCallback, useDeferredValue, useMemo, useRef } from "react";
 import { Region } from "wavesurfer.js/dist/plugins/regions.js";
 import { selectCuesTranslationsByLanguageId } from "../store/features/cue-translation.slice";
 import { selectAllCues, updateCueEnd, updateCueStart } from "../store/features/cue.slice";
@@ -14,15 +14,17 @@ export const useAudioWaveFormRegions = ({ play, pause }: WaveSurferState, curren
   const dispatch = useAppDispatch();
   const contentLanguage = useAppSelector(selectContentLanguage);
   const cues = useAppSelector(selectAllCues);
+  const deferredCues = useDeferredValue(cues);
   const transcriptions = useAppSelector((state) =>
     selectCuesTranslationsByLanguageId(state, { cueId: "", languageId: contentLanguage })
   );
   const voices = useAppSelector(selectAllVoices);
+  const deferredVoices = useDeferredValue(voices);
   const activeRegionId = useRef<string>("");
 
   const regions = useMemo(() => {
-    return cues.map((cue) => {
-      const voice = voices.find((voice) => voice.id === cue.voiceId);
+    return deferredCues.map((cue) => {
+      const voice = deferredVoices.find((voice) => voice.id === cue.voiceId);
       return {
         id: cue.id,
         start: formatISOTimeToDuration(cue.start),
@@ -34,7 +36,7 @@ export const useAudioWaveFormRegions = ({ play, pause }: WaveSurferState, curren
         resize: true,
       };
     });
-  }, [cues, transcriptions, voices]);
+  }, [deferredCues, transcriptions, deferredVoices]);
 
   const handleRegionUpdated = useCallback(
     ({ id, start, end }: Region) => {

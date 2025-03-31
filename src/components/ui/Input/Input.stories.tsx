@@ -23,8 +23,8 @@ const defaultArgs: InputArgs = {
 const renderFunction = function Render(args: InputArgs) {
   const [value, setValue] = useState(args.value);
 
-  function onChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setValue(event?.target.value);
+  function onChange(value: string) {
+    setValue(value);
   }
 
   return <Input {...args} value={value} onChange={onChange} />;

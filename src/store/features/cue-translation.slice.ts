@@ -65,4 +65,19 @@ export const selectCuesTranslationsByLanguageId = createSelector(
   (cueTranslations, languageId) => cueTranslations.filter((cueTranslation) => cueTranslation.languageId === languageId)
 );
 
+export const selectCueTextTranslationByCueIdAndLanguageId = createSelector(
+  [selectCueTranslationsByCueIdAndLanguageId],
+  (cueTranslation) => cueTranslation?.text
+);
+
+export const selectCueNoteTranslationByCueIdAndLanguageId = createSelector(
+  [selectCueTranslationsByCueIdAndLanguageId],
+  (cueTranslation) => cueTranslation?.note
+);
+
+export const selectCueTranslationIdByCueIdAndLanguageId = createSelector(
+  [selectCueTranslationsByCueIdAndLanguageId],
+  (cueTranslation) => cueTranslation?.id
+);
+
 export const { initializeCuesTranslations, updateCueTranslation } = cueTranslationSlice.actions;

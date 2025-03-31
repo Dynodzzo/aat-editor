@@ -1,6 +1,7 @@
+import { useThrottle } from "@uidotdev/usehooks";
 import clsx from "clsx";
 import { VisuallyHidden } from "radix-ui";
-import { memo, useCallback, useRef } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 
 export type AutoHeightTextareaProps = {
   value: string;
@@ -8,7 +9,7 @@ export type AutoHeightTextareaProps = {
   id?: string;
   placeholder?: string;
   className?: string;
-  onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onChange?: (value: string) => void;
 };
 
 export const AutoHeightTextarea = memo(function AutoHeightTextarea({
@@ -20,15 +21,22 @@ export const AutoHeightTextarea = memo(function AutoHeightTextarea({
   onChange,
 }: AutoHeightTextareaProps) {
   const ref = useRef<HTMLTextAreaElement>(null);
+  const [inputValue, setInputValue] = useState(value);
+  const throttledValue = useThrottle(inputValue, 300);
 
-  const handleChange = useCallback(
-    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-      if (onChange) onChange(event);
+  const handleChange = useCallback((event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInputValue(event.target.value);
+    adjustHeight();
+  }, []);
 
-      adjustHeight();
-    },
-    [onChange]
-  );
+  useEffect(() => {
+    setInputValue(value);
+    adjustHeight();
+  }, [value]);
+
+  useEffect(() => {
+    if (onChange) onChange(throttledValue);
+  }, [throttledValue, onChange]);
 
   const adjustHeight = () => {
     ref.current!.style.height = "inherit";
@@ -52,7 +60,7 @@ export const AutoHeightTextarea = memo(function AutoHeightTextarea({
           "focus-visible:outline-none",
           className
         )}
-        value={value}
+        value={inputValue}
         onChange={handleChange}
         rows={1}
       ></textarea>

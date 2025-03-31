@@ -1,5 +1,6 @@
+import { useThrottle } from "@uidotdev/usehooks";
 import clsx from "clsx";
-import { memo, useCallback } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 
 export type InputVariant = "fill" | "outline";
 export type InputSize = "sm" | "md";
@@ -15,7 +16,7 @@ export type InputProps = {
   variant?: InputVariant;
   size?: InputSize;
   className?: string;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (value: string) => void;
 };
 
 export const Input = memo(function Input({
@@ -29,12 +30,16 @@ export const Input = memo(function Input({
   className = "",
   onChange,
 }: InputProps) {
-  const handleChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      if (onChange) onChange(event);
-    },
-    [onChange]
-  );
+  const [inputValue, setInputValue] = useState(value);
+  const throttledValue = useThrottle(inputValue, 300);
+
+  const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+  }, []);
+
+  useEffect(() => {
+    if (onChange) onChange(throttledValue);
+  }, [throttledValue, onChange]);
 
   return (
     <div
@@ -50,7 +55,7 @@ export const Input = memo(function Input({
           "w-full h-6 placeholder:italic placeholder:text-neutral-400 font-normal text-sm text-neutral-500 [text-align:inherit] focus-visible:outline-none"
         )}
         type={type}
-        value={value}
+        value={inputValue}
         placeholder={placeholder}
         min={min}
         max={max}

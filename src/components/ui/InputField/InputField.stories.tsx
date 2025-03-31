@@ -34,9 +34,9 @@ const InputFieldTemplate: Story = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_, updateArgs] = useArgs<InputFieldArgs>();
 
-    function onChange(event: React.ChangeEvent<HTMLInputElement>) {
-      setCurrentValue(event?.target.value);
-      updateArgs({ value: event?.target.value });
+    function onChange(value: string) {
+      setCurrentValue(value);
+      updateArgs({ value });
     }
 
     return (

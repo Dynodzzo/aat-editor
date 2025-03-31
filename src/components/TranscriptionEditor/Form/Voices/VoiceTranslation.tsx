@@ -1,7 +1,8 @@
 import { useCallback, useId } from "react";
 import { LanguageId } from "../../../../model/transcription/language.model";
 import {
-  selectVoiceTranslationsByVoiceIdAndLanguageId,
+  selectVoiceTranslationIdByVoiceIdAndLanguageId,
+  selectVoiceTranslationValueByVoiceIdAndLanguageId,
   updateVoiceTranslation,
 } from "../../../../store/features/voice-translation.slice";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
@@ -17,31 +18,34 @@ type VoiceTranslationProps = {
 };
 
 export const VoiceTranslation = ({ voiceId, languageId, languageName }: VoiceTranslationProps) => {
-  const voiceTranslationId = useId();
+  const translationId = useId();
   const dispatch = useAppDispatch();
-  const voiceTranslation = useAppSelector((state) =>
-    selectVoiceTranslationsByVoiceIdAndLanguageId(state, voiceId, languageId)
+
+  const voiceTranslationValue = useAppSelector((state) =>
+    selectVoiceTranslationValueByVoiceIdAndLanguageId(state, { voiceId, languageId })
+  );
+  const voiceTranslationId = useAppSelector((state) =>
+    selectVoiceTranslationIdByVoiceIdAndLanguageId(state, { voiceId, languageId })
   );
 
   const handleChangeValue = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      if (!voiceTranslation) return;
-      dispatch(updateVoiceTranslation({ id: voiceTranslation.id, value: event.target.value }));
+    (value: string) => {
+      dispatch(updateVoiceTranslation({ id: voiceTranslationId!, value }));
     },
-    [dispatch, voiceTranslation]
+    [dispatch, voiceTranslationId]
   );
 
-  if (!voiceTranslation) return null;
+  if (!voiceTranslationId) return null;
 
   return (
     <InputFieldInline key={languageId} className="">
       <Label>
-        <LabelText htmlFor={voiceTranslationId}>{languageName}</LabelText>
+        <LabelText htmlFor={translationId}>{languageName}</LabelText>
       </Label>
       <Input
-        id={voiceTranslationId}
+        id={translationId}
         className="flex-1"
-        value={voiceTranslation.value}
+        value={voiceTranslationValue ?? ""}
         size="sm"
         variant="fill"
         onChange={handleChangeValue}

@@ -1,4 +1,5 @@
-import { memo, useCallback, useDeferredValue, useEffect, useRef, useState } from "react";
+import { useThrottle } from "@uidotdev/usehooks";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 
 export type ColorInputProps = {
   value: string;
@@ -9,7 +10,7 @@ export type ColorInputProps = {
 export const ColorInput = memo(function ColorInput({ value, id, onChange }: ColorInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [color, setColor] = useState<string>(value);
-  const deferredColor = useDeferredValue(color);
+  const throttledColor = useThrottle(color, 500);
 
   const handleClick = useCallback(() => {
     if (inputRef.current) inputRef.current.click();
@@ -23,11 +24,11 @@ export const ColorInput = memo(function ColorInput({ value, id, onChange }: Colo
   );
 
   useEffect(() => {
-    if (onChange) onChange(deferredColor);
-  }, [deferredColor, onChange]);
+    if (onChange) onChange(throttledColor);
+  }, [throttledColor, onChange]);
 
   return (
-    <div className="w-4 h-4 rounded-full cursor-pointer  grid place-items-center" onClick={handleClick}>
+    <div className="w-4 h-4 rounded-full cursor-pointer grid place-items-center" onClick={handleClick}>
       <div className="w-4 h-4 inset-ring-2 inset-ring-neutral-100 rounded-full" style={{ backgroundColor: value }}>
         <input
           ref={inputRef}

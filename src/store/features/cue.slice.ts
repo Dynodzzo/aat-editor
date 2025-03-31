@@ -46,3 +46,6 @@ export const {
 export const { initializeCues, addCue, updateCueStart, updateCueEnd, updateCueVoiceId, deleteCue } = cueSlice.actions;
 
 export const selectAllCues = createSelector([selectAll], (cues) => cues);
+export const selectCueStartById = createSelector([selectCueById], (cue) => cue.start);
+export const selectCueEndById = createSelector([selectCueById], (cue) => cue.end);
+export const selectCueVoiceIdById = createSelector([selectCueById], (cue) => cue.voiceId);

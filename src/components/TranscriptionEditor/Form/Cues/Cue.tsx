@@ -1,11 +1,15 @@
 import clsx from "clsx";
 import { MoreVert, Page, PlaySolid } from "iconoir-react";
-import { memo, useCallback, useContext } from "react";
+import { memo, useCallback, useContext, useMemo } from "react";
 import { AudioContext } from "../../../../context/audio.context";
-import { CueTranslation, Cue as CueType } from "../../../../model/transcription/cue.model";
-import { updateCueTranslation } from "../../../../store/features/cue-translation.slice";
-import { deleteCue, updateCueEnd, updateCueStart, updateCueVoiceId } from "../../../../store/features/cue.slice";
-import { useAppDispatch } from "../../../../store/hooks";
+import {
+  selectCueNoteTranslationByCueIdAndLanguageId,
+  selectCueTextTranslationByCueIdAndLanguageId,
+  selectCueTranslationIdByCueIdAndLanguageId,
+  updateCueTranslation,
+} from "../../../../store/features/cue-translation.slice";
+import { deleteCue, selectCueVoiceIdById, updateCueVoiceId } from "../../../../store/features/cue.slice";
+import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
 import { IconButton } from "../../../ui/Button/IconButton";
 import { DropdownMenu, DropdownMenuItem } from "../../../ui/DropDownMenu/DropDownMenu";
 import { AutoHeightTextarea } from "../../../ui/Input/AutoHeightTextarea";
@@ -14,8 +18,8 @@ import { Timecodes } from "./Timecodes";
 
 type CueProps = {
   index?: number;
-  cue: CueType;
-  translation: CueTranslation;
+  cueId: string;
+  languageId: string;
   hasNote: boolean;
   isNoteVisible: boolean;
   duration: number;
@@ -26,8 +30,8 @@ type CueProps = {
 
 export const Cue = memo(function Cue({
   index,
-  cue,
-  translation,
+  cueId,
+  languageId,
   isNoteVisible,
   hasNote,
   onToggleNote,
@@ -39,48 +43,46 @@ export const Cue = memo(function Cue({
     playerControls: { playRegion },
   } = useContext(AudioContext);
 
+  const idSelectorKeys = useMemo(() => ({ cueId, languageId }), [cueId, languageId]);
+  const translationId = useAppSelector((state) => selectCueTranslationIdByCueIdAndLanguageId(state, idSelectorKeys));
+  const text = useAppSelector((state) => selectCueTextTranslationByCueIdAndLanguageId(state, idSelectorKeys));
+  const note = useAppSelector((state) => selectCueNoteTranslationByCueIdAndLanguageId(state, idSelectorKeys));
+  const voiceId = useAppSelector((state) => selectCueVoiceIdById(state, cueId));
+
   const showPrefix = index !== undefined;
-
-  const handleChangeStart = useCallback(
-    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-      dispatch(updateCueStart({ id: cue.id, start: event.target.value }));
-    },
-    [dispatch, cue]
-  );
-
-  const handleChangeEnd = useCallback(
-    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-      dispatch(updateCueEnd({ id: cue.id, end: event.target.value }));
-    },
-    [dispatch, cue]
-  );
 
   const handleChangeVoice = useCallback(
     (voiceId: string) => {
-      dispatch(updateCueVoiceId({ id: cue.id, voiceId }));
+      dispatch(updateCueVoiceId({ id: cueId, voiceId }));
     },
-    [dispatch, cue]
+    [dispatch, cueId]
   );
 
-  const handleChangeText = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    if (!translation) return;
-    dispatch(updateCueTranslation({ id: translation.id, text: event.target.value, note: translation.note }));
-  };
+  const handleChangeText = useCallback(
+    (value: string) => {
+      if (!translationId) return;
+      dispatch(updateCueTranslation({ id: translationId, text: value, note: note ?? "" }));
+    },
+    [dispatch, translationId, note]
+  );
 
-  const handleChangeNote = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    if (!translation) return;
-    dispatch(updateCueTranslation({ id: translation.id, text: translation.text, note: event.target.value }));
-  };
+  const handleChangeNote = useCallback(
+    (value: string) => {
+      if (!translationId) return;
+      dispatch(updateCueTranslation({ id: translationId, text: text ?? "", note: value }));
+    },
+    [dispatch, translationId, text]
+  );
 
   const handleDelete = useCallback(() => {
-    dispatch(deleteCue(cue.id));
-  }, [dispatch, cue]);
+    dispatch(deleteCue(cueId));
+  }, [dispatch, cueId]);
 
   const handleListen = useCallback(() => {
-    void playRegion?.(cue.id);
-  }, [playRegion, cue]);
+    void playRegion?.(cueId);
+  }, [playRegion, cueId]);
 
-  if (!cue) return null;
+  if (!cueId) return null;
 
   return (
     <div
@@ -109,13 +111,8 @@ export const Cue = memo(function Cue({
 
       <div className="content flex flex-col gap-3 w-full">
         <div className="cue-header px-4.5 flex flex-row items-center justify-between">
-          <div className="left-group flex flex-row items-center">
-            <Timecodes
-              startTime={cue.start}
-              endTime={cue.end}
-              onChangeStartTime={handleChangeStart}
-              onChangeEndTime={handleChangeEnd}
-            />
+          <div className="left-group flex flex-row items-center gap-2">
+            <Timecodes cueId={cueId} />
             {hasNote && (
               <IconButton
                 type={isNoteVisible ? "primary" : "secondary"}
@@ -124,13 +121,14 @@ export const Cue = memo(function Cue({
               />
             )}
           </div>
-          <CueVoice value={cue.voiceId} onChangeVoice={handleChangeVoice} />
+          <CueVoice value={voiceId} onChangeVoice={handleChangeVoice} />
         </div>
         <div className="cue-transcript px-4.5">
           <div className="top-row flex flex-row items-center">
             <AutoHeightTextarea
-              value={translation?.text}
+              value={text!}
               onChange={handleChangeText}
+              placeholder="Enter text"
               className="grow font-normal text-sm text-neutral-500"
             />
             <DropdownMenu icon={<IconButton type="secondary" icon={<MoreVert width={12} height={12} />} />}>
@@ -144,11 +142,12 @@ export const Cue = memo(function Cue({
       {hasNote && isNoteVisible && (
         <>
           <div></div>
-          <div className="note px-4.5">
+          <div className="note flex px-4.5">
             <AutoHeightTextarea
-              value={translation?.note}
+              value={note!}
               onChange={handleChangeNote}
-              className="italic font-light text-xs text-neutral-500"
+              placeholder="Enter note"
+              className="grow italic font-light text-xs text-neutral-500"
             />
           </div>
         </>

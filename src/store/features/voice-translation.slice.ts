@@ -1,4 +1,5 @@
-import { createEntityAdapter, createSelector, createSlice, EntityState, PayloadAction } from "@reduxjs/toolkit";
+import { createEntityAdapter, createSlice, EntityState, PayloadAction } from "@reduxjs/toolkit";
+import { createIdSelector, createSelector } from "redux-views";
 import { AVAILABLE_LANGUAGES_IDS } from "../../constants/language.constants";
 import { VoiceTranslation } from "../../model/transcription/voice.model";
 import { RootState } from "../store";
@@ -44,17 +45,29 @@ export const {
   selectIds: selectVoiceTranslationsIds,
 } = voiceTranslationAdapter.getSelectors((state: RootState) => state.voiceTranslations);
 
-export const selectVoiceTranslationsByVoiceId = createSelector(
-  selectAllVoiceTranslations,
-  (_state: RootState, voiceId: string) => voiceId,
+type TranslationIdSelectorKeys = { voiceId: string; languageId: string };
+const selectTranslationsByVoiceId = createIdSelector<TranslationIdSelectorKeys>(({ voiceId }) => voiceId);
+const selectTranslationsByLanguageId = createIdSelector<TranslationIdSelectorKeys>(({ languageId }) => languageId);
+
+const selectVoiceTranslationsByVoiceId = createSelector(
+  [selectAllVoiceTranslations, selectTranslationsByVoiceId],
   (voiceTranslations, voiceId) => voiceTranslations.filter((voiceTranslation) => voiceTranslation.voiceId === voiceId)
 );
 
-export const selectVoiceTranslationsByVoiceIdAndLanguageId = createSelector(
-  selectVoiceTranslationsByVoiceId,
-  (_state: RootState, _voiceId: string, languageId: string) => languageId,
+const selectVoiceTranslationsByVoiceIdAndLanguageId = createSelector(
+  [selectVoiceTranslationsByVoiceId, selectTranslationsByLanguageId],
   (voiceTranslations, languageId) =>
     voiceTranslations.find((voiceTranslation) => voiceTranslation.languageId === languageId)
+);
+
+export const selectVoiceTranslationIdByVoiceIdAndLanguageId = createSelector(
+  [selectVoiceTranslationsByVoiceIdAndLanguageId],
+  (voiceTranslation) => voiceTranslation?.id
+);
+
+export const selectVoiceTranslationValueByVoiceIdAndLanguageId = createSelector(
+  [selectVoiceTranslationsByVoiceIdAndLanguageId],
+  (voiceTranslation) => voiceTranslation?.value
 );
 
 export const { initializeVoicesTranslations, updateVoiceTranslation } = voiceTranslationSlice.actions;
