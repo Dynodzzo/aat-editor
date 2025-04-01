@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import { MoreVert, Page, PlaySolid } from "iconoir-react";
-import { memo, useCallback, useContext, useMemo } from "react";
+import { VisuallyHidden } from "radix-ui";
+import { memo, useCallback, useContext, useId, useMemo } from "react";
 import { AudioContext } from "../../../../context/audio.context";
 import {
   selectCueNoteTranslationByCueIdAndLanguageId,
@@ -43,10 +44,12 @@ export const Cue = memo(function Cue({
     playerControls: { playRegion },
   } = useContext(AudioContext);
 
+  const textId = useId();
+  const noteId = useId();
   const idSelectorKeys = useMemo(() => ({ cueId, languageId }), [cueId, languageId]);
   const translationId = useAppSelector((state) => selectCueTranslationIdByCueIdAndLanguageId(state, idSelectorKeys));
-  const text = useAppSelector((state) => selectCueTextTranslationByCueIdAndLanguageId(state, idSelectorKeys));
-  const note = useAppSelector((state) => selectCueNoteTranslationByCueIdAndLanguageId(state, idSelectorKeys));
+  const text = useAppSelector((state) => selectCueTextTranslationByCueIdAndLanguageId(state, idSelectorKeys)) ?? "";
+  const note = useAppSelector((state) => selectCueNoteTranslationByCueIdAndLanguageId(state, idSelectorKeys)) ?? "";
   const voiceId = useAppSelector((state) => selectCueVoiceIdById(state, cueId));
 
   const showPrefix = index !== undefined;
@@ -125,8 +128,12 @@ export const Cue = memo(function Cue({
         </div>
         <div className="cue-transcript px-4.5">
           <div className="top-row flex flex-row items-center">
+            <VisuallyHidden.Root>
+              <label htmlFor={textId}>Text</label>
+            </VisuallyHidden.Root>
             <AutoHeightTextarea
-              value={text!}
+              id={textId}
+              value={text}
               onChange={handleChangeText}
               placeholder="Enter text"
               className="grow font-normal text-sm text-neutral-500"
@@ -143,8 +150,12 @@ export const Cue = memo(function Cue({
         <>
           <div></div>
           <div className="note flex px-4.5">
+            <VisuallyHidden.Root>
+              <label htmlFor={noteId}>Note</label>
+            </VisuallyHidden.Root>
             <AutoHeightTextarea
-              value={note!}
+              id={noteId}
+              value={note}
               onChange={handleChangeNote}
               placeholder="Enter note"
               className="grow italic font-light text-xs text-neutral-500"

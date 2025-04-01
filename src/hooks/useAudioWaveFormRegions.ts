@@ -18,6 +18,7 @@ export const useAudioWaveFormRegions = ({ play, pause }: WaveSurferState, curren
   const transcriptions = useAppSelector((state) =>
     selectCuesTranslationsByLanguageId(state, { cueId: "", languageId: contentLanguage })
   );
+  const deferredTranscriptions = useDeferredValue(transcriptions);
   const voices = useAppSelector(selectAllVoices);
   const deferredVoices = useDeferredValue(voices);
   const activeRegionId = useRef<string>("");
@@ -25,18 +26,21 @@ export const useAudioWaveFormRegions = ({ play, pause }: WaveSurferState, curren
   const regions = useMemo(() => {
     return deferredCues.map((cue) => {
       const voice = deferredVoices.find((voice) => voice.id === cue.voiceId);
+      const content = deferredTranscriptions
+        .find((transcription) => transcription.cueId === cue.id)
+        ?.text.padStart(1, " ");
       return {
         id: cue.id,
         start: formatISOTimeToDuration(cue.start),
         end: formatISOTimeToDuration(cue.end),
         // TODO Extract the magic constant
         color: voice ? voice.color + "44" : DEFAULT_REGION_COLOR,
-        content: transcriptions.find((transcription) => transcription.cueId === cue.id)?.text.padStart(1, " "),
+        content,
         drag: true,
         resize: true,
       };
     });
-  }, [deferredCues, transcriptions, deferredVoices]);
+  }, [deferredCues, deferredTranscriptions, deferredVoices]);
 
   const handleRegionUpdated = useCallback(
     ({ id, start, end }: Region) => {

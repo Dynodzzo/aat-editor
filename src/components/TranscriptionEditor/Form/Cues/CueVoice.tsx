@@ -31,6 +31,7 @@ export const CueVoice = memo(function CueVoice({ value, onChangeVoice }: CueVoic
       <Select
         value={value}
         trigger={<ChipTrigger id={voiceId} placeholder="Select voice" color={deferredVoiceColor!} />}
+        disabled={voicesIdsAndNames.length === 0}
         onChange={handleVoiceChange}
       >
         {voicesIdsAndNames.map(({ id, name }) => (
