@@ -67,12 +67,12 @@ export const selectCuesTranslationsByLanguageId = createSelector(
 
 export const selectCueTextTranslationByCueIdAndLanguageId = createSelector(
   [selectCueTranslationsByCueIdAndLanguageId],
-  (cueTranslation) => cueTranslation?.text
+  (cueTranslation) => cueTranslation?.text ?? ""
 );
 
 export const selectCueNoteTranslationByCueIdAndLanguageId = createSelector(
   [selectCueTranslationsByCueIdAndLanguageId],
-  (cueTranslation) => cueTranslation?.note
+  (cueTranslation) => cueTranslation?.note ?? ""
 );
 
 export const selectCueTranslationIdByCueIdAndLanguageId = createSelector(

@@ -21,22 +21,26 @@ export const AutoHeightTextarea = memo(function AutoHeightTextarea({
   onChange,
 }: AutoHeightTextareaProps) {
   const ref = useRef<HTMLTextAreaElement>(null);
+  const [hasTyped, setHasTyped] = useState(false);
   const [inputValue, setInputValue] = useState(value);
   const throttledValue = useThrottle(inputValue, 300);
 
   const handleChange = useCallback((event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setHasTyped(true);
     setInputValue(event.target.value);
     adjustHeight();
   }, []);
 
   useEffect(() => {
+    setHasTyped(false);
     setInputValue(value);
     adjustHeight();
   }, [value]);
 
   useEffect(() => {
+    if (!hasTyped) return;
     if (onChange) onChange(throttledValue);
-  }, [throttledValue, onChange]);
+  }, [throttledValue, onChange, hasTyped]);
 
   const adjustHeight = () => {
     ref.current!.style.height = "inherit";

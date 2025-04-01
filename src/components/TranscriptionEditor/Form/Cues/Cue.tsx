@@ -48,8 +48,8 @@ export const Cue = memo(function Cue({
   const noteId = useId();
   const idSelectorKeys = useMemo(() => ({ cueId, languageId }), [cueId, languageId]);
   const translationId = useAppSelector((state) => selectCueTranslationIdByCueIdAndLanguageId(state, idSelectorKeys));
-  const text = useAppSelector((state) => selectCueTextTranslationByCueIdAndLanguageId(state, idSelectorKeys)) ?? "";
-  const note = useAppSelector((state) => selectCueNoteTranslationByCueIdAndLanguageId(state, idSelectorKeys)) ?? "";
+  const text = useAppSelector((state) => selectCueTextTranslationByCueIdAndLanguageId(state, idSelectorKeys));
+  const note = useAppSelector((state) => selectCueNoteTranslationByCueIdAndLanguageId(state, idSelectorKeys));
   const voiceId = useAppSelector((state) => selectCueVoiceIdById(state, cueId));
 
   const showPrefix = index !== undefined;
