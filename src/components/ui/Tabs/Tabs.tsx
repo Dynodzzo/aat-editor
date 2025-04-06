@@ -23,7 +23,7 @@ type TabContentProps = {
 
 export const Tabs = ({ defaultValue, onChange, children }: PropsWithChildren<TabsProps>) => {
   return (
-    <RadixTabs.Root defaultValue={defaultValue} onValueChange={onChange}>
+    <RadixTabs.Root defaultValue={defaultValue} onValueChange={onChange} className="h-full">
       {children}
     </RadixTabs.Root>
   );
@@ -46,7 +46,13 @@ export const TabTrigger = ({ label, value }: TabTriggerProps) => {
 
 export const TabContent = ({ value, hidden = false, className, children }: PropsWithChildren<TabContentProps>) => {
   return (
-    <RadixTabs.Content className={className} value={value} forceMount hidden={hidden}>
+    <RadixTabs.Content
+      className={clsx("overflow-auto", className)}
+      style={{ height: "calc(100% - 48px)" }}
+      value={value}
+      forceMount
+      hidden={hidden}
+    >
       {children}
     </RadixTabs.Content>
   );

@@ -16,8 +16,8 @@ export const ConfigPanel = memo(function ConfigPanel() {
   };
 
   return (
-    <div className="relative h-full overflow-auto bg-white">
-      <div className="h-full overflow-auto" onScroll={handleScroll}>
+    <div className="relative h-full bg-white">
+      <div className="h-full" onScroll={handleScroll}>
         <ConfigPanelLayout>
           <Tabs defaultValue={activeTab} onChange={handleTabChange}>
             <TabsList className="border-b border-neutral-200">
