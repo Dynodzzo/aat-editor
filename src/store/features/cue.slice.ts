@@ -1,6 +1,7 @@
 import { createEntityAdapter, createSlice, EntityState, PayloadAction } from "@reduxjs/toolkit";
 import { createSelector } from "redux-views";
 import { Cue } from "../../model/transcription/cue.model";
+import { clearState } from "../actions";
 import { RootState } from "../store";
 
 type CueState = EntityState<Cue, string>;
@@ -32,6 +33,9 @@ const cueSlice = createSlice({
     deleteCue: (state, action: PayloadAction<string>) => {
       cueAdapter.removeOne(state, action.payload);
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(clearState, () => initialState);
   },
 });
 

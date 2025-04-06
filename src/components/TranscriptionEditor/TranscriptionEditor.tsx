@@ -11,7 +11,7 @@ import { SidePanel } from "./SidePanel/SidePanel";
 import { TopActions } from "./TopActions/TopActions";
 import { Waveform } from "./WaveForm/WaveForm";
 
-export const TranscriptionEditor = memo(function TranscriptionEditor() {
+export const TranscriptionEditor = memo(function TranscriptionEditor({ onStopEditing }: { onStopEditing: () => void }) {
   const currentTimeRef = useRef<number>(0);
   const source = useAppSelector(selectAudioSource);
 
@@ -47,7 +47,7 @@ export const TranscriptionEditor = memo(function TranscriptionEditor() {
     <AudioContext.Provider value={audioContext}>
       <div className="flex flex-row items-stretch h-full max-h-full w-full">
         <div className="flex flex-col flex-1 bg-neutral-100 overflow-hidden">
-          <TopActions />
+          <TopActions onStopEditing={onStopEditing} />
 
           <div className="flex flex-row flex-1 border-t-1 border-r-1 border-b-1 border-neutral-200 rounded-tr-lg overflow-hidden">
             <CuesPanel />

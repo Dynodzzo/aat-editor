@@ -2,6 +2,7 @@ import { createEntityAdapter, createSlice, EntityState, PayloadAction } from "@r
 import { createIdSelector, createSelector } from "redux-views";
 import { AVAILABLE_LANGUAGES_IDS } from "../../constants/language.constants";
 import { CueTranslation } from "../../model/transcription/cue.model";
+import { clearState } from "../actions";
 import { RootState } from "../store";
 import { addCue } from "./cue.slice";
 
@@ -23,18 +24,20 @@ const cueTranslationSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(addCue, (state, action) => {
-      const { id: cueId } = action.payload;
-      const translations: CueTranslation[] = AVAILABLE_LANGUAGES_IDS.map((languageId) => ({
-        id: crypto.randomUUID(),
-        cueId,
-        languageId,
-        text: "",
-        note: "",
-      }));
+    builder
+      .addCase(addCue, (state, action) => {
+        const { id: cueId } = action.payload;
+        const translations: CueTranslation[] = AVAILABLE_LANGUAGES_IDS.map((languageId) => ({
+          id: crypto.randomUUID(),
+          cueId,
+          languageId,
+          text: "",
+          note: "",
+        }));
 
-      cueTranslationAdapter.upsertMany(state, translations);
-    });
+        cueTranslationAdapter.upsertMany(state, translations);
+      })
+      .addCase(clearState, () => initialState);
   },
 });
 

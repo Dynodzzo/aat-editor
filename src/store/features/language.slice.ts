@@ -2,6 +2,7 @@ import { createEntityAdapter, createSlice, EntityState, PayloadAction } from "@r
 import { createSelector } from "redux-views";
 import { AVAILABLE_LANGUAGES } from "../../constants/language.constants";
 import { Language, LanguageId } from "../../model/transcription/language.model";
+import { clearState } from "../actions";
 import { RootState } from "../store";
 
 type LanguageState = EntityState<Language, LanguageId>;
@@ -26,6 +27,9 @@ const languageSlice = createSlice({
     activateLanguage: (state: LanguageState, action: PayloadAction<LanguageId>) => {
       languageAdapter.updateOne(state, { id: action.payload, changes: { isActive: true } });
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(clearState, () => initialState);
   },
 });
 

@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AudioState } from "../../model/audio.model";
+import { clearState } from "../actions";
 
 const initialState: AudioState = {
   duration: 0,
@@ -20,6 +21,9 @@ const audioSlice = createSlice({
   selectors: {
     selectDuration: (state: AudioState) => state.duration,
     selectSource: (state: AudioState) => state.source,
+  },
+  extraReducers: (builder) => {
+    builder.addCase(clearState, () => initialState);
   },
 });
 

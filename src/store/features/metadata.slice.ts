@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Metadata } from "../../model/transcription/metadata.model";
+import { clearState } from "../actions";
 
 const initialState: Metadata = {
   title: "",
@@ -37,6 +38,9 @@ const metadataSlice = createSlice({
     selectFileAuthor: (state: Metadata) => state.fileAuthor,
     selectContentLanguage: (state: Metadata) => state.contentLanguage,
     selectMetadata: (state: Metadata) => state,
+  },
+  extraReducers: (builder) => {
+    builder.addCase(clearState, () => initialState);
   },
 });
 

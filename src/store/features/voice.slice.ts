@@ -1,6 +1,7 @@
 import { createEntityAdapter, createSlice, EntityState, PayloadAction } from "@reduxjs/toolkit";
 import { createIdSelector, createSelector } from "redux-views";
 import { Voice } from "../../model/transcription/voice.model";
+import { clearState } from "../actions";
 import { RootState } from "../store";
 
 type VoiceState = EntityState<Voice, string>;
@@ -25,6 +26,9 @@ const voiceSlice = createSlice({
       const { id, name } = action.payload;
       voiceAdapter.updateOne(state, { id, changes: { name } });
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(clearState, () => initialState);
   },
 });
 
