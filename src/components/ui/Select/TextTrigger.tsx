@@ -6,11 +6,13 @@ export const TextTrigger = ({
   icon,
   disabled,
   className,
+  placeholder,
 }: {
   id: string;
   icon?: JSX.Element;
   disabled?: boolean;
   className?: string;
+  placeholder?: string;
 }) => {
   return (
     <RadixSelect.Trigger
@@ -22,7 +24,7 @@ export const TextTrigger = ({
       )}
     >
       <span className="flex-auto text-sm font-normal text-left leading-none">
-        <RadixSelect.Value></RadixSelect.Value>
+        <RadixSelect.Value placeholder={placeholder}></RadixSelect.Value>
       </span>
       <RadixSelect.Icon className={clsx({ "text-neutral-600": !disabled, "text-neutral-300": disabled })}>
         {icon}

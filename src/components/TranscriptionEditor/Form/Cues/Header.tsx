@@ -43,7 +43,13 @@ export const Header = memo(function Header({ translationLanguage, languages, onL
       <Separator.Root orientation="vertical" className="w-px h-full bg-neutral-200" />
       <div className="px-4 flex-1">
         <Select
-          trigger={<TextTrigger id="translation-language" icon={<NavArrowDown width={16} height={16} />} />}
+          trigger={
+            <TextTrigger
+              id="translation-language"
+              placeholder="Translate to..."
+              icon={<NavArrowDown width={16} height={16} />}
+            />
+          }
           value={translationLanguage}
           disabled={!languages.length}
           onChange={onLanguageChange}
