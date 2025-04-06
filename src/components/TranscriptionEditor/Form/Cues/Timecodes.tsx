@@ -44,7 +44,7 @@ export const Timecodes = memo(function Timecodes({ cueId }: TimecodesProps) {
         id={startId}
         value={start}
         label="From"
-        className="w-20 text-xs text-neutral-500"
+        className="w-[85px] text-xs text-neutral-500"
         onChange={handleChangeStart}
       />
       <ArrowRight className="text-neutral-500" width={10} height={10} />
@@ -52,7 +52,7 @@ export const Timecodes = memo(function Timecodes({ cueId }: TimecodesProps) {
         id={endId}
         value={end}
         label="To"
-        className="w-20 text-xs text-neutral-500"
+        className="w-[85px] text-xs text-neutral-500"
         onChange={handleChangeEnd}
       />
     </div>
