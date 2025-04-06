@@ -37,6 +37,7 @@
     "redux-views": "^1.0.3",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
+    "usehooks-ts": "^3.1.1",
     "wavesurfer.js": "^7.8.15",
     "zod": "^3.24.1"
   },

@@ -1,6 +1,7 @@
 import { defaultRangeExtractor, Range, useVirtualizer } from "@tanstack/react-virtual";
 import { Separator } from "radix-ui";
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useResizeObserver } from "usehooks-ts";
 import { AudioContext } from "../../../../context/audio.context";
 import { useRequestAnimationFrame } from "../../../../hooks/useRequestAnimationFrame";
 import { useScrollOverlay } from "../../../../hooks/useScrollOverlay";
@@ -50,6 +51,7 @@ export const Cues = memo(function Cues() {
     }, []),
   });
   const items = virtualizer.getVirtualItems();
+  const { height: parentHeight } = useResizeObserver({ ref: parentRef });
 
   useRequestAnimationFrame(() => {
     const currentTime = currentTimeRef?.current;
@@ -133,7 +135,7 @@ export const Cues = memo(function Cues() {
           </div>
           <div
             className="w-full flex flex-row justify-center"
-            style={{ height: parentRef.current ? parentRef.current?.clientHeight - virtualizer.getTotalSize() : 0 }}
+            style={{ height: parentHeight ? parentHeight - virtualizer.getTotalSize() : 0 }}
           >
             <Separator.Root orientation="vertical" className="w-px h-auto bg-neutral-200" />
           </div>
